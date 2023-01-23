@@ -36,5 +36,5 @@ outTmp/
 /test.output
 /kotlin-native/dist
 kotlin-ide/
-gradle/
 gradlew*
+/gradle/
