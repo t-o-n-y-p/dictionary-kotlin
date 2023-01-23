@@ -37,4 +37,4 @@ outTmp/
 /kotlin-native/dist
 kotlin-ide/
 gradle/
-geadlew*
+gradlew*
