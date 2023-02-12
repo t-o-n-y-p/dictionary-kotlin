@@ -119,3 +119,25 @@
 # Макеты
 
 ![Макеты](mockups/mockups.jpg)
+
+# Архитектура приложения
+
+![Архитектура](mockups/arch.svg)
+
+# API
+
+### Функции (эндпоинты)
+
+1. GET /api/v1/meanings?word=слово
+2. POST /api/v1/meanings
+3. GET /api/v1/meanings/pending
+4. PATCH /api/v1/meanings/{id}
+5. DELETE /api/v1/meanings/{id}
+
+### Описание сущности meaning
+
+1. id: идентификатор
+2. word: строка со словом
+3. meaning: строка со значением
+4. proposed_by: имя пользователя, который предложил значение
+5. approved: флаг подтверждения значение (true/false)
