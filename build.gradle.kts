@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "com.tonyp.dictionary-kotlin"
+group = "com.tonyp.dictionarykotlin"
 version = "0.1"
 
 allprojects {
