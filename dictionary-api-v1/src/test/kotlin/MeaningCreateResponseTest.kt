@@ -2,6 +2,7 @@ package com.tonyp.dictionarykotlin.api.v1
 
 import com.tonyp.dictionarykotlin.api.v1.models.*
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotMatch
 
@@ -34,7 +35,7 @@ class MeaningCreateResponseTest : FunSpec ({
         )
     )
 
-    test("Create response with success") {
+    test("Serialize create response with success") {
         val json = apiV1Mapper.writeValueAsString(createResponseSuccess)
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"success\".*")
@@ -47,7 +48,7 @@ class MeaningCreateResponseTest : FunSpec ({
         json shouldNotMatch "\"message\":"
     }
 
-    test("Create response with error") {
+    test("Serialize create response with error") {
         val json = apiV1Mapper.writeValueAsString(createResponseError)
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"error\".*")
@@ -60,6 +61,22 @@ class MeaningCreateResponseTest : FunSpec ({
         json shouldNotMatch "\"meaning\":"
         json shouldNotMatch "\"proposedBy\":"
         json shouldNotMatch "\"approved\":"
+    }
+
+    test("Deserialize create response with success") {
+        val json = apiV1Mapper.writeValueAsString(createResponseSuccess)
+        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as MeaningCreateResponse
+
+        val expectedCreateResponseSuccess = createResponseSuccess.copy(responseType = "create")
+        obj shouldBe expectedCreateResponseSuccess
+    }
+
+    test("Deserialize create response with error") {
+        val json = apiV1Mapper.writeValueAsString(createResponseError)
+        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as MeaningCreateResponse
+
+        val expectedCreateResponseError = createResponseError.copy(responseType = "create")
+        obj shouldBe expectedCreateResponseError
     }
 
 })

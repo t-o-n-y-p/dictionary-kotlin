@@ -2,6 +2,7 @@ package com.tonyp.dictionarykotlin.api.v1
 
 import com.tonyp.dictionarykotlin.api.v1.models.*
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotMatch
 
@@ -27,7 +28,7 @@ class MeaningDeleteRequestTest : FunSpec ({
         )
     )
 
-    test("Delete request with missing fields") {
+    test("Serialize delete request with missing fields") {
         val json = apiV1Mapper.writeValueAsString(firstDeleteRequest)
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"prod\".*")
@@ -35,12 +36,28 @@ class MeaningDeleteRequestTest : FunSpec ({
         json shouldNotMatch "\"stub\":"
     }
 
-    test("Delete request with all fields") {
+    test("Serialize delete request with all fields") {
         val json = apiV1Mapper.writeValueAsString(secondDeleteRequest)
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"stub\".*")
         json shouldMatch Regex(".*\"stub\":\\s*\"cannotDelete\".*")
         json shouldMatch Regex(".*\"id\":\\s*\"789\".*")
+    }
+
+    test("Deserialize delete request with missing fields") {
+        val json = apiV1Mapper.writeValueAsString(firstDeleteRequest)
+        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as MeaningDeleteRequest
+
+        val expectedFirstDeleteRequest = firstDeleteRequest.copy(requestType = "delete")
+        obj shouldBe expectedFirstDeleteRequest
+    }
+
+    test("Deserialize delete request with all fields") {
+        val json = apiV1Mapper.writeValueAsString(secondDeleteRequest)
+        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as MeaningDeleteRequest
+
+        val expectedSecondDeleteRequest = secondDeleteRequest.copy(requestType = "delete")
+        obj shouldBe expectedSecondDeleteRequest
     }
 
 })

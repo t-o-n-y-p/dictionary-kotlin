@@ -2,6 +2,7 @@ package com.tonyp.dictionarykotlin.api.v1
 
 import com.tonyp.dictionarykotlin.api.v1.models.*
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotMatch
 
@@ -28,7 +29,7 @@ class MeaningSearchRequestTest : FunSpec ({
         )
     )
 
-    test("Search request with missing fields") {
+    test("Serialize search request with missing fields") {
         val json = apiV1Mapper.writeValueAsString(firstSearchRequest)
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"test\".*")
@@ -37,13 +38,29 @@ class MeaningSearchRequestTest : FunSpec ({
         json shouldNotMatch "\"approved\":"
     }
 
-    test("Search request with all fields") {
+    test("Serialize search request with all fields") {
         val json = apiV1Mapper.writeValueAsString(secondSearchRequest)
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"stub\".*")
         json shouldMatch Regex(".*\"stub\":\\s*\"cannotSearch\".*")
         json shouldMatch Regex(".*\"word\":\\s*\"обвал\".*")
         json shouldMatch Regex(".*\"approved\":\\s*false.*")
+    }
+
+    test("Deserialize search request with missing fields") {
+        val json = apiV1Mapper.writeValueAsString(firstSearchRequest)
+        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as MeaningSearchRequest
+
+        val expectedFirstSearchRequest = firstSearchRequest.copy(requestType = "search")
+        obj shouldBe expectedFirstSearchRequest
+    }
+
+    test("Deserialize search request with all fields") {
+        val json = apiV1Mapper.writeValueAsString(secondSearchRequest)
+        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as MeaningSearchRequest
+
+        val expectedSecondSearchRequest = secondSearchRequest.copy(requestType = "search")
+        obj shouldBe expectedSecondSearchRequest
     }
 
 })

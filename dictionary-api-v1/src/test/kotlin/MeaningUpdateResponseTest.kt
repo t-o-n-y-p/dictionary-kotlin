@@ -2,6 +2,7 @@ package com.tonyp.dictionarykotlin.api.v1
 
 import com.tonyp.dictionarykotlin.api.v1.models.*
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotMatch
 
@@ -34,7 +35,7 @@ class MeaningUpdateResponseTest : FunSpec ({
         )
     )
 
-    test("Update response with success") {
+    test("Serialize update response with success") {
         val json = apiV1Mapper.writeValueAsString(updateResponseSuccess)
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"success\".*")
@@ -47,7 +48,7 @@ class MeaningUpdateResponseTest : FunSpec ({
         json shouldNotMatch "\"message\":"
     }
 
-    test("Update response with error") {
+    test("Serialize update response with error") {
         val json = apiV1Mapper.writeValueAsString(updateResponseError)
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"error\".*")
@@ -60,6 +61,22 @@ class MeaningUpdateResponseTest : FunSpec ({
         json shouldNotMatch "\"meaning\":"
         json shouldNotMatch "\"proposedBy\":"
         json shouldNotMatch "\"approved\":"
+    }
+
+    test("Deserialize update response with success") {
+        val json = apiV1Mapper.writeValueAsString(updateResponseSuccess)
+        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as MeaningUpdateResponse
+
+        val expectedUpdateResponseSuccess = updateResponseSuccess.copy(responseType = "update")
+        obj shouldBe expectedUpdateResponseSuccess
+    }
+
+    test("Deserialize update response with error") {
+        val json = apiV1Mapper.writeValueAsString(updateResponseError)
+        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as MeaningUpdateResponse
+
+        val expectedUpdateResponseError = updateResponseError.copy(responseType = "update")
+        obj shouldBe expectedUpdateResponseError
     }
 
 })
