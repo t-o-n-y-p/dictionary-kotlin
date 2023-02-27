@@ -33,6 +33,7 @@ class MeaningCreateRequestTest : FunSpec ({
 
     test("Serialize create request with missing fields") {
         val json = apiV1Mapper.writeValueAsString(firstCreateRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"create\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"test\".*")
         json shouldMatch Regex(".*\"word\":\\s*\"трава\".*")
@@ -43,6 +44,7 @@ class MeaningCreateRequestTest : FunSpec ({
 
     test("Serialize create request with all fields") {
         val json = apiV1Mapper.writeValueAsString(secondCreateRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"create\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"stub\".*")
         json shouldMatch Regex(".*\"stub\":\\s*\"cannotCreate\".*")

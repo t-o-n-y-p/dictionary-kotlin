@@ -19,6 +19,6 @@ data class DictionaryContext (
     var meaningRequest: DictionaryMeaning = DictionaryMeaning(),
     var meaningFilterRequest: DictionaryMeaningFilter = DictionaryMeaningFilter(),
     var meaningResponse: DictionaryMeaning = DictionaryMeaning(),
-    var meaningsResponse: MutableList<DictionaryMeaning> = mutableListOf(),
+    var meaningsResponse: MutableList<DictionaryMeaning> = mutableListOf()
 
-    )
+)

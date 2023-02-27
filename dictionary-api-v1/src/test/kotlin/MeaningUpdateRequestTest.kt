@@ -31,6 +31,7 @@ class MeaningUpdateRequestTest : FunSpec ({
 
     test("Serialize update request with missing fields") {
         val json = apiV1Mapper.writeValueAsString(firstUpdateRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"update\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"prod\".*")
         json shouldMatch Regex(".*\"id\":\\s*\"456\".*")
@@ -40,6 +41,7 @@ class MeaningUpdateRequestTest : FunSpec ({
 
     test("Serialize update request with all fields") {
         val json = apiV1Mapper.writeValueAsString(secondUpdateRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"update\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"stub\".*")
         json shouldMatch Regex(".*\"stub\":\\s*\"cannotUpdate\".*")

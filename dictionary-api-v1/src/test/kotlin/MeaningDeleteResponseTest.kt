@@ -33,6 +33,7 @@ class MeaningDeleteResponseTest : FunSpec ({
 
     test("Serialize delete response with success") {
         val json = apiV1Mapper.writeValueAsString(deleteResponseSuccess)
+        json shouldMatch Regex(".*\"responseType\":\\s*\"delete\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"success\".*")
         json shouldMatch Regex(".*\"id\":\\s*\"456\".*")
@@ -42,6 +43,7 @@ class MeaningDeleteResponseTest : FunSpec ({
 
     test("Serialize delete response with error") {
         val json = apiV1Mapper.writeValueAsString(deleteResponseError)
+        json shouldMatch Regex(".*\"responseType\":\\s*\"delete\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"error\".*")
         json shouldMatch Regex(".*\"code\":\\s*\"789\".*")

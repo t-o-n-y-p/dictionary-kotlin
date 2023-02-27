@@ -31,6 +31,7 @@ class MeaningSearchRequestTest : FunSpec ({
 
     test("Serialize search request with missing fields") {
         val json = apiV1Mapper.writeValueAsString(firstSearchRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"search\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"test\".*")
         json shouldMatch Regex(".*\"word\":\\s*\"трава\".*")
@@ -40,6 +41,7 @@ class MeaningSearchRequestTest : FunSpec ({
 
     test("Serialize search request with all fields") {
         val json = apiV1Mapper.writeValueAsString(secondSearchRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"search\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"stub\".*")
         json shouldMatch Regex(".*\"stub\":\\s*\"cannotSearch\".*")

@@ -37,6 +37,7 @@ class MeaningReadResponseTest : FunSpec ({
 
     test("Serialize read response with success") {
         val json = apiV1Mapper.writeValueAsString(readResponseSuccess)
+        json shouldMatch Regex(".*\"responseType\":\\s*\"read\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"success\".*")
         json shouldMatch Regex(".*\"id\":\\s*\"456\".*")
@@ -50,6 +51,7 @@ class MeaningReadResponseTest : FunSpec ({
 
     test("Serialize read response with error") {
         val json = apiV1Mapper.writeValueAsString(readResponseError)
+        json shouldMatch Regex(".*\"responseType\":\\s*\"read\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"error\".*")
         json shouldMatch Regex(".*\"code\":\\s*\"789\".*")

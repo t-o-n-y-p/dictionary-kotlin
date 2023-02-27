@@ -46,6 +46,7 @@ class MeaningSearchResponseTest : FunSpec ({
 
     test("Serialize search response with success") {
         val json = apiV1Mapper.writeValueAsString(searchResponseSuccess)
+        json shouldMatch Regex(".*\"responseType\":\\s*\"search\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"success\".*")
         json shouldMatch Regex(".*\"id\":\\s*\"456\".*")
@@ -64,6 +65,7 @@ class MeaningSearchResponseTest : FunSpec ({
 
     test("Serialize search response with error") {
         val json = apiV1Mapper.writeValueAsString(searchResponseError)
+        json shouldMatch Regex(".*\"responseType\":\\s*\"search\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"error\".*")
         json shouldMatch Regex(".*\"code\":\\s*\"789\".*")

@@ -30,6 +30,7 @@ class MeaningReadRequestTest : FunSpec ({
 
     test("Serialize read request with missing fields") {
         val json = apiV1Mapper.writeValueAsString(firstReadRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"read\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"test\".*")
         json shouldMatch Regex(".*\"id\":\\s*\"456\".*")
@@ -38,6 +39,7 @@ class MeaningReadRequestTest : FunSpec ({
 
     test("Serialize read request with all fields") {
         val json = apiV1Mapper.writeValueAsString(secondReadRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"read\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"mode\":\\s*\"stub\".*")
         json shouldMatch Regex(".*\"stub\":\\s*\"cannotRead\".*")
