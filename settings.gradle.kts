@@ -7,4 +7,3 @@ pluginManagement {
         kotlin("jvm") version kotlinVersion
     }
 }
-include("dictionary-test-module")
