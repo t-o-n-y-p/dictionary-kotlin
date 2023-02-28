@@ -20,7 +20,7 @@ class MeaningSearchRequestTest : FunSpec ({
             stub = MeaningRequestDebugStubs.CANNOT_SEARCH
         ),
         meaningFilter = MeaningSearchFilter(
-            word = "обвал",
+            word = "трава",
             approved = false
         )
     )
@@ -57,7 +57,7 @@ class MeaningSearchRequestTest : FunSpec ({
         json shouldMatch Regex(".*\"mode\":\\s*\"stub\".*")
         json shouldMatch Regex(".*\"stub\":\\s*\"cannotSearch\".*")
         json shouldMatch Regex(".*\"meaningFilter\":\\s*\\{\\s*[^}].*")
-        json shouldMatch Regex(".*\"word\":\\s*\"обвал\".*")
+        json shouldMatch Regex(".*\"word\":\\s*\"трава\".*")
         json shouldMatch Regex(".*\"approved\":\\s*false.*")
     }
 

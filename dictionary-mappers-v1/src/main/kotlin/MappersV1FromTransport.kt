@@ -36,7 +36,7 @@ private fun MeaningDebug?.transportToStubCase(): DictionaryStub = when (this?.st
     null -> DictionaryStub.NONE
 }
 
-fun DictionaryContext.fromTransport(request: MeaningCreateRequest) {
+private fun DictionaryContext.fromTransport(request: MeaningCreateRequest) {
     command = DictionaryCommand.CREATE
     requestId = request.requestId()
     meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning()
@@ -44,7 +44,7 @@ fun DictionaryContext.fromTransport(request: MeaningCreateRequest) {
     stubCase = request.debug.transportToStubCase()
 }
 
-fun DictionaryContext.fromTransport(request: MeaningReadRequest) {
+private fun DictionaryContext.fromTransport(request: MeaningReadRequest) {
     command = DictionaryCommand.READ
     requestId = request.requestId()
     meaningRequest = request.meaning?.id.toMeaningWithId()
@@ -52,7 +52,7 @@ fun DictionaryContext.fromTransport(request: MeaningReadRequest) {
     stubCase = request.debug.transportToStubCase()
 }
 
-fun DictionaryContext.fromTransport(request: MeaningUpdateRequest) {
+private fun DictionaryContext.fromTransport(request: MeaningUpdateRequest) {
     command = DictionaryCommand.UPDATE
     requestId = request.requestId()
     meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning()
@@ -60,7 +60,7 @@ fun DictionaryContext.fromTransport(request: MeaningUpdateRequest) {
     stubCase = request.debug.transportToStubCase()
 }
 
-fun DictionaryContext.fromTransport(request: MeaningDeleteRequest) {
+private fun DictionaryContext.fromTransport(request: MeaningDeleteRequest) {
     command = DictionaryCommand.DELETE
     requestId = request.requestId()
     meaningRequest = request.meaning?.id.toMeaningWithId()
@@ -68,7 +68,7 @@ fun DictionaryContext.fromTransport(request: MeaningDeleteRequest) {
     stubCase = request.debug.transportToStubCase()
 }
 
-fun DictionaryContext.fromTransport(request: MeaningSearchRequest) {
+private fun DictionaryContext.fromTransport(request: MeaningSearchRequest) {
     command = DictionaryCommand.SEARCH
     requestId = request.requestId()
     meaningFilterRequest = request.meaningFilter.toInternal()

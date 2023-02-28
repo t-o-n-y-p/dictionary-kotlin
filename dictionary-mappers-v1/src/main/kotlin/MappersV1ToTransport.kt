@@ -5,7 +5,7 @@ import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.*
 import com.tonyp.dictionarykotlin.mappers.v1.exceptions.UnknownDictionaryCommand
 
-fun DictionaryContext.toTransport(): IResponse = when (val cmd = command) {
+fun DictionaryContext.toTransportMeaning(): IResponse = when (val cmd = command) {
     DictionaryCommand.CREATE -> toTransportCreate()
     DictionaryCommand.READ -> toTransportRead()
     DictionaryCommand.UPDATE -> toTransportUpdate()
@@ -14,42 +14,42 @@ fun DictionaryContext.toTransport(): IResponse = when (val cmd = command) {
     DictionaryCommand.NONE -> throw UnknownDictionaryCommand(cmd)
 }
 
-fun DictionaryContext.toTransportCreate() = MeaningCreateResponse(
+private fun DictionaryContext.toTransportCreate() = MeaningCreateResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meaning = meaningResponse.toTransportFullMeaning()
 )
 
-fun DictionaryContext.toTransportRead() = MeaningReadResponse(
+private fun DictionaryContext.toTransportRead() = MeaningReadResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meaning = meaningResponse.toTransportFullMeaning()
 )
 
-fun DictionaryContext.toTransportUpdate() = MeaningUpdateResponse(
+private fun DictionaryContext.toTransportUpdate() = MeaningUpdateResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meaning = meaningResponse.toTransportFullMeaning()
 )
 
-fun DictionaryContext.toTransportDelete() = MeaningDeleteResponse(
+private fun DictionaryContext.toTransportDelete() = MeaningDeleteResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meaning = meaningResponse.toTransportDeleteMeaning()
 )
 
-fun DictionaryContext.toTransportSearch() = MeaningSearchResponse(
+private fun DictionaryContext.toTransportSearch() = MeaningSearchResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meanings = meaningsResponse.toTransportFullMeanings()
 )
 
-fun List<DictionaryMeaning>.toTransportFullMeanings(): List<MeaningResponseFullObject>? = this
+private fun List<DictionaryMeaning>.toTransportFullMeanings(): List<MeaningResponseFullObject>? = this
     .map { it.toTransportFullMeaning() }
     .toList()
     .takeIf { it.isNotEmpty() }

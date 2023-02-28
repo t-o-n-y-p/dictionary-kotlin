@@ -14,9 +14,9 @@ class MeaningReadResponseTest : FunSpec ({
         result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "456",
-            word = "трава",
-            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
-            proposedBy = "t-o-n-y-p",
+            word = "обвал",
+            value = "снежные глыбы или обломки скал, обрушившиеся с гор",
+            proposedBy = "unittest",
             approved = false
         ),
         errors = emptyList()
@@ -60,9 +60,9 @@ class MeaningReadResponseTest : FunSpec ({
         json shouldMatch Regex(".*\"result\":\\s*\"success\".*")
         json shouldMatch Regex(".*\"meaning\":\\{\\s*[^}].*")
         json shouldMatch Regex(".*\"id\":\\s*\"456\".*")
-        json shouldMatch Regex(".*\"word\":\\s*\"трава\".*")
-        json shouldMatch Regex(".*\"value\":\\s*\"о чем-н. не имеющем вкуса, безвкусном \\(разг.\\)\".*")
-        json shouldMatch Regex(".*\"proposedBy\":\\s*\"t-o-n-y-p\".*")
+        json shouldMatch Regex(".*\"word\":\\s*\"обвал\".*")
+        json shouldMatch Regex(".*\"value\":\\s*\"снежные глыбы или обломки скал, обрушившиеся с гор\".*")
+        json shouldMatch Regex(".*\"proposedBy\":\\s*\"unittest\".*")
         json shouldMatch Regex(".*\"approved\":\\s*false.*")
         json shouldMatch Regex(".*\"errors\":\\s*\\[\\s*].*")
         json shouldNotMatch "\"code\":"

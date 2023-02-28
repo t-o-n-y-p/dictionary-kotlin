@@ -28,7 +28,7 @@ class FromSearchTransportMapperTest : FunSpec ({
             stub = MeaningRequestDebugStubs.CANNOT_SEARCH
         ),
         meaningFilter = MeaningSearchFilter(
-            word = "обвал",
+            word = "трава",
             approved = true
         )
     )
@@ -105,7 +105,7 @@ class FromSearchTransportMapperTest : FunSpec ({
         context.timeStart shouldBe Instant.NONE
         context.meaningRequest shouldBe DictionaryMeaning()
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter(
-            word = "обвал",
+            word = "трава",
             approved = DictionaryMeaningApproved.TRUE
         )
         context.meaningResponse shouldBe DictionaryMeaning()
