@@ -7,7 +7,6 @@ pluginManagement {
         kotlin("jvm") version kotlinVersion
     }
 }
-include("dictionary-test-module")
 include("dictionary-api-v1")
 include("dictionary-common")
 include("dictionary-mappers-v1")
