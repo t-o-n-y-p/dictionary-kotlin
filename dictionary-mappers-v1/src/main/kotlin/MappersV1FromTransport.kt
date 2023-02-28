@@ -89,7 +89,7 @@ private fun Boolean?.fromTransport(): DictionaryMeaningApproved = when (this) {
 
 private fun MeaningCreateObject.toInternal(): DictionaryMeaning = DictionaryMeaning(
     word = this.word ?: "",
-    meaning = this.meaning ?: "",
+    value = this.value ?: "",
     proposedBy = this.proposedBy ?: ""
 )
 

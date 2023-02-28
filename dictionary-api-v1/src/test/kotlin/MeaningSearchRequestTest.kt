@@ -8,17 +8,13 @@ import io.kotest.matchers.string.shouldNotMatch
 
 class MeaningSearchRequestTest : FunSpec ({
 
+    val emptySearchRequest = MeaningSearchRequest()
     val firstSearchRequest = MeaningSearchRequest(
-        requestId = "123",
-        debug = MeaningDebug(
-            mode = MeaningRequestDebugMode.TEST
-        ),
-        meaningFilter = MeaningSearchFilter(
-            word = "трава"
-        )
+        debug = MeaningDebug(),
+        meaningFilter = MeaningSearchFilter()
     )
     val secondSearchRequest = MeaningSearchRequest(
-        requestId = "456",
+        requestId = "789",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
             stub = MeaningRequestDebugStubs.CANNOT_SEARCH
@@ -29,24 +25,48 @@ class MeaningSearchRequestTest : FunSpec ({
         )
     )
 
+    test("Serialize empty search request") {
+        val json = apiV1Mapper.writeValueAsString(emptySearchRequest)
+        json shouldMatch Regex(".*\"requestType\":\\s*\"search\".*")
+        json shouldNotMatch "\"requestId\":"
+        json shouldNotMatch "\"debug\":"
+        json shouldNotMatch "\"meaning\":"
+        json shouldNotMatch "\"mode\":"
+        json shouldNotMatch "\"stub\":"
+        json shouldNotMatch "\"word\":"
+        json shouldNotMatch "\"approved\":"
+    }
+
     test("Serialize search request with missing fields") {
         val json = apiV1Mapper.writeValueAsString(firstSearchRequest)
         json shouldMatch Regex(".*\"requestType\":\\s*\"search\".*")
-        json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
-        json shouldMatch Regex(".*\"mode\":\\s*\"test\".*")
-        json shouldMatch Regex(".*\"word\":\\s*\"трава\".*")
+        json shouldMatch Regex(".*\"debug\":\\s*\\{\\s*}.*")
+        json shouldMatch Regex(".*\"meaningFilter\":\\s*\\{\\s*}.*")
+        json shouldNotMatch "\"requestId\":"
+        json shouldNotMatch "\"mode\":"
         json shouldNotMatch "\"stub\":"
+        json shouldNotMatch "\"word\":"
         json shouldNotMatch "\"approved\":"
     }
 
     test("Serialize search request with all fields") {
         val json = apiV1Mapper.writeValueAsString(secondSearchRequest)
         json shouldMatch Regex(".*\"requestType\":\\s*\"search\".*")
-        json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
+        json shouldMatch Regex(".*\"requestId\":\\s*\"789\".*")
+        json shouldMatch Regex(".*\"debug\":\\s*\\{\\s*[^}].*")
         json shouldMatch Regex(".*\"mode\":\\s*\"stub\".*")
         json shouldMatch Regex(".*\"stub\":\\s*\"cannotSearch\".*")
+        json shouldMatch Regex(".*\"meaningFilter\":\\s*\\{\\s*[^}].*")
         json shouldMatch Regex(".*\"word\":\\s*\"обвал\".*")
         json shouldMatch Regex(".*\"approved\":\\s*false.*")
+    }
+
+    test("Deserialize empty search request") {
+        val json = apiV1Mapper.writeValueAsString(emptySearchRequest)
+        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as MeaningSearchRequest
+
+        val expectedFirstSearchRequest = emptySearchRequest.copy(requestType = "search")
+        obj shouldBe expectedFirstSearchRequest
     }
 
     test("Deserialize search request with missing fields") {

@@ -186,7 +186,7 @@ components:
         word:
           type: string
           description: Слово
-        meaning:
+        value:
           type: string
           description: Значение
         proposedBy:

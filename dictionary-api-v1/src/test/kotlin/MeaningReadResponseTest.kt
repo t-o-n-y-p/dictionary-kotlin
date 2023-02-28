@@ -8,43 +8,63 @@ import io.kotest.matchers.string.shouldNotMatch
 
 class MeaningReadResponseTest : FunSpec ({
 
+    val emptyReadResponse = MeaningReadResponse()
     val readResponseSuccess = MeaningReadResponse(
         requestId = "123",
         result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "456",
             word = "трава",
-            meaning = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "t-o-n-y-p",
             approved = false
-        )
+        ),
+        errors = emptyList()
     )
-
     val readResponseError = MeaningReadResponse(
-        requestId = "456",
+        requestId = "789",
         result = ResponseResult.ERROR,
+        meaning = MeaningResponseFullObject(),
         errors = listOf(
             Error(
-                code = "789",
+                code = "123",
                 message = "exception"
             ),
             Error(
-                code = "123",
+                code = "456",
                 message = "error"
             )
         )
     )
+
+    test("Serialize empty read response") {
+        val json = apiV1Mapper.writeValueAsString(emptyReadResponse)
+        json shouldMatch Regex(".*\"responseType\":\\s*\"read\".*")
+        json shouldNotMatch "\"requestId\":"
+        json shouldNotMatch "\"result\":"
+        json shouldNotMatch "\"meaning\":"
+        json shouldNotMatch "\"id\":"
+        json shouldNotMatch "\"word\":"
+        json shouldNotMatch "\"value\":"
+        json shouldNotMatch "\"proposedBy\":"
+        json shouldNotMatch "\"approved\":"
+        json shouldNotMatch "\"errors\":"
+        json shouldNotMatch "\"code\":"
+        json shouldNotMatch "\"message\":"
+    }
 
     test("Serialize read response with success") {
         val json = apiV1Mapper.writeValueAsString(readResponseSuccess)
         json shouldMatch Regex(".*\"responseType\":\\s*\"read\".*")
         json shouldMatch Regex(".*\"requestId\":\\s*\"123\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"success\".*")
+        json shouldMatch Regex(".*\"meaning\":\\{\\s*[^}].*")
         json shouldMatch Regex(".*\"id\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"word\":\\s*\"трава\".*")
-        json shouldMatch Regex(".*\"meaning\":\\s*\"о чем-н. не имеющем вкуса, безвкусном \\(разг.\\)\".*")
+        json shouldMatch Regex(".*\"value\":\\s*\"о чем-н. не имеющем вкуса, безвкусном \\(разг.\\)\".*")
         json shouldMatch Regex(".*\"proposedBy\":\\s*\"t-o-n-y-p\".*")
         json shouldMatch Regex(".*\"approved\":\\s*false.*")
+        json shouldMatch Regex(".*\"errors\":\\s*\\[\\s*].*")
         json shouldNotMatch "\"code\":"
         json shouldNotMatch "\"message\":"
     }
@@ -52,17 +72,27 @@ class MeaningReadResponseTest : FunSpec ({
     test("Serialize read response with error") {
         val json = apiV1Mapper.writeValueAsString(readResponseError)
         json shouldMatch Regex(".*\"responseType\":\\s*\"read\".*")
-        json shouldMatch Regex(".*\"requestId\":\\s*\"456\".*")
+        json shouldMatch Regex(".*\"requestId\":\\s*\"789\".*")
         json shouldMatch Regex(".*\"result\":\\s*\"error\".*")
-        json shouldMatch Regex(".*\"code\":\\s*\"789\".*")
+        json shouldMatch Regex(".*\"meaning\":\\{\\s*}.*")
+        json shouldMatch Regex(".*\"errors\":\\s*\\[\\s*[^]].*")
         json shouldMatch Regex(".*\"code\":\\s*\"123\".*")
+        json shouldMatch Regex(".*\"code\":\\s*\"456\".*")
         json shouldMatch Regex(".*\"message\":\\s*\"exception\".*")
         json shouldMatch Regex(".*\"message\":\\s*\"error\".*")
         json shouldNotMatch "\"id\":"
         json shouldNotMatch "\"word\":"
-        json shouldNotMatch "\"meaning\":"
+        json shouldNotMatch "\"value\":"
         json shouldNotMatch "\"proposedBy\":"
         json shouldNotMatch "\"approved\":"
+    }
+
+    test("Deserialize empty read response") {
+        val json = apiV1Mapper.writeValueAsString(emptyReadResponse)
+        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as MeaningReadResponse
+
+        val expectedReadResponseSuccess = emptyReadResponse.copy(responseType = "read")
+        obj shouldBe expectedReadResponseSuccess
     }
 
     test("Deserialize read response with success") {

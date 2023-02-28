@@ -57,7 +57,7 @@ fun List<DictionaryMeaning>.toTransportFullMeanings(): List<MeaningResponseFullO
 private fun DictionaryMeaning.toTransportFullMeaning(): MeaningResponseFullObject = MeaningResponseFullObject(
     id = id.takeIf { it != DictionaryMeaningId.NONE }?.asString(),
     word = word.takeIf { it.isNotBlank() },
-    meaning = meaning.takeIf { it.isNotBlank() },
+    value = value.takeIf { it.isNotBlank() },
     proposedBy = proposedBy.takeIf { it.isNotBlank() },
     approved = approved.toTransportMeaning()
 )
