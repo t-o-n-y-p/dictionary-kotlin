@@ -8,37 +8,36 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.Instant
 
-class FromCreateTransportMapperTest : FunSpec ({
+class FromUpdateTransportMapperTest : FunSpec ({
 
-    val emptyCreateRequest = MeaningCreateRequest()
-    val successStubCreateRequest = MeaningCreateRequest(
+    val emptyUpdateRequest = MeaningUpdateRequest()
+    val successStubUpdateRequest = MeaningUpdateRequest(
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
             stub = MeaningRequestDebugStubs.SUCCESS
         )
     )
-    val firstCreateRequest = MeaningCreateRequest(
+    val firstUpdateRequest = MeaningUpdateRequest(
         debug = MeaningDebug(),
-        meaning = MeaningCreateObject()
+        meaning = MeaningUpdateObject()
     )
-    val secondCreateRequest = MeaningCreateRequest(
+    val secondUpdateRequest = MeaningUpdateRequest(
         requestId = "123",
         debug = MeaningDebug(
-            mode = MeaningRequestDebugMode.PROD,
-            stub = MeaningRequestDebugStubs.CANNOT_CREATE
+            mode = MeaningRequestDebugMode.TEST,
+            stub = MeaningRequestDebugStubs.CANNOT_UPDATE
         ),
-        meaning = MeaningCreateObject(
-            word = "обвал",
-            value = "снежные глыбы или обломки скал, обрушившиеся с гор",
-            proposedBy = "t-o-n-y-p"
+        meaning = MeaningUpdateObject(
+            id = "789",
+            approved = false
         )
     )
 
-    test("From transport empty create request") {
+    test("From transport empty update request") {
         val context = DictionaryContext()
-        context.fromTransport(emptyCreateRequest)
+        context.fromTransport(emptyUpdateRequest)
 
-        context.command shouldBe DictionaryCommand.CREATE
+        context.command shouldBe DictionaryCommand.UPDATE
         context.state shouldBe DictionaryState.NONE
         context.errors shouldBe mutableListOf()
 
@@ -53,11 +52,11 @@ class FromCreateTransportMapperTest : FunSpec ({
         context.meaningsResponse shouldBe mutableListOf()
     }
 
-    test("From transport stub success create request") {
+    test("From transport stub success update request") {
         val context = DictionaryContext()
-        context.fromTransport(successStubCreateRequest)
+        context.fromTransport(successStubUpdateRequest)
 
-        context.command shouldBe DictionaryCommand.CREATE
+        context.command shouldBe DictionaryCommand.UPDATE
         context.state shouldBe DictionaryState.NONE
         context.errors shouldBe mutableListOf()
 
@@ -72,11 +71,11 @@ class FromCreateTransportMapperTest : FunSpec ({
         context.meaningsResponse shouldBe mutableListOf()
     }
 
-    test("From transport create request with missing fields") {
+    test("From transport update request with missing fields") {
         val context = DictionaryContext()
-        context.fromTransport(firstCreateRequest)
+        context.fromTransport(firstUpdateRequest)
 
-        context.command shouldBe DictionaryCommand.CREATE
+        context.command shouldBe DictionaryCommand.UPDATE
         context.state shouldBe DictionaryState.NONE
         context.errors shouldBe mutableListOf()
 
@@ -91,25 +90,25 @@ class FromCreateTransportMapperTest : FunSpec ({
         context.meaningsResponse shouldBe mutableListOf()
     }
 
-    test("From transport create request with all fields") {
+    test("From transport update request with all fields") {
         val context = DictionaryContext()
-        context.fromTransport(secondCreateRequest)
+        context.fromTransport(secondUpdateRequest)
 
-        context.command shouldBe DictionaryCommand.CREATE
+        context.command shouldBe DictionaryCommand.UPDATE
         context.state shouldBe DictionaryState.NONE
         context.errors shouldBe mutableListOf()
 
-        context.workMode shouldBe DictionaryWorkMode.PROD
-        context.stubCase shouldBe DictionaryStub.CANNOT_CREATE
+        context.workMode shouldBe DictionaryWorkMode.TEST
+        context.stubCase shouldBe DictionaryStub.CANNOT_UPDATE
 
         context.requestId shouldBe DictionaryRequestId("123")
         context.timeStart shouldBe Instant.NONE
         context.meaningRequest shouldBe DictionaryMeaning(
-            id = DictionaryMeaningId.NONE,
-            word = "обвал",
-            value = "снежные глыбы или обломки скал, обрушившиеся с гор",
-            proposedBy = "t-o-n-y-p",
-            approved = DictionaryMeaningApproved.NONE
+            id = DictionaryMeaningId("789"),
+            word = "",
+            value = "",
+            proposedBy = "",
+            approved = DictionaryMeaningApproved.FALSE
         )
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
         context.meaningResponse shouldBe DictionaryMeaning()

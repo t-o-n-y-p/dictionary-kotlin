@@ -8,37 +8,35 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.Instant
 
-class FromCreateTransportMapperTest : FunSpec ({
+class FromDeleteTransportMapperTest : FunSpec ({
 
-    val emptyCreateRequest = MeaningCreateRequest()
-    val successStubCreateRequest = MeaningCreateRequest(
+    val emptyDeleteRequest = MeaningDeleteRequest()
+    val successStubDeleteRequest = MeaningDeleteRequest(
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
             stub = MeaningRequestDebugStubs.SUCCESS
         )
     )
-    val firstCreateRequest = MeaningCreateRequest(
+    val firstDeleteRequest = MeaningDeleteRequest(
         debug = MeaningDebug(),
-        meaning = MeaningCreateObject()
+        meaning = MeaningDeleteObject()
     )
-    val secondCreateRequest = MeaningCreateRequest(
-        requestId = "123",
+    val secondDeleteRequest = MeaningDeleteRequest(
+        requestId = "456",
         debug = MeaningDebug(
-            mode = MeaningRequestDebugMode.PROD,
-            stub = MeaningRequestDebugStubs.CANNOT_CREATE
+            mode = MeaningRequestDebugMode.TEST,
+            stub = MeaningRequestDebugStubs.CANNOT_DELETE
         ),
-        meaning = MeaningCreateObject(
-            word = "обвал",
-            value = "снежные глыбы или обломки скал, обрушившиеся с гор",
-            proposedBy = "t-o-n-y-p"
+        meaning = MeaningDeleteObject(
+            id = "123"
         )
     )
 
-    test("From transport empty create request") {
+    test("From transport empty delete request") {
         val context = DictionaryContext()
-        context.fromTransport(emptyCreateRequest)
+        context.fromTransport(emptyDeleteRequest)
 
-        context.command shouldBe DictionaryCommand.CREATE
+        context.command shouldBe DictionaryCommand.DELETE
         context.state shouldBe DictionaryState.NONE
         context.errors shouldBe mutableListOf()
 
@@ -53,11 +51,11 @@ class FromCreateTransportMapperTest : FunSpec ({
         context.meaningsResponse shouldBe mutableListOf()
     }
 
-    test("From transport stub success create request") {
+    test("From transport stub success delete request") {
         val context = DictionaryContext()
-        context.fromTransport(successStubCreateRequest)
+        context.fromTransport(successStubDeleteRequest)
 
-        context.command shouldBe DictionaryCommand.CREATE
+        context.command shouldBe DictionaryCommand.DELETE
         context.state shouldBe DictionaryState.NONE
         context.errors shouldBe mutableListOf()
 
@@ -72,11 +70,11 @@ class FromCreateTransportMapperTest : FunSpec ({
         context.meaningsResponse shouldBe mutableListOf()
     }
 
-    test("From transport create request with missing fields") {
+    test("From transport delete request with missing fields") {
         val context = DictionaryContext()
-        context.fromTransport(firstCreateRequest)
+        context.fromTransport(firstDeleteRequest)
 
-        context.command shouldBe DictionaryCommand.CREATE
+        context.command shouldBe DictionaryCommand.DELETE
         context.state shouldBe DictionaryState.NONE
         context.errors shouldBe mutableListOf()
 
@@ -91,24 +89,24 @@ class FromCreateTransportMapperTest : FunSpec ({
         context.meaningsResponse shouldBe mutableListOf()
     }
 
-    test("From transport create request with all fields") {
+    test("From transport delete request with all fields") {
         val context = DictionaryContext()
-        context.fromTransport(secondCreateRequest)
+        context.fromTransport(secondDeleteRequest)
 
-        context.command shouldBe DictionaryCommand.CREATE
+        context.command shouldBe DictionaryCommand.DELETE
         context.state shouldBe DictionaryState.NONE
         context.errors shouldBe mutableListOf()
 
-        context.workMode shouldBe DictionaryWorkMode.PROD
-        context.stubCase shouldBe DictionaryStub.CANNOT_CREATE
+        context.workMode shouldBe DictionaryWorkMode.TEST
+        context.stubCase shouldBe DictionaryStub.CANNOT_DELETE
 
-        context.requestId shouldBe DictionaryRequestId("123")
+        context.requestId shouldBe DictionaryRequestId("456")
         context.timeStart shouldBe Instant.NONE
         context.meaningRequest shouldBe DictionaryMeaning(
-            id = DictionaryMeaningId.NONE,
-            word = "обвал",
-            value = "снежные глыбы или обломки скал, обрушившиеся с гор",
-            proposedBy = "t-o-n-y-p",
+            id = DictionaryMeaningId("123"),
+            word = "",
+            value = "",
+            proposedBy = "",
             approved = DictionaryMeaningApproved.NONE
         )
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
