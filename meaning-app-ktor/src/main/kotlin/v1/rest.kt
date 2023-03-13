@@ -4,7 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
 fun Route.v1Meaning() {
-    route("ad") {
+    route("meaning") {
         post("create") {
             call.createMeaning()
         }

@@ -23,9 +23,6 @@ fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
-    // Generally not needed as it is replaced by a `routing`
-    install(Routing)
-
     install(CachingHeaders)
     install(DefaultHeaders)
     install(AutoHeadResponse)
@@ -52,7 +49,7 @@ fun Application.module() {
     install(Locations)
 
     routing {
-        route("v1") {
+        route("api/v1") {
             v1Meaning()
         }
     }

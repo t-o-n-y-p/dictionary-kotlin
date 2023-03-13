@@ -48,10 +48,14 @@ dependencies {
     implementation(ktor("auth"))
     implementation(ktor("auth-jwt"))
 
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
     implementation(project(mapOf("path" to ":dictionary-common")))
     implementation(project(mapOf("path" to ":dictionary-api-v1")))
     implementation(project(mapOf("path" to ":dictionary-mappers-v1")))
     implementation(project(mapOf("path" to ":dictionary-stubs")))
+
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
