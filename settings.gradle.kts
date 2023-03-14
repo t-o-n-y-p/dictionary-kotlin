@@ -8,7 +8,6 @@ pluginManagement {
 
     plugins {
         kotlin("jvm") version kotlinVersion
-        kotlin("plugin.serialization") version kotlinVersion apply false
         id("io.ktor.plugin") version ktorPluginVersion apply false
 
         id("org.openapi.generator") version openapiVersion apply false

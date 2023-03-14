@@ -4,7 +4,6 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
 val ktorVersion: String by project
 val logbackVersion: String by project
-val serializationVersion: String by project
 val kotestVersion: String by project
 val datetimeVersion: String by project
 
@@ -17,7 +16,6 @@ plugins {
     id("application")
     id("com.bmuschko.docker-java-application")
     id("com.bmuschko.docker-remote-api")
-    kotlin("plugin.serialization")
 }
 
 repositories {
@@ -35,7 +33,6 @@ dependencies {
 
     implementation(ktor("jackson", "serialization"))
     implementation(ktor("content-negotiation"))
-    implementation(ktor("kotlinx-json", "serialization"))
 
     implementation(ktor("locations"))
     implementation(ktor("caching-headers"))
