@@ -6,16 +6,16 @@ import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
 
 object DictionaryMeaningStub {
 
-    private val approvedMeaning: DictionaryMeaning
-        get() = DictionaryMeaning(
+    private val approvedMeaning: DictionaryMeaning =
+        DictionaryMeaning(
             id = DictionaryMeaningId("123"),
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
             approved = DictionaryMeaningApproved.TRUE
         )
-    private val pendingMeaning: DictionaryMeaning
-        get() = DictionaryMeaning(
+    private val pendingMeaning: DictionaryMeaning =
+        DictionaryMeaning(
             id = DictionaryMeaningId("456"),
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",

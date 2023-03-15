@@ -5,6 +5,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 val ktorVersion: String by project
 val logbackVersion: String by project
 val kotestVersion: String by project
+val ktorKotestExtensionVersion: String by project
 val datetimeVersion: String by project
 
 // ex: Converts to "io.ktor:ktor-ktor-server-netty:2.0.1" with only ktor("netty")
@@ -31,7 +32,7 @@ dependencies {
     implementation(ktor("core"))
     implementation(ktor("netty"))
 
-    implementation(ktor("jackson", "serialization"))
+    implementation(ktor("jackson", prefix = "serialization"))
     implementation(ktor("content-negotiation"))
 
     implementation(ktor("locations"))
@@ -56,6 +57,10 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-assertions-ktor:${ktorKotestExtensionVersion}")
+    testImplementation(ktor("test-host"))
+    testImplementation(ktor("content-negotiation", prefix = "client-"))
+    testImplementation(ktor("websockets", prefix = "client-"))
 }
 
 tasks {
