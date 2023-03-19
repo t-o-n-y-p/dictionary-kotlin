@@ -175,7 +175,7 @@ components:
           update: '#/components/schemas/MeaningUpdateResponse'
           delete: '#/components/schemas/MeaningDeleteResponse'
           search: '#/components/schemas/MeaningSearchResponse'
-          search_init: '#/components/schemas/MeaningSearchInitResponse'
+          init: '#/components/schemas/MeaningInitResponse'
 
     MeaningWebSocketParams:
       properties:
@@ -365,11 +365,10 @@ components:
         - $ref: '#/components/schemas/IResponse'
         - $ref: '#/components/schemas/MeaningResponseMulti'
 
-    MeaningSearchInitResponse:
+    MeaningInitResponse:
       allOf:
         - $ref: '#/components/schemas/IResponse'
         - $ref: '#/components/schemas/MeaningWebSocketParams'
-        - $ref: '#/components/schemas/MeaningResponseMulti'
 
     # STUBS ======================
     MeaningRequestDebugMode:

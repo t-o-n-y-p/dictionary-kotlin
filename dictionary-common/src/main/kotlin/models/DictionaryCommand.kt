@@ -8,6 +8,6 @@ enum class DictionaryCommand {
     UPDATE,
     DELETE,
     SEARCH,
-    SEARCH_INIT
+    INIT
 
 }

@@ -11,7 +11,7 @@ fun DictionaryContext.toTransportMeaning(): IResponse = when (val cmd = command)
     DictionaryCommand.UPDATE -> toTransportUpdate()
     DictionaryCommand.DELETE -> toTransportDelete()
     DictionaryCommand.SEARCH -> toTransportSearch()
-    DictionaryCommand.SEARCH_INIT -> toTransportSearchInit()
+    DictionaryCommand.INIT -> toTransportInit()
     DictionaryCommand.NONE -> throw UnknownDictionaryCommand(cmd)
 }
 
@@ -50,12 +50,11 @@ private fun DictionaryContext.toTransportSearch() = MeaningSearchResponse(
     meanings = meaningsResponse.toTransportFullMeanings()
 )
 
-private fun DictionaryContext.toTransportSearchInit() = MeaningSearchInitResponse(
+private fun DictionaryContext.toTransportInit() = MeaningInitResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
-    webSocketExtensions = webSocketExtensions.toTransportExtensions(),
-    meanings = meaningsResponse.toTransportFullMeanings()
+    webSocketExtensions = webSocketExtensions.toTransportExtensions()
 )
 
 private fun List<DictionaryMeaning>.toTransportFullMeanings(): List<MeaningResponseFullObject>? = this
