@@ -175,6 +175,21 @@ components:
           update: '#/components/schemas/MeaningUpdateResponse'
           delete: '#/components/schemas/MeaningDeleteResponse'
           search: '#/components/schemas/MeaningSearchResponse'
+          search_init: '#/components/schemas/MeaningSearchInitResponse'
+
+    MeaningWebSocketParams:
+      properties:
+        webSocketExtensions:
+          type: array
+          description: Расширения WebSocket, применяемые в сессии
+          items:
+            $ref: '#/components/schemas/MeaningWebSocketExtension'
+
+    MeaningWebSocketExtension:
+      type: string
+      description: Расширения WebSocket, применяемые в сессии
+      enum:
+        - deflate
 
     MeaningId:
       type: string
@@ -348,6 +363,12 @@ components:
     MeaningSearchResponse:
       allOf:
         - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/MeaningResponseMulti'
+
+    MeaningSearchInitResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/MeaningWebSocketParams'
         - $ref: '#/components/schemas/MeaningResponseMulti'
 
     # STUBS ======================

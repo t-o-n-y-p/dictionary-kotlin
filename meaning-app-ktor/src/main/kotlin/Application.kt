@@ -1,7 +1,8 @@
 package com.tonyp.dictionarykotlin.meaning.app
 
 import com.tonyp.dictionarykotlin.api.v1.apiV1Mapper
-import com.tonyp.dictionarykotlin.meaning.app.v1.v1Meaning
+import com.tonyp.dictionarykotlin.meaning.app.v1.v1MeaningApi
+import com.tonyp.dictionarykotlin.meaning.app.v1.v1MeaningWebsocket
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -17,6 +18,7 @@ import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import io.ktor.websocket.*
 import org.slf4j.event.Level
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
@@ -26,7 +28,11 @@ fun Application.module() {
     install(CachingHeaders)
     install(DefaultHeaders)
     install(AutoHeadResponse)
-    install(WebSockets)
+    install(WebSockets) {
+        extensions {
+            install(WebSocketDeflateExtension)
+        }
+    }
 
     install(CORS) {
         allowMethod(HttpMethod.Post)
@@ -50,7 +56,10 @@ fun Application.module() {
 
     routing {
         route("api/v1") {
-            v1Meaning()
+            v1MeaningApi()
+        }
+        route("ws/v1") {
+            v1MeaningWebsocket()
         }
     }
 }

@@ -6,7 +6,6 @@ import com.tonyp.dictionarykotlin.mappers.v1.fromTransport
 import com.tonyp.dictionarykotlin.mappers.v1.toTransportMeaning
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldMatch
 
 class UnknownTransportMapperTest : FunSpec ({

@@ -10,7 +10,7 @@ import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.testing.*
 
-class ApplicationSuccessStubTest : FunSpec ({
+class ApiSuccessStubTest : FunSpec ({
 
     val createRequest = MeaningCreateRequest(
         requestId = "123",

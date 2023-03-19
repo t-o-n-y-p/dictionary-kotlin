@@ -11,6 +11,7 @@ fun DictionaryContext.toTransportMeaning(): IResponse = when (val cmd = command)
     DictionaryCommand.UPDATE -> toTransportUpdate()
     DictionaryCommand.DELETE -> toTransportDelete()
     DictionaryCommand.SEARCH -> toTransportSearch()
+    DictionaryCommand.SEARCH_INIT -> toTransportSearchInit()
     DictionaryCommand.NONE -> throw UnknownDictionaryCommand(cmd)
 }
 
@@ -49,6 +50,14 @@ private fun DictionaryContext.toTransportSearch() = MeaningSearchResponse(
     meanings = meaningsResponse.toTransportFullMeanings()
 )
 
+private fun DictionaryContext.toTransportSearchInit() = MeaningSearchInitResponse(
+    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
+    result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    errors = errors.toTransportErrors(),
+    webSocketExtensions = webSocketExtensions.toTransportExtensions(),
+    meanings = meaningsResponse.toTransportFullMeanings()
+)
+
 private fun List<DictionaryMeaning>.toTransportFullMeanings(): List<MeaningResponseFullObject>? = this
     .map { it.toTransportFullMeaning() }
     .toList()
@@ -77,7 +86,16 @@ private fun List<DictionaryError>.toTransportErrors(): List<Error>? = this
     .toList()
     .takeIf { it.isNotEmpty() }
 
+private fun List<DictionaryWebSocketExtension>.toTransportExtensions(): List<MeaningWebSocketExtension> = this
+    .mapNotNull { it.toTransportExtension() }
+    .toList()
+
 private fun DictionaryError.toTransportMeaning() = Error(
     code = code.takeIf { it.isNotBlank() },
     message = message.takeIf { it.isNotBlank() }
 )
+
+private fun DictionaryWebSocketExtension.toTransportExtension() = when (this) {
+    DictionaryWebSocketExtension.DEFLATE -> MeaningWebSocketExtension.DEFLATE
+    DictionaryWebSocketExtension.NONE -> null
+}

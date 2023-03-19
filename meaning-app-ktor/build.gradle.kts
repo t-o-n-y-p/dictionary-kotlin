@@ -1,12 +1,13 @@
-import org.jetbrains.kotlin.util.suffixIfNot
-import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+import org.jetbrains.kotlin.util.suffixIfNot
 
 val ktorVersion: String by project
 val logbackVersion: String by project
 val kotestVersion: String by project
 val ktorKotestExtensionVersion: String by project
 val datetimeVersion: String by project
+val statelyVersion: String by project
 
 // ex: Converts to "io.ktor:ktor-ktor-server-netty:2.0.1" with only ktor("netty")
 fun ktor(module: String, prefix: String = "server-", version: String? = this@Build_gradle.ktorVersion): Any =
@@ -47,6 +48,7 @@ dependencies {
     implementation(ktor("auth-jwt"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
+    implementation("co.touchlab:stately-concurrent-collections:$statelyVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
     implementation(project(mapOf("path" to ":dictionary-common")))
@@ -57,7 +59,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest.extensions:kotest-assertions-ktor:${ktorKotestExtensionVersion}")
+    testImplementation("io.kotest.extensions:kotest-assertions-ktor:$ktorKotestExtensionVersion")
     testImplementation(ktor("test-host"))
     testImplementation(ktor("content-negotiation", prefix = "client-"))
     testImplementation(ktor("websockets", prefix = "client-"))
