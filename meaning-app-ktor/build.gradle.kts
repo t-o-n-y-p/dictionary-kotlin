@@ -48,7 +48,6 @@ dependencies {
     implementation(ktor("auth-jwt"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
-    implementation("co.touchlab:stately-concurrent-collections:$statelyVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
     implementation(project(mapOf("path" to ":dictionary-common")))

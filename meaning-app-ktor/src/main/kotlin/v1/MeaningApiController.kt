@@ -15,6 +15,7 @@ suspend fun ApplicationCall.createMeaning() {
     context.fromTransport(request)
     context.meaningResponse = DictionaryMeaningStub.getPending()
     respond(context.toTransportMeaning())
+    sendWebSocketCreateDeleteNotification(context)
 }
 
 suspend fun ApplicationCall.readMeaning() {
@@ -31,6 +32,7 @@ suspend fun ApplicationCall.updateMeaning() {
     context.fromTransport(request)
     context.meaningResponse = DictionaryMeaningStub.getApproved()
     respond(context.toTransportMeaning())
+    sendWebSocketUpdateNotification(context)
 }
 
 suspend fun ApplicationCall.deleteMeaning() {
@@ -39,6 +41,7 @@ suspend fun ApplicationCall.deleteMeaning() {
     context.fromTransport(request)
     context.meaningResponse = DictionaryMeaningStub.getPending()
     respond(context.toTransportMeaning())
+    sendWebSocketCreateDeleteNotification(context)
 }
 
 suspend fun ApplicationCall.searchMeaning() {
