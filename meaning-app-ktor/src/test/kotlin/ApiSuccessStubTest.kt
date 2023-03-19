@@ -3,9 +3,11 @@ import com.tonyp.dictionarykotlin.api.v1.models.*
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.testing.*
@@ -136,18 +138,26 @@ class ApiSuccessStubTest : FunSpec ({
         )
     )
 
-    test("Create request success stub") {
-        testApplication {
-            val client = createClient {
-                install(ContentNegotiation) {
-                    jackson {
-                        setConfig(apiV1Mapper.serializationConfig)
-                        setConfig(apiV1Mapper.deserializationConfig)
-                    }
+    suspend fun ApplicationTestBuilder.post(
+        urlString: String,
+        block: HttpRequestBuilder.() -> Unit = {}
+    ): HttpResponse {
+        val client = createClient {
+            install(ContentNegotiation) {
+                jackson {
+                    setConfig(apiV1Mapper.serializationConfig)
+                    setConfig(apiV1Mapper.deserializationConfig)
                 }
             }
+        }
+        return client.post(urlString) {
+            block()
+        }
+    }
 
-            val response = client.post("/api/v1/meaning/create") {
+    test("Create request success stub") {
+        testApplication {
+            val response = post("/api/v1/meaning/create") {
                 contentType(ContentType.Application.Json)
                 setBody(createRequest)
             }
@@ -159,16 +169,7 @@ class ApiSuccessStubTest : FunSpec ({
 
     test("Delete request success stub") {
         testApplication {
-            val client = createClient {
-                install(ContentNegotiation) {
-                    jackson {
-                        setConfig(apiV1Mapper.serializationConfig)
-                        setConfig(apiV1Mapper.deserializationConfig)
-                    }
-                }
-            }
-
-            val response = client.post("/api/v1/meaning/delete") {
+            val response = post("/api/v1/meaning/delete") {
                 contentType(ContentType.Application.Json)
                 setBody(deleteRequest)
             }
@@ -180,16 +181,7 @@ class ApiSuccessStubTest : FunSpec ({
 
     test("Read request success stub") {
         testApplication {
-            val client = createClient {
-                install(ContentNegotiation) {
-                    jackson {
-                        setConfig(apiV1Mapper.serializationConfig)
-                        setConfig(apiV1Mapper.deserializationConfig)
-                    }
-                }
-            }
-
-            val response = client.post("/api/v1/meaning/read") {
+            val response = post("/api/v1/meaning/read") {
                 contentType(ContentType.Application.Json)
                 setBody(readRequest)
             }
@@ -201,16 +193,7 @@ class ApiSuccessStubTest : FunSpec ({
 
     test("Update request success stub") {
         testApplication {
-            val client = createClient {
-                install(ContentNegotiation) {
-                    jackson {
-                        setConfig(apiV1Mapper.serializationConfig)
-                        setConfig(apiV1Mapper.deserializationConfig)
-                    }
-                }
-            }
-
-            val response = client.post("/api/v1/meaning/update") {
+            val response = post("/api/v1/meaning/update") {
                 contentType(ContentType.Application.Json)
                 setBody(updateRequest)
             }
@@ -222,16 +205,7 @@ class ApiSuccessStubTest : FunSpec ({
 
     test("Search request success stub") {
         testApplication {
-            val client = createClient {
-                install(ContentNegotiation) {
-                    jackson {
-                        setConfig(apiV1Mapper.serializationConfig)
-                        setConfig(apiV1Mapper.deserializationConfig)
-                    }
-                }
-            }
-
-            val response = client.post("/api/v1/meaning/search") {
+            val response = post("/api/v1/meaning/search") {
                 contentType(ContentType.Application.Json)
                 setBody(searchRequest)
             }
