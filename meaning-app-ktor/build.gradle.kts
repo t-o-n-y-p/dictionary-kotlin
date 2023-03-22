@@ -7,7 +7,6 @@ val logbackVersion: String by project
 val kotestVersion: String by project
 val ktorKotestExtensionVersion: String by project
 val datetimeVersion: String by project
-val statelyVersion: String by project
 
 // ex: Converts to "io.ktor:ktor-ktor-server-netty:2.0.1" with only ktor("netty")
 fun ktor(module: String, prefix: String = "server-", version: String? = this@Build_gradle.ktorVersion): Any =

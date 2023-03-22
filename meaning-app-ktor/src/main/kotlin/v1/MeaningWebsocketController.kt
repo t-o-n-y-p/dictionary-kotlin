@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import java.util.*
-import kotlin.collections.HashMap
 
 private val sessions = Collections.synchronizedMap<WebSocketSession, DictionaryContext>(HashMap())
 
@@ -46,13 +45,11 @@ suspend fun sendWebSocketCreateDeleteNotification(context: DictionaryContext) =
     sessions.entries
         .filter {
             (
-                    it.value.meaningFilterRequest.word == context.meaningResponse.word && (
-                            it.value.meaningFilterRequest.approved == DictionaryMeaningApproved.NONE
-                                    || it.value.meaningFilterRequest.approved == context.meaningResponse.approved
-                            )
-            ) || (
-                    it.value.meaningFilterRequest.word == ""
-                            && it.value.meaningFilterRequest.approved == context.meaningResponse.approved
+                    it.value.meaningFilterRequest.word == context.meaningResponse.word
+                            || it.value.meaningFilterRequest.word == ""
+            ) && (
+                    it.value.meaningFilterRequest.approved == DictionaryMeaningApproved.NONE
+                            || it.value.meaningFilterRequest.approved == context.meaningResponse.approved
                     )
         }.forEach {
             it.key.trySendResponse(context)
@@ -61,7 +58,7 @@ suspend fun sendWebSocketCreateDeleteNotification(context: DictionaryContext) =
 suspend fun sendWebSocketUpdateNotification(context: DictionaryContext) {
     sessions.entries
         .filter {
-            it.value.meaningFilterRequest.word == context.meaningResponse.word
+            (it.value.meaningFilterRequest.word == context.meaningResponse.word || it.value.meaningFilterRequest.word == "")
                     && it.value.meaningFilterRequest.approved == DictionaryMeaningApproved.NONE
         }.forEach {
             it.key.trySendResponse(context)
