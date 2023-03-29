@@ -12,8 +12,8 @@ fun WebSocketSession.createInitContext(): DictionaryContext {
     return context
 }
 
-fun WebSocketSession.createInitContext(e: Exception): DictionaryContext {
+fun WebSocketSession.createInitContext(t: Throwable): DictionaryContext {
     val context = createInitContext()
-    context.errors.add(e.asDictionaryError())
+    context.errors.add(t.asDictionaryError())
     return context
 }

@@ -7,36 +7,37 @@ import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
 import com.tonyp.dictionarykotlin.mappers.v1.fromTransport
 import com.tonyp.dictionarykotlin.mappers.v1.toTransportMeaning
+import com.tonyp.dictionarykotlin.meaning.app.helpers.WebSocketSessionMap
 import com.tonyp.dictionarykotlin.meaning.app.helpers.createInitContext
 import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
 import io.ktor.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
-import java.util.*
 
-private val sessions = Collections.synchronizedMap<WebSocketSession, DictionaryContext>(HashMap())
+private val sessions = WebSocketSessionMap()
 
 suspend fun WebSocketSession.searchMeaning() {
     val initContext = createInitContext()
-    sessions[this] = initContext
+    sessions.put(this, initContext)
     trySendResponse(initContext)
 
     incoming.receiveAsFlow().mapNotNull{
         val frame = it as? Frame.Text ?: return@mapNotNull
-        try {
-            val context = DictionaryContext()
-            val request = apiV1Mapper.readValue(frame.readText(), MeaningSearchRequest::class.java)
-            context.fromTransport(request)
-            context.meaningsResponse.addAll(DictionaryMeaningStub.getSearchResult())
-            trySendResponse(context)
-            sessions[this] = context
-        } catch (_: ClosedReceiveChannelException) {
+        val context = DictionaryContext()
+        val request = apiV1Mapper.readValue(frame.readText(), MeaningSearchRequest::class.java)
+        context.fromTransport(request)
+        context.meaningsResponse.addAll(DictionaryMeaningStub.getSearchResult())
+        trySendResponse(context)
+        sessions.put(this, context)
+    }.catch {
+        if (it is ClosedReceiveChannelException) {
             sessions.clear()
-        } catch (e: Exception) {
-            trySendResponse(createInitContext(e))
+        } else {
+            trySendResponse(createInitContext(it))
         }
     }.collect()
 }
