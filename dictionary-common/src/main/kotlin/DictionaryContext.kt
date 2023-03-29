@@ -14,6 +14,8 @@ data class DictionaryContext (
     var workMode: DictionaryWorkMode = DictionaryWorkMode.PROD,
     var stubCase: DictionaryStub = DictionaryStub.NONE,
 
+    var webSocketExtensions: MutableList<DictionaryWebSocketExtension> = mutableListOf(),
+
     var requestId: DictionaryRequestId = DictionaryRequestId.NONE,
     var timeStart: Instant = Instant.NONE,
     var meaningRequest: DictionaryMeaning = DictionaryMeaning(),

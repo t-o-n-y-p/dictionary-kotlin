@@ -1,4 +1,7 @@
-import com.tonyp.dictionarykotlin.api.v1.models.*
+import com.tonyp.dictionarykotlin.api.v1.models.Error
+import com.tonyp.dictionarykotlin.api.v1.models.MeaningReadResponse
+import com.tonyp.dictionarykotlin.api.v1.models.MeaningResponseFullObject
+import com.tonyp.dictionarykotlin.api.v1.models.ResponseResult
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.*
 import com.tonyp.dictionarykotlin.mappers.v1.toTransportMeaning

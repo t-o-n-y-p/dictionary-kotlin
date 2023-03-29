@@ -1,6 +1,6 @@
-import org.jetbrains.kotlin.util.suffixIfNot
-import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+import org.jetbrains.kotlin.util.suffixIfNot
 
 val ktorVersion: String by project
 val logbackVersion: String by project
@@ -57,7 +57,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest.extensions:kotest-assertions-ktor:${ktorKotestExtensionVersion}")
+    testImplementation("io.kotest.extensions:kotest-assertions-ktor:$ktorKotestExtensionVersion")
     testImplementation(ktor("test-host"))
     testImplementation(ktor("content-negotiation", prefix = "client-"))
     testImplementation(ktor("websockets", prefix = "client-"))
