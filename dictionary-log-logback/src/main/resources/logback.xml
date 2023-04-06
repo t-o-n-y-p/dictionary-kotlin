@@ -1,0 +1,71 @@
+<configuration>
+
+    <property name="LOGS_KAFKA_HOSTS" value="${BOOTSTRAP_SERVERS:-localhost:9094}"/>
+    <property name="LOGS_KAFKA_TOPIC" value="${LOGS_KAFKA_TOPIC:-dictionary-logs}"/>
+    <property name="SERVICE_NAME" value="${SERVICE_NAME:-dictionary}"/>
+
+    <property name="LOG_APP_LEVEL" value="${LOG_APP_LEVEL:-info}"/>
+    <property name="LOG_COMMON_LEVEL" value="${LOG_COMMON_LEVEL:-error}"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level[%marker] %logger{36} - %msg%n%mdc%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="kafka"
+              class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
+        <if condition='!property("LOGS_KAFKA_HOSTS").equals("LOGS_KAFKA_HOSTS_IS_UNDEFINED")
+                        &amp;&amp; !property("LOGS_KAFKA_HOSTS").isEmpty()'>
+            <then>
+                <appender name="kafkaVerboseAppender"
+                          class="com.github.danielwegener.logback.kafka.KafkaAppender">
+                    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                        <providers>
+                            <timestamp/>
+                            <version/>
+                            <pattern>
+                                <pattern>
+                                    {
+                                    "component": "${SERVICE_NAME}",
+                                    "container-id": "${HOSTNAME}"
+                                    }
+                                </pattern>
+                            </pattern>
+                            <message/>
+                            <loggerName/>
+                            <threadName/>
+                            <logLevel/>
+                            <logstashMarkers/>
+                            <callerData/>
+                            <stackTrace/>
+                            <context/>
+                            <mdc/>
+                            <logstashMarkers/>
+                            <arguments/>
+                            <tags/>
+                        </providers>
+                    </encoder>
+                    <topic>${LOGS_KAFKA_TOPIC}</topic>
+                    <deliveryStrategy
+                            class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+                    <producerConfig>bootstrap.servers=${LOGS_KAFKA_HOSTS}</producerConfig>
+                </appender>
+            </then>
+        </if>
+    </appender>
+
+    <logger name="com.tonyp.dictionarykotlin" level="${LOG_APP_LEVEL}" additivity="false">
+        <appender-ref ref="kafka"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="Application" level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="${LOG_COMMON_LEVEL}">
+        <appender-ref ref="kafka"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
