@@ -7,4 +7,5 @@ dependencies {
     val datetimeVersion: String by project
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
+    implementation(project(mapOf("path" to ":dictionary-log-common")))
 }

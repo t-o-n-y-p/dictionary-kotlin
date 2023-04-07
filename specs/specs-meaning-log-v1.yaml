@@ -41,6 +41,7 @@ components:
             - update
             - delete
             - search
+            - init
         requestMeaning:
           $ref: '#/components/schemas/MeaningLog'
         requestFilter:
