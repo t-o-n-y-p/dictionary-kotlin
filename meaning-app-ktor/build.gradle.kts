@@ -6,6 +6,8 @@ val logbackVersion: String by project
 val kotestVersion: String by project
 val ktorKotestExtensionVersion: String by project
 val datetimeVersion: String by project
+val logbackAppendersVersion: String by project
+val fluentdLoggerVersion: String by project
 
 fun ktorServer(module: String, version: String? = ktorVersion): Any =
     "io.ktor:ktor-server-$module:$version"
@@ -48,6 +50,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("com.sndyuk:logback-more-appenders:$logbackAppendersVersion")
+    implementation("org.fluentd:fluent-logger:$fluentdLoggerVersion")
 
     implementation(project(mapOf("path" to ":dictionary-common")))
     implementation(project(mapOf("path" to ":dictionary-api-v1")))
