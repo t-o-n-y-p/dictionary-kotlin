@@ -13,8 +13,7 @@ import toLog
 
 suspend fun ApplicationCall.createMeaning(appSettings: DictionaryAppSettings) {
     val logId = "create"
-    val logger = appSettings.corSettings.loggerProvider
-        .logger(ApplicationCall::createMeaning::class.qualifiedName ?: logId)
+    val logger = appSettings.corSettings.loggerProvider.logger(ApplicationCall::createMeaning)
     logger.doWithLogging(logId) {
         val request = receive<MeaningCreateRequest>()
         val context = DictionaryContext()
@@ -35,8 +34,7 @@ suspend fun ApplicationCall.createMeaning(appSettings: DictionaryAppSettings) {
 
 suspend fun ApplicationCall.readMeaning(appSettings: DictionaryAppSettings) {
     val logId = "read"
-    val logger = appSettings.corSettings.loggerProvider
-        .logger(ApplicationCall::readMeaning::class.qualifiedName ?: logId)
+    val logger = appSettings.corSettings.loggerProvider.logger(ApplicationCall::readMeaning)
     logger.doWithLogging(logId) {
         val request = receive<MeaningReadRequest>()
         val context = DictionaryContext()
@@ -56,8 +54,7 @@ suspend fun ApplicationCall.readMeaning(appSettings: DictionaryAppSettings) {
 
 suspend fun ApplicationCall.updateMeaning(appSettings: DictionaryAppSettings) {
     val logId = "update"
-    val logger = appSettings.corSettings.loggerProvider
-        .logger(ApplicationCall::updateMeaning::class.qualifiedName ?: logId)
+    val logger = appSettings.corSettings.loggerProvider.logger(ApplicationCall::updateMeaning)
     logger.doWithLogging(logId) {
         val request = receive<MeaningUpdateRequest>()
         val context = DictionaryContext()
@@ -78,8 +75,7 @@ suspend fun ApplicationCall.updateMeaning(appSettings: DictionaryAppSettings) {
 
 suspend fun ApplicationCall.deleteMeaning(appSettings: DictionaryAppSettings) {
     val logId = "delete"
-    val logger = appSettings.corSettings.loggerProvider
-        .logger(ApplicationCall::deleteMeaning::class.qualifiedName ?: logId)
+    val logger = appSettings.corSettings.loggerProvider.logger(ApplicationCall::deleteMeaning)
     logger.doWithLogging(logId) {
         val request = receive<MeaningDeleteRequest>()
         val context = DictionaryContext()
@@ -100,8 +96,7 @@ suspend fun ApplicationCall.deleteMeaning(appSettings: DictionaryAppSettings) {
 
 suspend fun ApplicationCall.searchMeaning(appSettings: DictionaryAppSettings) {
     val logId = "search"
-    val logger = appSettings.corSettings.loggerProvider
-        .logger(ApplicationCall::searchMeaning::class.qualifiedName ?: logId)
+    val logger = appSettings.corSettings.loggerProvider.logger(ApplicationCall::searchMeaning)
     logger.doWithLogging(logId) {
         val request = receive<MeaningSearchRequest>()
         val context = DictionaryContext()

@@ -24,8 +24,7 @@ private val sessions = WebSocketSessionMap()
 
 suspend fun WebSocketSession.searchMeaning(appSettings: DictionaryAppSettings) {
     val logId = "search"
-    val logger = appSettings.corSettings.loggerProvider
-        .logger(WebSocketSession::searchMeaning::class.qualifiedName ?: logId)
+    val logger = appSettings.corSettings.loggerProvider.logger(WebSocketSession::searchMeaning)
     logger.doWithLogging(logId) {
         val initContext = createInitContext()
         sessions.put(this, initContext)

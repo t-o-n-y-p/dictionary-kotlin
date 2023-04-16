@@ -69,7 +69,7 @@ fun Application.initPlugins(appSettings: DictionaryAppSettings) {
         val wrapper = appSettings
             .corSettings
             .loggerProvider
-            .logger(Application::module::class.qualifiedName ?: "Application") as? DictionaryLogWrapper
+            .logger(Application::module) as? DictionaryLogWrapper
         wrapper?.logger?.also { logger = it }
     }
 }
