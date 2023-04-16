@@ -61,6 +61,7 @@ dependencies {
     implementation(project(mapOf("path" to ":dictionary-log-common")))
     implementation(project(mapOf("path" to ":dictionary-log-v1")))
     implementation(project(mapOf("path" to ":dictionary-log-mappers-v1")))
+    implementation(project(mapOf("path" to ":dictionary-business")))
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")

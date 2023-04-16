@@ -10,7 +10,8 @@ import com.tonyp.dictionarykotlin.mappers.v1.toTransportMeaning
 import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
 import com.tonyp.dictionarykotlin.meaning.app.helpers.WebSocketSessionMap
 import com.tonyp.dictionarykotlin.meaning.app.helpers.createInitContext
-import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
+import com.tonyp.dictionarykotlin.meaning.app.helpers.process
+import com.tonyp.dictionarykotlin.meaning.app.helpers.sendResponse
 import io.ktor.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.receiveAsFlow
-import toLog
 
 private val sessions = WebSocketSessionMap()
 
@@ -28,7 +28,7 @@ suspend fun WebSocketSession.searchMeaning(appSettings: DictionaryAppSettings) {
     logger.doWithLogging(logId) {
         val initContext = createInitContext()
         sessions.put(this, initContext)
-        trySendResponse(initContext)
+        trySendResponse(appSettings, initContext)
     }
 
     incoming.receiveAsFlow().mapNotNull{
@@ -37,24 +37,20 @@ suspend fun WebSocketSession.searchMeaning(appSettings: DictionaryAppSettings) {
             val context = DictionaryContext()
             val request = apiV1Mapper.readValue(frame.readText(), MeaningSearchRequest::class.java)
             context.fromTransport(request)
-            logger.info(
-                msg = "${context.command} request is received",
-                data = context.toLog("${logId}-request")
-            )
-            context.meaningsResponse.addAll(DictionaryMeaningStub.getSearchResult())
-            trySendResponse(context)
+            process(appSettings, context)
+            trySendResponse(appSettings, context)
             sessions.put(this, context)
         }
     }.catch {
         if (it is ClosedReceiveChannelException) {
             sessions.clear()
         } else {
-            trySendResponse(createInitContext(it))
+            trySendResponse(appSettings, createInitContext(it))
         }
     }.collect()
 }
 
-suspend fun sendWebSocketCreateDeleteNotification(context: DictionaryContext) =
+suspend fun sendWebSocketCreateDeleteNotification(appSettings: DictionaryAppSettings, context: DictionaryContext) =
     sessions.entries
         .filter {
             (
@@ -65,16 +61,16 @@ suspend fun sendWebSocketCreateDeleteNotification(context: DictionaryContext) =
                             || it.value.meaningFilterRequest.approved == context.meaningResponse.approved
                     )
         }.forEach {
-            it.key.trySendResponse(context)
+            it.key.trySendResponse(appSettings, context)
         }
 
-suspend fun sendWebSocketUpdateNotification(context: DictionaryContext) {
+suspend fun sendWebSocketUpdateNotification(appSettings: DictionaryAppSettings, context: DictionaryContext) {
     sessions.entries
         .filter {
             (it.value.meaningFilterRequest.word == context.meaningResponse.word || it.value.meaningFilterRequest.word == "")
                     && it.value.meaningFilterRequest.approved == DictionaryMeaningApproved.NONE
         }.forEach {
-            it.key.trySendResponse(context)
+            it.key.trySendResponse(appSettings, context)
         }
     sessions.entries
         .filter {
@@ -82,7 +78,7 @@ suspend fun sendWebSocketUpdateNotification(context: DictionaryContext) {
                     && it.value.meaningFilterRequest.approved == context.meaningResponse.approved
         }.forEach {
             context.command = DictionaryCommand.CREATE
-            it.key.trySendResponse(context)
+            it.key.trySendResponse(appSettings, context)
         }
     sessions.entries
         .filter {
@@ -91,14 +87,14 @@ suspend fun sendWebSocketUpdateNotification(context: DictionaryContext) {
                     && it.value.meaningFilterRequest.approved != context.meaningResponse.approved
         }.forEach {
             context.command = DictionaryCommand.DELETE
-            it.key.trySendResponse(context)
+            it.key.trySendResponse(appSettings, context)
         }
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-private suspend fun WebSocketSession.trySendResponse(context: DictionaryContext) {
+private suspend fun WebSocketSession.trySendResponse(appSettings: DictionaryAppSettings, context: DictionaryContext) {
     try {
-        send(apiV1Mapper.writeValueAsString(context.toTransportMeaning()))
+        sendResponse(appSettings, context)
     } catch (_: Exception) {
         if (outgoing.isClosedForSend) {
             sessions.remove(this)

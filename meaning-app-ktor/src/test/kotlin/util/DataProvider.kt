@@ -293,7 +293,7 @@ object DataProvider {
             }
         ),
         row(
-            "Wrong word and wrong approved",
+            "Wrong word and approved",
             searchRequest {
                 meaningFilter {
                     word = "обвал"

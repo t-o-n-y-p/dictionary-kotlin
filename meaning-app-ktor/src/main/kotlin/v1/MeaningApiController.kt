@@ -5,11 +5,11 @@ import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.mappers.v1.fromTransport
 import com.tonyp.dictionarykotlin.mappers.v1.toTransportMeaning
 import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
-import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
+import com.tonyp.dictionarykotlin.meaning.app.helpers.process
+import com.tonyp.dictionarykotlin.meaning.app.helpers.sendResponse
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import toLog
 
 suspend fun ApplicationCall.createMeaning(appSettings: DictionaryAppSettings) {
     val logId = "create"
@@ -18,17 +18,9 @@ suspend fun ApplicationCall.createMeaning(appSettings: DictionaryAppSettings) {
         val request = receive<MeaningCreateRequest>()
         val context = DictionaryContext()
         context.fromTransport(request)
-        logger.info(
-            msg = "${context.command} request is received",
-            data = context.toLog("${logId}-request")
-        )
-        context.meaningResponse = DictionaryMeaningStub.getPending()
-        respond(context.toTransportMeaning())
-        logger.info(
-            msg = "${context.command} response is sent",
-            data = context.toLog("${logId}-response")
-        )
-        sendWebSocketCreateDeleteNotification(context)
+        process(appSettings, context)
+        sendResponse(appSettings, context)
+        sendWebSocketCreateDeleteNotification(appSettings, context)
     }
 }
 
@@ -39,16 +31,8 @@ suspend fun ApplicationCall.readMeaning(appSettings: DictionaryAppSettings) {
         val request = receive<MeaningReadRequest>()
         val context = DictionaryContext()
         context.fromTransport(request)
-        logger.info(
-            msg = "${context.command} request is received",
-            data = context.toLog("${logId}-request")
-        )
-        context.meaningResponse = DictionaryMeaningStub.getApproved()
-        respond(context.toTransportMeaning())
-        logger.info(
-            msg = "${context.command} response is sent",
-            data = context.toLog("${logId}-response")
-        )
+        process(appSettings, context)
+        sendResponse(appSettings, context)
     }
 }
 
@@ -59,17 +43,9 @@ suspend fun ApplicationCall.updateMeaning(appSettings: DictionaryAppSettings) {
         val request = receive<MeaningUpdateRequest>()
         val context = DictionaryContext()
         context.fromTransport(request)
-        logger.info(
-            msg = "${context.command} request is received",
-            data = context.toLog("${logId}-request")
-        )
-        context.meaningResponse = DictionaryMeaningStub.getApproved()
-        respond(context.toTransportMeaning())
-        logger.info(
-            msg = "${context.command} response is sent",
-            data = context.toLog("${logId}-response")
-        )
-        sendWebSocketUpdateNotification(context)
+        process(appSettings, context)
+        sendResponse(appSettings, context)
+        sendWebSocketUpdateNotification(appSettings, context)
     }
 }
 
@@ -80,17 +56,9 @@ suspend fun ApplicationCall.deleteMeaning(appSettings: DictionaryAppSettings) {
         val request = receive<MeaningDeleteRequest>()
         val context = DictionaryContext()
         context.fromTransport(request)
-        logger.info(
-            msg = "${context.command} request is received",
-            data = context.toLog("${logId}-request")
-        )
-        context.meaningResponse = DictionaryMeaningStub.getPending()
-        respond(context.toTransportMeaning())
-        logger.info(
-            msg = "${context.command} response is sent",
-            data = context.toLog("${logId}-response")
-        )
-        sendWebSocketCreateDeleteNotification(context)
+        process(appSettings, context)
+        sendResponse(appSettings, context)
+        sendWebSocketCreateDeleteNotification(appSettings, context)
     }
 }
 
@@ -101,15 +69,7 @@ suspend fun ApplicationCall.searchMeaning(appSettings: DictionaryAppSettings) {
         val request = receive<MeaningSearchRequest>()
         val context = DictionaryContext()
         context.fromTransport(request)
-        logger.info(
-            msg = "${context.command} request is received",
-            data = context.toLog("${logId}-request")
-        )
-        context.meaningsResponse.addAll(DictionaryMeaningStub.getSearchResult())
-        respond(context.toTransportMeaning())
-        logger.info(
-            msg = "${context.command} response is sent",
-            data = context.toLog("${logId}-response")
-        )
+        process(appSettings, context)
+        sendResponse(appSettings, context)
     }
 }
