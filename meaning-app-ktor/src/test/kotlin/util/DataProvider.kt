@@ -5,7 +5,7 @@ import io.kotest.data.row
 
 object DataProvider {
 
-    val createRequest = MeaningCreateRequest(
+    val createRequestStubSuccess = MeaningCreateRequest(
         requestId = "123",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -17,10 +17,10 @@ object DataProvider {
             proposedBy = "unittest"
         )
     )
-    val createResponse = MeaningCreateResponse(
+    val createResponseStubSuccess = MeaningCreateResponse(
         responseType = "create",
         requestId = "123",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "456",
             word = "обвал",
@@ -30,7 +30,7 @@ object DataProvider {
         )
     )
 
-    val deleteRequest = MeaningDeleteRequest(
+    val deleteRequestStubSuccess = MeaningDeleteRequest(
         requestId = "789",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -40,16 +40,16 @@ object DataProvider {
             id = "123"
         )
     )
-    val deleteResponse = MeaningDeleteResponse(
+    val deleteResponseStubSuccess = MeaningDeleteResponse(
         responseType = "delete",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseDeleteObject(
             id = "456"
         )
     )
 
-    val readRequest = MeaningReadRequest(
+    val readRequestStubSuccess = MeaningReadRequest(
         requestId = "456",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -59,10 +59,10 @@ object DataProvider {
             id = "789"
         )
     )
-    val readResponse = MeaningReadResponse(
+    val readResponseStubSuccess = MeaningReadResponse(
         responseType = "read",
         requestId = "456",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "123",
             word = "трава",
@@ -72,7 +72,7 @@ object DataProvider {
         )
     )
 
-    val updateRequest = MeaningUpdateRequest(
+    val updateRequestStubSuccess = MeaningUpdateRequest(
         requestId = "789",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -83,10 +83,10 @@ object DataProvider {
             approved = false
         )
     )
-    val updateResponse = MeaningUpdateResponse(
+    val updateResponseStubSuccess = MeaningUpdateResponse(
         responseType = "update",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "123",
             word = "трава",
@@ -95,10 +95,10 @@ object DataProvider {
             approved = true
         )
     )
-    val updateToCreateResponse = MeaningCreateResponse(
+    val updateToCreateResponseStubSuccess = MeaningCreateResponse(
         responseType = "create",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "123",
             word = "трава",
@@ -107,16 +107,16 @@ object DataProvider {
             approved = true
         )
     )
-    val updateToDeleteResponse = MeaningDeleteResponse(
+    val updateToDeleteResponseStubSuccess = MeaningDeleteResponse(
         responseType = "delete",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseDeleteObject(
             id = "123"
         )
     )
 
-    val searchRequest = MeaningSearchRequest(
+    val searchRequestStubSuccess = MeaningSearchRequest(
         requestId = "789",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -127,10 +127,10 @@ object DataProvider {
             approved = false
         )
     )
-    val searchResponse = MeaningSearchResponse(
+    val searchResponseStubSuccess = MeaningSearchResponse(
         responseType = "search",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meanings = listOf(
             MeaningResponseFullObject(
                 id = "123",

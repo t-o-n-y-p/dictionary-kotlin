@@ -15,7 +15,7 @@ class ToCreateTransportMapperResponseTest : FunSpec ({
     )
     val successCreateContext = DictionaryContext(
         command = DictionaryCommand.CREATE,
-        state = DictionaryState.RUNNING,
+        state = DictionaryState.FINISHING,
         requestId = DictionaryRequestId("123"),
         meaningResponse = DictionaryMeaning(
             id = DictionaryMeaningId("456"),

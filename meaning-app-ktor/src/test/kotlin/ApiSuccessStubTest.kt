@@ -6,16 +6,16 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import util.DataProvider.createRequest
-import util.DataProvider.createResponse
-import util.DataProvider.deleteRequest
-import util.DataProvider.deleteResponse
-import util.DataProvider.readRequest
-import util.DataProvider.readResponse
-import util.DataProvider.searchRequest
-import util.DataProvider.searchResponse
-import util.DataProvider.updateRequest
-import util.DataProvider.updateResponse
+import util.DataProvider.createRequestStubSuccess
+import util.DataProvider.createResponseStubSuccess
+import util.DataProvider.deleteRequestStubSuccess
+import util.DataProvider.deleteResponseStubSuccess
+import util.DataProvider.readRequestStubSuccess
+import util.DataProvider.readResponseStubSuccess
+import util.DataProvider.searchRequestStubSuccess
+import util.DataProvider.searchResponseStubSuccess
+import util.DataProvider.updateRequestStubSuccess
+import util.DataProvider.updateResponseStubSuccess
 import util.post
 
 class ApiSuccessStubTest : FunSpec ({
@@ -24,11 +24,11 @@ class ApiSuccessStubTest : FunSpec ({
         testApplication {
             val response = post("/api/v1/meaning/create") {
                 contentType(ContentType.Application.Json)
-                setBody(createRequest)
+                setBody(createRequestStubSuccess)
             }
 
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as MeaningCreateResponse shouldBe createResponse
+            response.body() as MeaningCreateResponse shouldBe createResponseStubSuccess
         }
     }
 
@@ -36,11 +36,11 @@ class ApiSuccessStubTest : FunSpec ({
         testApplication {
             val response = post("/api/v1/meaning/delete") {
                 contentType(ContentType.Application.Json)
-                setBody(deleteRequest)
+                setBody(deleteRequestStubSuccess)
             }
 
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as MeaningDeleteResponse shouldBe deleteResponse
+            response.body() as MeaningDeleteResponse shouldBe deleteResponseStubSuccess
         }
     }
 
@@ -48,11 +48,11 @@ class ApiSuccessStubTest : FunSpec ({
         testApplication {
             val response = post("/api/v1/meaning/read") {
                 contentType(ContentType.Application.Json)
-                setBody(readRequest)
+                setBody(readRequestStubSuccess)
             }
 
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as MeaningReadResponse shouldBe readResponse
+            response.body() as MeaningReadResponse shouldBe readResponseStubSuccess
         }
     }
 
@@ -60,11 +60,11 @@ class ApiSuccessStubTest : FunSpec ({
         testApplication {
             val response = post("/api/v1/meaning/update") {
                 contentType(ContentType.Application.Json)
-                setBody(updateRequest)
+                setBody(updateRequestStubSuccess)
             }
 
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as MeaningUpdateResponse shouldBe updateResponse
+            response.body() as MeaningUpdateResponse shouldBe updateResponseStubSuccess
         }
     }
 
@@ -72,11 +72,11 @@ class ApiSuccessStubTest : FunSpec ({
         testApplication {
             val response = post("/api/v1/meaning/search") {
                 contentType(ContentType.Application.Json)
-                setBody(searchRequest)
+                setBody(searchRequestStubSuccess)
             }
 
             response shouldHaveStatus HttpStatusCode.OK
-            response.body() as MeaningSearchResponse shouldBe searchResponse
+            response.body() as MeaningSearchResponse shouldBe searchResponseStubSuccess
         }
     }
 

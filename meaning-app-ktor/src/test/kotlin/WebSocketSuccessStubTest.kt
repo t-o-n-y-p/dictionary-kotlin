@@ -7,22 +7,22 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import util.DataProvider.createRequest
-import util.DataProvider.createResponse
-import util.DataProvider.deleteRequest
-import util.DataProvider.deleteResponse
+import util.DataProvider.createRequestStubSuccess
+import util.DataProvider.createResponseStubSuccess
+import util.DataProvider.deleteRequestStubSuccess
+import util.DataProvider.deleteResponseStubSuccess
 import util.DataProvider.noCreateDeleteNotificationData
 import util.DataProvider.noUpdateNotificationData
-import util.DataProvider.searchRequest
-import util.DataProvider.searchResponse
+import util.DataProvider.searchRequestStubSuccess
+import util.DataProvider.searchResponseStubSuccess
 import util.DataProvider.successfulCreateDeleteNotificationData
 import util.DataProvider.successfulCreateNotificationFromUpdateRequestData
 import util.DataProvider.successfulDeleteNotificationFromUpdateRequestData
 import util.DataProvider.successfulUpdateNotificationData
-import util.DataProvider.updateRequest
-import util.DataProvider.updateResponse
-import util.DataProvider.updateToCreateResponse
-import util.DataProvider.updateToDeleteResponse
+import util.DataProvider.updateRequestStubSuccess
+import util.DataProvider.updateResponseStubSuccess
+import util.DataProvider.updateToCreateResponseStubSuccess
+import util.DataProvider.updateToDeleteResponseStubSuccess
 import util.PatchedWebSockets
 import util.post
 import util.webSocket
@@ -66,10 +66,10 @@ class WebSocketSuccessStubTest : FreeSpec({
             webSocket("/ws/v1/meaning/search") {
                 // skipping init response
                 incoming.receive() as Frame.Text
-                send(apiV1Mapper.writeValueAsString(searchRequest))
+                send(apiV1Mapper.writeValueAsString(searchRequestStubSuccess))
                 val raw = incoming.receive() as Frame.Text
                 val response = apiV1Mapper.readValue(raw.readText(), MeaningSearchResponse::class.java)
-                response shouldBe searchResponse
+                response shouldBe searchResponseStubSuccess
             }
         }
     }
@@ -87,12 +87,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/create") {
                             contentType(ContentType.Application.Json)
-                            setBody(createRequest)
+                            setBody(createRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningCreateResponse::class.java)
-                        response shouldBe createResponse
+                        response shouldBe createResponseStubSuccess
                     }
                 }
             }
@@ -112,7 +112,7 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/create") {
                             contentType(ContentType.Application.Json)
-                            setBody(createRequest)
+                            setBody(createRequestStubSuccess)
                         }
 
                         incoming.isEmpty shouldBe true
@@ -135,12 +135,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/delete") {
                             contentType(ContentType.Application.Json)
-                            setBody(deleteRequest)
+                            setBody(deleteRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningDeleteResponse::class.java)
-                        response shouldBe deleteResponse
+                        response shouldBe deleteResponseStubSuccess
                     }
                 }
             }
@@ -160,7 +160,7 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/delete") {
                             contentType(ContentType.Application.Json)
-                            setBody(deleteRequest)
+                            setBody(deleteRequestStubSuccess)
                         }
 
                         incoming.isEmpty shouldBe true
@@ -183,12 +183,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/update") {
                             contentType(ContentType.Application.Json)
-                            setBody(updateRequest)
+                            setBody(updateRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningUpdateResponse::class.java)
-                        response shouldBe updateResponse
+                        response shouldBe updateResponseStubSuccess
                     }
                 }
             }
@@ -208,12 +208,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/update") {
                             contentType(ContentType.Application.Json)
-                            setBody(updateRequest)
+                            setBody(updateRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningCreateResponse::class.java)
-                        response shouldBe updateToCreateResponse
+                        response shouldBe updateToCreateResponseStubSuccess
                     }
                 }
             }
@@ -233,12 +233,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/update") {
                             contentType(ContentType.Application.Json)
-                            setBody(updateRequest)
+                            setBody(updateRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningDeleteResponse::class.java)
-                        response shouldBe updateToDeleteResponse
+                        response shouldBe updateToDeleteResponseStubSuccess
                     }
                 }
             }
@@ -258,7 +258,7 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/update") {
                             contentType(ContentType.Application.Json)
-                            setBody(updateRequest)
+                            setBody(updateRequestStubSuccess)
                         }
 
                         incoming.isEmpty shouldBe true

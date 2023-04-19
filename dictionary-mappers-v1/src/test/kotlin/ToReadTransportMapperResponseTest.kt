@@ -15,7 +15,7 @@ class ToReadTransportMapperResponseTest : FunSpec ({
     )
     val successReadContext = DictionaryContext(
         command = DictionaryCommand.READ,
-        state = DictionaryState.RUNNING,
+        state = DictionaryState.FINISHING,
         requestId = DictionaryRequestId("789"),
         meaningResponse = DictionaryMeaning(
             id = DictionaryMeaningId("123"),

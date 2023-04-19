@@ -17,42 +17,42 @@ fun DictionaryContext.toTransportMeaning(): IResponse = when (val cmd = command)
 
 private fun DictionaryContext.toTransportCreate() = MeaningCreateResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = if (state == DictionaryState.FINISHING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meaning = meaningResponse.toTransportFullMeaning()
 )
 
 private fun DictionaryContext.toTransportRead() = MeaningReadResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = if (state == DictionaryState.FINISHING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meaning = meaningResponse.toTransportFullMeaning()
 )
 
 private fun DictionaryContext.toTransportUpdate() = MeaningUpdateResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = if (state == DictionaryState.FINISHING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meaning = meaningResponse.toTransportFullMeaning()
 )
 
 private fun DictionaryContext.toTransportDelete() = MeaningDeleteResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = if (state == DictionaryState.FINISHING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meaning = meaningResponse.toTransportDeleteMeaning()
 )
 
 private fun DictionaryContext.toTransportSearch() = MeaningSearchResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = if (state == DictionaryState.FINISHING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     meanings = meaningsResponse.toTransportFullMeanings()
 )
 
 private fun DictionaryContext.toTransportInit() = MeaningInitResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == DictionaryState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = if (state == DictionaryState.FINISHING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     webSocketExtensions = webSocketExtensions.toTransportExtensions()
 )

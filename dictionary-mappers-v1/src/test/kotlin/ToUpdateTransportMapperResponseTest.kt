@@ -15,7 +15,7 @@ class ToUpdateTransportMapperResponseTest : FunSpec ({
     )
     val successUpdateContext = DictionaryContext(
         command = DictionaryCommand.UPDATE,
-        state = DictionaryState.RUNNING,
+        state = DictionaryState.FINISHING,
         requestId = DictionaryRequestId("123"),
         meaningResponse = DictionaryMeaning(
             id = DictionaryMeaningId("456"),
