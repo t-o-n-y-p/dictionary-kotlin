@@ -8,8 +8,8 @@ import com.tonyp.dictionarykotlin.cor.CorChainDsl
 import com.tonyp.dictionarykotlin.cor.worker
 import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
 
-fun CorChainDsl<DictionaryContext>.stubUpdateSuccess(title: String) = worker {
-    this.title = title
+fun CorChainDsl<DictionaryContext>.stubUpdateSuccess() = worker {
+    this.title = "Имитация успешной обработки"
     on {
         command == DictionaryCommand.UPDATE
                 && stubCase == DictionaryStub.SUCCESS

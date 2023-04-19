@@ -21,6 +21,13 @@ data class DictionaryContext (
     var timeStart: Instant = Instant.NONE,
     var meaningRequest: DictionaryMeaning = DictionaryMeaning(),
     var meaningFilterRequest: DictionaryMeaningFilter = DictionaryMeaningFilter(),
+
+    var meaningValidating: DictionaryMeaning = DictionaryMeaning(),
+    var meaningFilterValidating: DictionaryMeaningFilter = DictionaryMeaningFilter(),
+
+    var meaningValidated: DictionaryMeaning = DictionaryMeaning(),
+    var meaningFilterValidated: DictionaryMeaningFilter = DictionaryMeaningFilter(),
+
     var meaningResponse: DictionaryMeaning = DictionaryMeaning(),
     var meaningsResponse: MutableList<DictionaryMeaning> = mutableListOf()
 

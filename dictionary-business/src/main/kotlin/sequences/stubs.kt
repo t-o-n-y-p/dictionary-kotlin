@@ -6,11 +6,8 @@ import com.tonyp.dictionarykotlin.common.models.DictionaryWorkMode
 import com.tonyp.dictionarykotlin.cor.CorChainDsl
 import com.tonyp.dictionarykotlin.cor.sequence
 
-fun CorChainDsl<DictionaryContext>.stubs(
-    title: String,
-    block: CorChainDsl<DictionaryContext>.() -> Unit
-) = sequence {
-    this.title = title
+fun CorChainDsl<DictionaryContext>.stubs(block: CorChainDsl<DictionaryContext>.() -> Unit) = sequence {
+    this.title = "Обработка стабов"
     on { workMode == DictionaryWorkMode.STUB && state == DictionaryState.RUNNING }
     block()
 }

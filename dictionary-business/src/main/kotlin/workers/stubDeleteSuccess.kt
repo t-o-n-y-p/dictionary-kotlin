@@ -8,8 +8,8 @@ import com.tonyp.dictionarykotlin.cor.CorChainDsl
 import com.tonyp.dictionarykotlin.cor.worker
 import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
 
-fun CorChainDsl<DictionaryContext>.stubDeleteSuccess(title: String) = worker {
-    this.title = title
+fun CorChainDsl<DictionaryContext>.stubDeleteSuccess() = worker {
+    this.title = "Имитация успешной обработки"
     on {
         command == DictionaryCommand.DELETE
                 && stubCase == DictionaryStub.SUCCESS
