@@ -6,29 +6,31 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 
 fun Route.v1MeaningApi(appSettings: DictionaryAppSettings) {
+    val logger = appSettings.corSettings.loggerProvider.logger(Route::v1MeaningApi)
     route("meaning") {
         post("create") {
-            call.createMeaning(appSettings)
+            call.createMeaning(appSettings, logger)
         }
         post("read") {
-            call.readMeaning(appSettings)
+            call.readMeaning(appSettings, logger)
         }
         post("update") {
-            call.updateMeaning(appSettings)
+            call.updateMeaning(appSettings, logger)
         }
         post("delete") {
-            call.deleteMeaning(appSettings)
+            call.deleteMeaning(appSettings, logger)
         }
         post("search") {
-            call.searchMeaning(appSettings)
+            call.searchMeaning(appSettings, logger)
         }
     }
 }
 
 fun Route.v1MeaningWebsocket(appSettings: DictionaryAppSettings) {
+    val logger = appSettings.corSettings.loggerProvider.logger(Route::v1MeaningWebsocket)
     route("meaning") {
         webSocket("search") {
-            searchMeaning(appSettings)
+            searchMeaning(appSettings, logger)
         }
     }
 }

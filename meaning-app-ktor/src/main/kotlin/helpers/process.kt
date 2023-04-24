@@ -6,17 +6,17 @@ import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
 import toLog
 
 private val processor = DictionaryMeaningProcessor()
-suspend fun process(appSettings: DictionaryAppSettings, ctx: DictionaryContext) {
+suspend fun process(appSettings: DictionaryAppSettings, ctx: DictionaryContext, logId: String) {
     val logger = appSettings.corSettings.loggerProvider.logger(::process)
     logger.doWithLogging {
         logger.info(
-            msg = "Started processing ${ctx.command} request",
-            data = ctx.toLog("${ctx.command.name.lowercase()}-request")
+            msg = "Started processing $logId request",
+            data = ctx.toLog("$logId-request")
         )
         processor.exec(ctx)
         logger.info(
-            msg = "Response ${ctx.command} is ready",
-            data = ctx.toLog("${ctx.command.name.lowercase()}-response")
+            msg = "Response $logId is ready",
+            data = ctx.toLog("$logId-response")
         )
     }
 }

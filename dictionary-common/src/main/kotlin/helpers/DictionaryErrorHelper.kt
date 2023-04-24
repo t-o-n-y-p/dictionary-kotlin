@@ -4,10 +4,13 @@ import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.DictionaryError
 import com.tonyp.dictionarykotlin.common.models.DictionaryState
 
-fun Throwable.asDictionaryError(code: String = "unknown") =
+fun Throwable.asDictionaryError(
+    code: String = "UNKNOWN_ERROR",
+    message: String = "Something went wrong, please try again later"
+) =
     DictionaryError(
         code = code,
-        message = this.message ?: "",
+        message = message,
         exception = this
     )
 

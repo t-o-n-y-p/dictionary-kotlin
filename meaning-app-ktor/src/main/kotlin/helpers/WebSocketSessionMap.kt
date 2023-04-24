@@ -12,6 +12,8 @@ class WebSocketSessionMap(
     val entries
         get() = sessions.entries
 
+    operator fun get(k: WebSocketSession): DictionaryContext? = sessions[k]
+
     suspend fun put(k: WebSocketSession, v: DictionaryContext) = mutex.withLock {
         sessions[k] = v
     }
