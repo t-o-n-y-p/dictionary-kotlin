@@ -1,5 +1,7 @@
 import com.tonyp.dictionarykotlin.api.v1.apiV1Mapper
-import com.tonyp.dictionarykotlin.api.v1.models.*
+import com.tonyp.dictionarykotlin.api.v1.models.MeaningCreateResponse
+import com.tonyp.dictionarykotlin.api.v1.models.MeaningDeleteResponse
+import com.tonyp.dictionarykotlin.api.v1.models.MeaningUpdateResponse
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.request.*
@@ -7,75 +9,15 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import util.DataProvider.createRequestStubSuccess
-import util.DataProvider.createResponseStubSuccess
-import util.DataProvider.deleteRequestStubSuccess
-import util.DataProvider.deleteResponseStubSuccess
-import util.DataProvider.noCreateDeleteNotificationData
-import util.DataProvider.noUpdateNotificationData
-import util.DataProvider.searchRequestStubSuccess
-import util.DataProvider.searchResponseStubSuccess
-import util.DataProvider.successfulCreateDeleteNotificationData
-import util.DataProvider.successfulCreateNotificationFromUpdateRequestData
-import util.DataProvider.successfulDeleteNotificationFromUpdateRequestData
-import util.DataProvider.successfulUpdateNotificationData
-import util.DataProvider.updateRequestStubSuccess
-import util.DataProvider.updateResponseStubSuccess
-import util.DataProvider.updateToCreateResponseStubSuccess
-import util.DataProvider.updateToDeleteResponseStubSuccess
-import util.PatchedWebSockets
+import util.DataProvider
 import util.post
 import util.webSocket
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class WebSocketSuccessStubTest : FreeSpec({
-
-    val initResponseWithNoExtensions = MeaningInitResponse(
-        responseType = "init",
-        result = ResponseResult.ERROR,
-        webSocketExtensions = emptyList()
-    )
-    val initResponseWithExtension = MeaningInitResponse(
-        responseType = "init",
-        result = ResponseResult.ERROR,
-        webSocketExtensions = listOf(MeaningWebSocketExtension.DEFLATE)
-    )
-
-    "Init response with no extensions" - {
-        testApplication {
-            webSocket("/ws/v1/meaning/search") {
-                val raw = incoming.receive() as Frame.Text
-                val response = apiV1Mapper.readValue(raw.readText(), MeaningInitResponse::class.java)
-                response shouldBe initResponseWithNoExtensions
-            }
-        }
-    }
-
-    "Init response with extensions" - {
-        testApplication {
-            webSocket("/ws/v1/meaning/search", { install(PatchedWebSockets) }) {
-                val raw = incoming.receive() as Frame.Text
-                val response = apiV1Mapper.readValue(raw.readText(), MeaningInitResponse::class.java)
-                response shouldBe initResponseWithExtension
-            }
-        }
-    }
-
-    "Search request success stub" - {
-        testApplication {
-            webSocket("/ws/v1/meaning/search") {
-                // skipping init response
-                incoming.receive() as Frame.Text
-                send(apiV1Mapper.writeValueAsString(searchRequestStubSuccess))
-                val raw = incoming.receive() as Frame.Text
-                val response = apiV1Mapper.readValue(raw.readText(), MeaningSearchResponse::class.java)
-                response shouldBe searchResponseStubSuccess
-            }
-        }
-    }
+class WebSocketNotificationTest : FreeSpec({
 
     "Successful create notification to websocket" - {
-        successfulCreateDeleteNotificationData.map { (description, searchRequest) ->
+        DataProvider.successfulCreateDeleteNotificationData.map { (description, searchRequest) ->
             description {
                 testApplication {
                     webSocket("/ws/v1/meaning/search") {
@@ -87,12 +29,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/create") {
                             contentType(ContentType.Application.Json)
-                            setBody(createRequestStubSuccess)
+                            setBody(DataProvider.createRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningCreateResponse::class.java)
-                        response shouldBe createResponseStubSuccess
+                        response shouldBe DataProvider.createResponseStubSuccess
                     }
                 }
             }
@@ -100,7 +42,7 @@ class WebSocketSuccessStubTest : FreeSpec({
     }
 
     "No create notification to websocket" - {
-        noCreateDeleteNotificationData.map { (description, searchRequest) ->
+        DataProvider.noCreateDeleteNotificationData.map { (description, searchRequest) ->
             description {
                 testApplication {
                     webSocket("/ws/v1/meaning/search") {
@@ -112,7 +54,7 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/create") {
                             contentType(ContentType.Application.Json)
-                            setBody(createRequestStubSuccess)
+                            setBody(DataProvider.createRequestStubSuccess)
                         }
 
                         incoming.isEmpty shouldBe true
@@ -123,7 +65,7 @@ class WebSocketSuccessStubTest : FreeSpec({
     }
 
     "Successful delete notification to websocket" - {
-        successfulCreateDeleteNotificationData.map { (description, searchRequest) ->
+        DataProvider.successfulCreateDeleteNotificationData.map { (description, searchRequest) ->
             description {
                 testApplication {
                     webSocket("/ws/v1/meaning/search") {
@@ -135,12 +77,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/delete") {
                             contentType(ContentType.Application.Json)
-                            setBody(deleteRequestStubSuccess)
+                            setBody(DataProvider.deleteRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningDeleteResponse::class.java)
-                        response shouldBe deleteResponseStubSuccess
+                        response shouldBe DataProvider.deleteResponseStubSuccess
                     }
                 }
             }
@@ -148,7 +90,7 @@ class WebSocketSuccessStubTest : FreeSpec({
     }
 
     "No delete notification to websocket" - {
-        noCreateDeleteNotificationData.map { (description, searchRequest) ->
+        DataProvider.noCreateDeleteNotificationData.map { (description, searchRequest) ->
             description {
                 testApplication {
                     webSocket("/ws/v1/meaning/search") {
@@ -160,7 +102,7 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/delete") {
                             contentType(ContentType.Application.Json)
-                            setBody(deleteRequestStubSuccess)
+                            setBody(DataProvider.deleteRequestStubSuccess)
                         }
 
                         incoming.isEmpty shouldBe true
@@ -171,7 +113,7 @@ class WebSocketSuccessStubTest : FreeSpec({
     }
 
     "Successful update notification to websocket" - {
-        successfulUpdateNotificationData.map { (description, searchRequest) ->
+        DataProvider.successfulUpdateNotificationData.map { (description, searchRequest) ->
             description {
                 testApplication {
                     webSocket("/ws/v1/meaning/search") {
@@ -183,12 +125,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/update") {
                             contentType(ContentType.Application.Json)
-                            setBody(updateRequestStubSuccess)
+                            setBody(DataProvider.updateRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningUpdateResponse::class.java)
-                        response shouldBe updateResponseStubSuccess
+                        response shouldBe DataProvider.updateResponseStubSuccess
                     }
                 }
             }
@@ -196,7 +138,7 @@ class WebSocketSuccessStubTest : FreeSpec({
     }
 
     "Successful create notification to websocket from update request" - {
-        successfulCreateNotificationFromUpdateRequestData.map { (description, searchRequest) ->
+        DataProvider.successfulCreateNotificationFromUpdateRequestData.map { (description, searchRequest) ->
             description {
                 testApplication {
                     webSocket("/ws/v1/meaning/search") {
@@ -208,12 +150,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/update") {
                             contentType(ContentType.Application.Json)
-                            setBody(updateRequestStubSuccess)
+                            setBody(DataProvider.updateRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningCreateResponse::class.java)
-                        response shouldBe updateToCreateResponseStubSuccess
+                        response shouldBe DataProvider.updateToCreateResponseStubSuccess
                     }
                 }
             }
@@ -221,7 +163,7 @@ class WebSocketSuccessStubTest : FreeSpec({
     }
 
     "Successful delete notification to websocket from update request" - {
-        successfulDeleteNotificationFromUpdateRequestData.map { (description, searchRequest) ->
+        DataProvider.successfulDeleteNotificationFromUpdateRequestData.map { (description, searchRequest) ->
             description {
                 testApplication {
                     webSocket("/ws/v1/meaning/search") {
@@ -233,12 +175,12 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/update") {
                             contentType(ContentType.Application.Json)
-                            setBody(updateRequestStubSuccess)
+                            setBody(DataProvider.updateRequestStubSuccess)
                         }
 
                         val raw = incoming.receive() as Frame.Text
                         val response = apiV1Mapper.readValue(raw.readText(), MeaningDeleteResponse::class.java)
-                        response shouldBe updateToDeleteResponseStubSuccess
+                        response shouldBe DataProvider.updateToDeleteResponseStubSuccess
                     }
                 }
             }
@@ -246,7 +188,7 @@ class WebSocketSuccessStubTest : FreeSpec({
     }
 
     "No update notification to websocket" - {
-        noUpdateNotificationData.map { (description, searchRequest) ->
+        DataProvider.noUpdateNotificationData.map { (description, searchRequest) ->
             description {
                 testApplication {
                     webSocket("/ws/v1/meaning/search") {
@@ -258,7 +200,7 @@ class WebSocketSuccessStubTest : FreeSpec({
 
                         post("/api/v1/meaning/update") {
                             contentType(ContentType.Application.Json)
-                            setBody(updateRequestStubSuccess)
+                            setBody(DataProvider.updateRequestStubSuccess)
                         }
 
                         incoming.isEmpty shouldBe true

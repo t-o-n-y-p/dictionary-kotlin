@@ -25,17 +25,17 @@ suspend fun ApplicationCall.sendResponse(appSettings: DictionaryAppSettings, ctx
 @OptIn(ExperimentalCoroutinesApi::class)
 suspend fun WebSocketSession.sendResponse(appSettings: DictionaryAppSettings, ctx: DictionaryContext, logId: String) {
     val logger = appSettings.corSettings.loggerProvider.logger(::sendResponse)
-    try {
-        logger.doWithLogging {
+    logger.doWithLogging {
+        try {
             send(apiV1Mapper.writeValueAsString(ctx.toTransportMeaning()))
             logger.info(
                 msg = "$logId response is sent",
                 data = ctx.toLog("$logId-response")
             )
-        }
-    } catch (_: Exception) {
-        if (outgoing.isClosedForSend) {
-            sessions.remove(this)
+        } catch (_: Exception) {
+            if (outgoing.isClosedForSend) {
+                sessions.remove(this)
+            }
         }
     }
 }
