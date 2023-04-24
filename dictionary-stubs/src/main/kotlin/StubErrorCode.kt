@@ -6,6 +6,7 @@ enum class StubErrorCode {
     CANNOT_READ,
     CANNOT_UPDATE,
     CANNOT_DELETE,
-    CANNOT_SEARCH
+    CANNOT_SEARCH,
+    INVALID_STUB
 
 }

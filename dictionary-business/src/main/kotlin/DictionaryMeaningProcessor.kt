@@ -1,15 +1,10 @@
 package com.tonyp.dictionarykotlin.business
 
-import com.tonyp.dictionarykotlin.business.sequences.operation
-import com.tonyp.dictionarykotlin.business.sequences.stubs
-import com.tonyp.dictionarykotlin.business.sequences.validation
+import com.tonyp.dictionarykotlin.business.sequences.*
 import com.tonyp.dictionarykotlin.business.workers.*
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
 import com.tonyp.dictionarykotlin.cor.chain
-import com.tonyp.dictionarykotlin.cor.worker
 
 class DictionaryMeaningProcessor {
 
@@ -22,14 +17,11 @@ class DictionaryMeaningProcessor {
                 stubs {
                     stubCreateSuccess()
                     stubCreateError()
+                    stubDoesNotExist()
                 }
                 validation {
                     startMeaningValidation()
-                    worker("Очистка id") { meaningValidating.id = DictionaryMeaningId.NONE }
-                    worker("Очистка word") { meaningValidating.word = meaningValidating.word.trim() }
-                    worker("Очистка value") { meaningValidating.value = meaningValidating.value.trim() }
-                    worker("Очистка proposedBy") { meaningValidating.proposedBy = meaningValidating.proposedBy.trim() }
-                    worker("Очистка approved") { meaningValidating.approved = DictionaryMeaningApproved.NONE }
+                    clearValidatingCreateContext()
                     validateWordNotEmpty()
                     validateValueNotEmpty()
                     validateWordContent()
@@ -42,12 +34,11 @@ class DictionaryMeaningProcessor {
                 stubs {
                     stubReadSuccess()
                     stubReadError()
+                    stubDoesNotExist()
                 }
                 validation {
                     startMeaningValidation()
-                    worker("Очистка id") {
-                        meaningValidating.id = DictionaryMeaningId(meaningValidating.id.asString().trim())
-                    }
+                    clearValidatingReadContext()
                     validateIdNotEmpty()
                     validateIdContent()
                     finishMeaningValidation()
@@ -57,15 +48,11 @@ class DictionaryMeaningProcessor {
                 stubs {
                     stubUpdateSuccess()
                     stubUpdateError()
+                    stubDoesNotExist()
                 }
                 validation {
                     startMeaningValidation()
-                    worker("Очистка id") {
-                        meaningValidating.id = DictionaryMeaningId(meaningValidating.id.asString().trim())
-                    }
-                    worker("Очистка word") { meaningValidating.word = "" }
-                    worker("Очистка value") { meaningValidating.value = "" }
-                    worker("Очистка proposedBy") { meaningValidating.proposedBy = "" }
+                    clearValidatingUpdateContext()
                     validateApprovedNotEmpty()
                     finishMeaningValidation()
                 }
@@ -74,12 +61,11 @@ class DictionaryMeaningProcessor {
                 stubs {
                     stubDeleteSuccess()
                     stubDeleteError()
+                    stubDoesNotExist()
                 }
                 validation {
                     startMeaningValidation()
-                    worker("Очистка id") {
-                        meaningValidating.id = DictionaryMeaningId(meaningValidating.id.asString().trim())
-                    }
+                    clearValidatingDeleteContext()
                     validateIdNotEmpty()
                     validateIdContent()
                     finishMeaningValidation()
@@ -89,9 +75,11 @@ class DictionaryMeaningProcessor {
                 stubs {
                     stubSearchSuccess()
                     stubSearchError()
+                    stubDoesNotExist()
                 }
                 validation {
                     startFilterValidation()
+                    clearValidatingSearchContext()
                     finishFilterValidation()
                 }
             }

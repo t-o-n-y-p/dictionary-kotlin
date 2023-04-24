@@ -55,4 +55,9 @@ object DictionaryMeaningStub {
         message = "Cannot search"
     )
 
+    fun getInvalidStubError() = DictionaryError(
+        code = StubErrorCode.INVALID_STUB.name,
+        message = "Provided stub does not exist"
+    )
+
 }
