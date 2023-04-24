@@ -10,7 +10,7 @@ fun CorChainDsl<DictionaryContext>.validateWordContent() = worker {
     this.title = "Проверка, что слово состоит из русских букв"
     on {
         meaningValidating.word.isNotEmpty()
-                && !meaningValidating.word.matches(Regex("[А-Яа-яЁё]{1,32}"))
+                && !meaningValidating.word.matches(Regex("[А-Яа-яЁё-]{1,32}"))
     }
     handle {
         fail(

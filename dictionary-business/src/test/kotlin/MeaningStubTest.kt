@@ -1,4 +1,4 @@
-import com.tonyp.dictionarykotlin.business.DictionaryMeaningProcessor
+import DataProvider.processor
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
 import com.tonyp.dictionarykotlin.common.models.DictionaryState
@@ -9,8 +9,6 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
 class MeaningStubTest : FunSpec ({
-
-    val processor = DictionaryMeaningProcessor()
 
     test("Create stub success") {
         val successStubContext = DictionaryContext(

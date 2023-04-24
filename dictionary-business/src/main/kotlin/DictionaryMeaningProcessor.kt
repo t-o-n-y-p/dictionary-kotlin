@@ -53,6 +53,8 @@ class DictionaryMeaningProcessor {
                 validation {
                     startMeaningValidation()
                     clearValidatingUpdateContext()
+                    validateIdNotEmpty()
+                    validateIdContent()
                     validateApprovedNotEmpty()
                     finishMeaningValidation()
                 }

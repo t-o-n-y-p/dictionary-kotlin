@@ -1,6 +1,6 @@
 import com.tonyp.dictionarykotlin.api.v1.apiV1Mapper
 import com.tonyp.dictionarykotlin.api.v1.models.*
-import io.kotest.core.spec.style.FreeSpec
+import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.server.testing.*
 import io.ktor.websocket.*
@@ -11,7 +11,7 @@ import util.DataProvider.searchResponseStubSuccess
 import util.PatchedWebSockets
 import util.webSocket
 
-class WebSocketStubTest : FreeSpec({
+class WebSocketStubTest : FunSpec ({
 
     val initResponseWithNoExtensions = MeaningInitResponse(
         responseType = "init",
@@ -24,7 +24,7 @@ class WebSocketStubTest : FreeSpec({
         webSocketExtensions = listOf(MeaningWebSocketExtension.DEFLATE)
     )
 
-    "Init response with no extensions" - {
+    test("Init response with no extensions") {
         testApplication {
             webSocket("/ws/v1/meaning/search") {
                 val raw = incoming.receive() as Frame.Text
@@ -34,7 +34,7 @@ class WebSocketStubTest : FreeSpec({
         }
     }
 
-    "Init response with extensions" - {
+    test("Init response with extensions") {
         testApplication {
             webSocket("/ws/v1/meaning/search", { install(PatchedWebSockets) }) {
                 val raw = incoming.receive() as Frame.Text
@@ -44,7 +44,7 @@ class WebSocketStubTest : FreeSpec({
         }
     }
 
-    "Search request success stub" - {
+    test("Search request success stub") {
         testApplication {
             webSocket("/ws/v1/meaning/search") {
                 // skipping init response
@@ -57,7 +57,7 @@ class WebSocketStubTest : FreeSpec({
         }
     }
 
-    "Search request error stub" - {
+    test("Search request error stub") {
         testApplication {
             webSocket("/ws/v1/meaning/search") {
                 // skipping init response
