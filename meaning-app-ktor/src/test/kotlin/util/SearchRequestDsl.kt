@@ -23,10 +23,6 @@ class SearchRequestBuilder {
     }
 
     fun build() = MeaningSearchRequest(
-        debug = MeaningDebug(
-            mode = MeaningRequestDebugMode.STUB,
-            stub = MeaningRequestDebugStubs.SUCCESS
-        ),
         meaningFilter = MeaningSearchFilter(
             word = word,
             approved = approved

@@ -1,53 +1,38 @@
 package com.tonyp.dictionarykotlin.meaning.app.v1
 
 import com.tonyp.dictionarykotlin.api.v1.models.*
-import com.tonyp.dictionarykotlin.common.DictionaryContext
-import com.tonyp.dictionarykotlin.mappers.v1.fromTransport
-import com.tonyp.dictionarykotlin.mappers.v1.toTransportMeaning
-import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
+import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
+import com.tonyp.dictionarykotlin.log.v1.common.IDictionaryLogWrapper
+import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
 import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
 
-suspend fun ApplicationCall.createMeaning() {
-    val request = receive<MeaningCreateRequest>()
-    val context = DictionaryContext()
-    context.fromTransport(request)
-    context.meaningResponse = DictionaryMeaningStub.getPending()
-    respond(context.toTransportMeaning())
-    sendWebSocketCreateDeleteNotification(context)
+suspend fun ApplicationCall.createMeaning(appSettings: DictionaryAppSettings, logger: IDictionaryLogWrapper) {
+    processCommand<MeaningCreateRequest>(
+        DictionaryCommand.CREATE, appSettings, logger, "meaning-create"
+    )?.also { sendWebSocketCreateDeleteNotification(appSettings, it) }
+
 }
 
-suspend fun ApplicationCall.readMeaning() {
-    val request = receive<MeaningReadRequest>()
-    val context = DictionaryContext()
-    context.fromTransport(request)
-    context.meaningResponse = DictionaryMeaningStub.getApproved()
-    respond(context.toTransportMeaning())
+suspend fun ApplicationCall.readMeaning(appSettings: DictionaryAppSettings, logger: IDictionaryLogWrapper) {
+    processCommand<MeaningReadRequest>(
+        DictionaryCommand.READ, appSettings, logger, "meaning-read"
+    )
 }
 
-suspend fun ApplicationCall.updateMeaning() {
-    val request = receive<MeaningUpdateRequest>()
-    val context = DictionaryContext()
-    context.fromTransport(request)
-    context.meaningResponse = DictionaryMeaningStub.getApproved()
-    respond(context.toTransportMeaning())
-    sendWebSocketUpdateNotification(context)
+suspend fun ApplicationCall.updateMeaning(appSettings: DictionaryAppSettings, logger: IDictionaryLogWrapper) {
+    processCommand<MeaningUpdateRequest>(
+        DictionaryCommand.UPDATE, appSettings, logger, "meaning-update"
+    )?.also { sendWebSocketUpdateNotification(appSettings, it) }
 }
 
-suspend fun ApplicationCall.deleteMeaning() {
-    val request = receive<MeaningDeleteRequest>()
-    val context = DictionaryContext()
-    context.fromTransport(request)
-    context.meaningResponse = DictionaryMeaningStub.getPending()
-    respond(context.toTransportMeaning())
-    sendWebSocketCreateDeleteNotification(context)
+suspend fun ApplicationCall.deleteMeaning(appSettings: DictionaryAppSettings, logger: IDictionaryLogWrapper) {
+    processCommand<MeaningDeleteRequest>(
+        DictionaryCommand.DELETE, appSettings, logger, "meaning-delete"
+    )?.also { sendWebSocketCreateDeleteNotification(appSettings, it) }
 }
 
-suspend fun ApplicationCall.searchMeaning() {
-    val request = receive<MeaningSearchRequest>()
-    val context = DictionaryContext()
-    context.fromTransport(request)
-    context.meaningsResponse.addAll(DictionaryMeaningStub.getSearchResult())
-    respond(context.toTransportMeaning())
+suspend fun ApplicationCall.searchMeaning(appSettings: DictionaryAppSettings, logger: IDictionaryLogWrapper) {
+    processCommand<MeaningSearchRequest>(
+        DictionaryCommand.SEARCH, appSettings, logger, "meaning-search"
+    )
 }

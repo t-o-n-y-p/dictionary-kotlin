@@ -1,16 +1,18 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
-import org.jetbrains.kotlin.util.suffixIfNot
 
 val ktorVersion: String by project
 val logbackVersion: String by project
 val kotestVersion: String by project
 val ktorKotestExtensionVersion: String by project
 val datetimeVersion: String by project
+val logbackAppendersVersion: String by project
+val fluentdLoggerVersion: String by project
 
-// ex: Converts to "io.ktor:ktor-ktor-server-netty:2.0.1" with only ktor("netty")
-fun ktor(module: String, prefix: String = "server-", version: String? = this@Build_gradle.ktorVersion): Any =
-    "io.ktor:ktor-${prefix.suffixIfNot("-")}$module:$version"
+fun ktorServer(module: String, version: String? = ktorVersion): Any =
+    "io.ktor:ktor-server-$module:$version"
+fun ktorClient(module: String, version: String? = ktorVersion): Any =
+    "io.ktor:ktor-client-$module:$version"
 
 plugins {
     kotlin("jvm")
@@ -29,38 +31,45 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(ktor("core"))
-    implementation(ktor("netty"))
+    implementation(ktorServer("core"))
+    implementation(ktorServer("netty"))
 
-    implementation(ktor("jackson", prefix = "serialization"))
-    implementation(ktor("content-negotiation"))
+    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
 
-    implementation(ktor("locations"))
-    implementation(ktor("caching-headers"))
-    implementation(ktor("call-logging"))
-    implementation(ktor("auto-head-response"))
-    implementation(ktor("cors"))
-    implementation(ktor("default-headers"))
-    implementation(ktor("websockets"))
+    implementation(ktorServer("caching-headers"))
+    implementation(ktorServer("call-logging"))
+    implementation(ktorServer("auto-head-response"))
+    implementation(ktorServer("cors"))
+    implementation(ktorServer("default-headers"))
+    implementation(ktorServer("websockets"))
+    implementation(ktorServer("content-negotiation"))
+    implementation(ktorServer("config-yaml"))
 
-    implementation(ktor("auth"))
-    implementation(ktor("auth-jwt"))
+    implementation(ktorServer("auth"))
+    implementation(ktorServer("auth-jwt"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("com.sndyuk:logback-more-appenders:$logbackAppendersVersion")
+    implementation("org.fluentd:fluent-logger:$fluentdLoggerVersion")
 
     implementation(project(mapOf("path" to ":dictionary-common")))
     implementation(project(mapOf("path" to ":dictionary-api-v1")))
     implementation(project(mapOf("path" to ":dictionary-mappers-v1")))
     implementation(project(mapOf("path" to ":dictionary-stubs")))
+    implementation(project(mapOf("path" to ":dictionary-log-logback")))
+    implementation(project(mapOf("path" to ":dictionary-log-common")))
+    implementation(project(mapOf("path" to ":dictionary-log-v1")))
+    implementation(project(mapOf("path" to ":dictionary-log-mappers-v1")))
+    implementation(project(mapOf("path" to ":dictionary-business")))
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest.extensions:kotest-assertions-ktor:$ktorKotestExtensionVersion")
-    testImplementation(ktor("test-host"))
-    testImplementation(ktor("content-negotiation", prefix = "client-"))
-    testImplementation(ktor("websockets", prefix = "client-"))
+    testImplementation(ktorServer("test-host"))
+    testImplementation(ktorClient("content-negotiation"))
+    testImplementation(ktorClient("websockets"))
 }
 
 tasks {

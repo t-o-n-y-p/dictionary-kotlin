@@ -1,0 +1,622 @@
+import DataProvider.empties
+import DataProvider.invalidIds
+import DataProvider.invalidUsernames
+import DataProvider.invalidWords
+import DataProvider.processor
+import DataProvider.validApproved
+import DataProvider.validIds
+import com.tonyp.dictionarykotlin.common.DictionaryContext
+import com.tonyp.dictionarykotlin.common.models.*
+import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
+
+class ValidationTest : FreeSpec ({
+
+    "Create with empty word" - {
+        empties.map { (description, word) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = word,
+                        value = "value",
+                        proposedBy = "proposedBy"
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "WORD_IS_EMPTY",
+                        message = "Word must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Create with invalid word" - {
+        invalidWords.map { (description, word) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = word,
+                        value = "value",
+                        proposedBy = "proposedBy"
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_WORD",
+                        message = "Word must be 1-32 russian letters"
+                    )
+                )
+            }
+        }
+    }
+
+    "Create with valid word" - {
+        DataProvider.validWords.map { (description, word) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = word,
+                        value = "value",
+                        proposedBy = "proposedBy"
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    word = word.trim(),
+                    value = "value",
+                    proposedBy = "proposedBy"
+                )
+            }
+        }
+    }
+
+    "Create with empty value" - {
+        empties.map { (description, value) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = "слово",
+                        value = value,
+                        proposedBy = "proposedBy"
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "VALUE_IS_EMPTY",
+                        message = "Value must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Create with invalid value" - {
+        DataProvider.validValues.map { (description, value) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = "слово",
+                        value = value.repeat(257),
+                        proposedBy = "proposedBy"
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_VALUE",
+                        message = "Value must be 256 symbols at maximum"
+                    )
+                )
+            }
+        }
+    }
+
+    "Create with valid value" - {
+        DataProvider.validValues.map { (description, value) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = "слово",
+                        value = value,
+                        proposedBy = "proposedBy"
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    word = "слово",
+                    value = value.trim(),
+                    proposedBy = "proposedBy"
+                )
+            }
+        }
+    }
+
+    "Create with empty username" - {
+        empties.map { (description, username) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = "слово",
+                        value = "value",
+                        proposedBy = username
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    word = "слово",
+                    value = "value",
+                    proposedBy = ""
+                )
+            }
+        }
+    }
+
+    "Create with invalid username" - {
+        invalidUsernames.map { (description, username) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = "слово",
+                        value = "value",
+                        proposedBy = username
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_USERNAME",
+                        message = "Username must be 1-12 latin letters or underscores total"
+                    )
+                )
+            }
+        }
+    }
+
+    "Create with valid username" - {
+        DataProvider.validUsernames.map { (description, username) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.CREATE,
+                    meaningRequest = DictionaryMeaning(
+                        word = "слово",
+                        value = "value",
+                        proposedBy = username
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    word = "слово",
+                    value = "value",
+                    proposedBy = username.trim()
+                )
+            }
+        }
+    }
+
+    "Create with multiple errors" {
+        val context = DictionaryContext(
+            command = DictionaryCommand.CREATE,
+            meaningRequest = DictionaryMeaning(
+                word = invalidWords[0].b,
+                value = empties[1].b,
+                proposedBy = invalidUsernames[2].b
+            )
+        )
+        processor.exec(context)
+
+        context.state shouldBe DictionaryState.FAILING
+        context.errors shouldContainExactlyInAnyOrder listOf(
+            DictionaryError(
+                code = "VALUE_IS_EMPTY",
+                message = "Value must not be empty"
+            ),
+            DictionaryError(
+                code = "INVALID_WORD",
+                message = "Word must be 1-32 russian letters"
+            ),
+            DictionaryError(
+                code = "INVALID_USERNAME",
+                message = "Username must be 1-12 latin letters or underscores total"
+            )
+        )
+    }
+
+    "Read with empty ID" - {
+        empties.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.READ,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id)
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "ID_IS_EMPTY",
+                        message = "ID must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Read with invalid ID" - {
+        invalidIds.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.READ,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id)
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_ID",
+                        message = "ID must be 1 or more digits"
+                    )
+                )
+            }
+        }
+    }
+
+    "Read with valid ID" - {
+        validIds.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.READ,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id)
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    id = DictionaryMeaningId(id.trim())
+                )
+            }
+        }
+    }
+
+    "Delete with empty ID" - {
+        empties.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id)
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "ID_IS_EMPTY",
+                        message = "ID must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Delete with invalid ID" - {
+        invalidIds.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id)
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_ID",
+                        message = "ID must be 1 or more digits"
+                    )
+                )
+            }
+        }
+    }
+
+    "Delete with valid ID" - {
+        validIds.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id)
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    id = DictionaryMeaningId(id.trim())
+                )
+            }
+        }
+    }
+
+    "Update with empty ID" - {
+        empties.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id),
+                        approved = DictionaryMeaningApproved.FALSE
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "ID_IS_EMPTY",
+                        message = "ID must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Update with invalid ID" - {
+        invalidIds.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id),
+                        approved = DictionaryMeaningApproved.TRUE
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_ID",
+                        message = "ID must be 1 or more digits"
+                    )
+                )
+            }
+        }
+    }
+
+    "Update with valid ID" - {
+        validIds.map { (description, id) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId(id),
+                        approved = DictionaryMeaningApproved.FALSE
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    id = DictionaryMeaningId(id.trim()),
+                    approved = DictionaryMeaningApproved.FALSE
+                )
+            }
+        }
+    }
+
+    "Update with empty approved flag" {
+        val context = DictionaryContext(
+            command = DictionaryCommand.UPDATE,
+            meaningRequest = DictionaryMeaning(
+                id = DictionaryMeaningId(validIds[0].b)
+            )
+        )
+        processor.exec(context)
+
+        context.state shouldBe DictionaryState.FAILING
+        context.errors shouldContainExactlyInAnyOrder listOf(
+            DictionaryError(
+                code = "APPROVED_FLAG_IS_EMPTY",
+                message = "Approved flag must not be empty"
+            )
+        )
+    }
+
+    "Update with valid approved flag" - {
+        validApproved.map { (description, approved) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("123"),
+                        approved = approved
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    id = DictionaryMeaningId("123"),
+                    approved = approved
+                )
+            }
+        }
+    }
+
+    "Update with multiple errors" {
+        val context = DictionaryContext(
+            command = DictionaryCommand.UPDATE,
+            meaningRequest = DictionaryMeaning(
+                id = DictionaryMeaningId(invalidIds[0].b)
+            )
+        )
+        processor.exec(context)
+
+        context.state shouldBe DictionaryState.FAILING
+        context.errors shouldContainExactlyInAnyOrder listOf(
+            DictionaryError(
+                code = "INVALID_ID",
+                message = "ID must be 1 or more digits"
+            ),
+            DictionaryError(
+                code = "APPROVED_FLAG_IS_EMPTY",
+                message = "Approved flag must not be empty"
+            )
+        )
+    }
+
+    "Search with empty word" - {
+        empties.map { (description, word) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.SEARCH,
+                    meaningFilterRequest = DictionaryMeaningFilter(
+                        word = word,
+                        approved = DictionaryMeaningApproved.FALSE
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
+                    word = "",
+                    approved = DictionaryMeaningApproved.FALSE
+                )
+            }
+        }
+    }
+
+    "Search with invalid word" - {
+        invalidWords.map { (description, word) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.SEARCH,
+                    meaningFilterRequest = DictionaryMeaningFilter(
+                        word = word,
+                        approved = DictionaryMeaningApproved.TRUE
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
+                    word = word,
+                    approved = DictionaryMeaningApproved.TRUE
+                )
+            }
+        }
+    }
+
+    "Search with valid word" - {
+        DataProvider.validWords.map { (description, word) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.SEARCH,
+                    meaningFilterRequest = DictionaryMeaningFilter(
+                        word = word,
+                        approved = DictionaryMeaningApproved.FALSE
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
+                    word = word.trim(),
+                    approved = DictionaryMeaningApproved.FALSE
+                )
+            }
+        }
+    }
+
+    "Search with empty approved flag" {
+        val context = DictionaryContext(
+            command = DictionaryCommand.SEARCH,
+            meaningFilterRequest = DictionaryMeaningFilter(
+                word = "word"
+            )
+        )
+        processor.exec(context)
+
+        context.state shouldBe DictionaryState.RUNNING
+        context.errors shouldBe emptyList()
+        context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
+            word = "word"
+        )
+    }
+
+    "Update with valid approved flag" - {
+        validApproved.map { (description, approved) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.SEARCH,
+                    meaningFilterRequest = DictionaryMeaningFilter(
+                        word = "word",
+                        approved = approved
+                    )
+                )
+                processor.exec(context)
+
+                context.state shouldBe DictionaryState.RUNNING
+                context.errors shouldBe emptyList()
+                context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
+                    word = "word",
+                    approved = approved
+                )
+            }
+        }
+    }
+
+})

@@ -1,0 +1,88 @@
+openapi: 3.0.4
+info:
+  title: Dictionary log models
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+paths: {}
+
+components:
+  schemas:
+    CommonLogModel:
+      title: Общая модель лога
+      description: Общая модель лога для всех микросервисов системы
+      type: object
+      properties:
+        messageTime:
+          type: string
+        logId:
+          type: string
+        source:
+          type: string
+        meaning:
+          $ref: '#/components/schemas/DictionaryLogModel'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorLogModel'
+
+    DictionaryLogModel:
+      title: Модель лога для микросервиса Dictionary
+      type: object
+      properties:
+        requestId:
+          type: string
+        operation:
+          type: string
+          enum:
+            - create
+            - read
+            - update
+            - delete
+            - search
+            - init
+        requestMeaning:
+          $ref: '#/components/schemas/MeaningLog'
+        requestFilter:
+          $ref: '#/components/schemas/MeaningFilterLog'
+        responseMeaning:
+          $ref: '#/components/schemas/MeaningLog'
+        responseMeanings:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeaningLog'
+
+    ErrorLogModel:
+      title: Модель лога для ошибки
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        level:
+          type: string
+
+    MeaningLog:
+      title: Модель лога для значения
+      type: object
+      properties:
+        id:
+          type: string
+        word:
+          type: string
+        value:
+          type: string
+        proposedBy:
+          type: string
+        approved:
+          type: boolean
+
+    MeaningFilterLog:
+      title: Модель лога фильтра
+      properties:
+        word:
+          type: string
+        approved:
+          type: boolean

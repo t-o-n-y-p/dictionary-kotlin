@@ -1,5 +1,6 @@
 package com.tonyp.dictionarykotlin.stubs
 
+import com.tonyp.dictionarykotlin.common.models.DictionaryError
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
@@ -28,5 +29,35 @@ object DictionaryMeaningStub {
     fun getPending() = pendingMeaning.copy()
 
     fun getSearchResult() = listOf(getApproved(), getPending())
+
+    fun getCreateError() = DictionaryError(
+        code = StubErrorCode.CANNOT_CREATE.name,
+        message = "Cannot create"
+    )
+
+    fun getReadError() = DictionaryError(
+        code = StubErrorCode.CANNOT_READ.name,
+        message = "Cannot read"
+    )
+
+    fun getUpdateError() = DictionaryError(
+        code = StubErrorCode.CANNOT_UPDATE.name,
+        message = "Cannot update"
+    )
+
+    fun getDeleteError() = DictionaryError(
+        code = StubErrorCode.CANNOT_DELETE.name,
+        message = "Cannot delete"
+    )
+
+    fun getSearchError() = DictionaryError(
+        code = StubErrorCode.CANNOT_SEARCH.name,
+        message = "Cannot search"
+    )
+
+    fun getInvalidStubError() = DictionaryError(
+        code = StubErrorCode.INVALID_STUB.name,
+        message = "Provided stub does not exist"
+    )
 
 }

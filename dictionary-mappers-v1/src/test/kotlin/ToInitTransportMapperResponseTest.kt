@@ -15,7 +15,7 @@ class ToInitTransportMapperResponseTest : FunSpec ({
     )
     val successInitContext = DictionaryContext(
         command = DictionaryCommand.INIT,
-        state = DictionaryState.RUNNING,
+        state = DictionaryState.FINISHING,
         requestId = DictionaryRequestId("456"),
         webSocketExtensions = mutableListOf(DictionaryWebSocketExtension.DEFLATE, DictionaryWebSocketExtension.NONE)
     )

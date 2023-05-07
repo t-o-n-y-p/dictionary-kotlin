@@ -15,7 +15,7 @@ class ToDeleteTransportMapperResponseTest : FunSpec ({
     )
     val successDeleteContext = DictionaryContext(
         command = DictionaryCommand.DELETE,
-        state = DictionaryState.RUNNING,
+        state = DictionaryState.FINISHING,
         requestId = DictionaryRequestId("456"),
         meaningResponse = DictionaryMeaning(
             id = DictionaryMeaningId("789"),

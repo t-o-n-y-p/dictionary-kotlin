@@ -4,6 +4,7 @@ enum class DictionaryState {
 
     NONE,
     RUNNING,
-    FAILING
+    FAILING,
+    FINISHING
 
 }

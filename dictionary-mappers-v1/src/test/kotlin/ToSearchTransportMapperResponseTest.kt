@@ -15,7 +15,7 @@ class ToSearchTransportMapperResponseTest : FunSpec ({
     )
     val successSearchContext = DictionaryContext(
         command = DictionaryCommand.SEARCH,
-        state = DictionaryState.RUNNING,
+        state = DictionaryState.FINISHING,
         requestId = DictionaryRequestId("123"),
         meaningsResponse = mutableListOf(
             DictionaryMeaning(),

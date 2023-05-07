@@ -1,11 +1,12 @@
 package util
 
 import com.tonyp.dictionarykotlin.api.v1.models.*
+import com.tonyp.dictionarykotlin.stubs.StubErrorCode
 import io.kotest.data.row
 
 object DataProvider {
 
-    val createRequest = MeaningCreateRequest(
+    val createRequestStubSuccess = MeaningCreateRequest(
         requestId = "123",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -17,10 +18,10 @@ object DataProvider {
             proposedBy = "unittest"
         )
     )
-    val createResponse = MeaningCreateResponse(
+    val createResponseStubSuccess = MeaningCreateResponse(
         responseType = "create",
         requestId = "123",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "456",
             word = "обвал",
@@ -30,7 +31,29 @@ object DataProvider {
         )
     )
 
-    val deleteRequest = MeaningDeleteRequest(
+    val createRequestStubError = MeaningCreateRequest(
+        requestId = "123",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.STUB,
+            stub = MeaningRequestDebugStubs.CANNOT_CREATE
+        ),
+        meaning = MeaningCreateObject(
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "unittest"
+        )
+    )
+    val createResponseStubError = MeaningCreateResponse(
+        responseType = "create",
+        requestId = "123",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(code = StubErrorCode.CANNOT_CREATE.name, message = "Cannot create")
+        ),
+        meaning = MeaningResponseFullObject()
+    )
+
+    val deleteRequestStubSuccess = MeaningDeleteRequest(
         requestId = "789",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -40,16 +63,36 @@ object DataProvider {
             id = "123"
         )
     )
-    val deleteResponse = MeaningDeleteResponse(
+    val deleteResponseStubSuccess = MeaningDeleteResponse(
         responseType = "delete",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseDeleteObject(
             id = "456"
         )
     )
 
-    val readRequest = MeaningReadRequest(
+    val deleteRequestStubError = MeaningDeleteRequest(
+        requestId = "789",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.STUB,
+            stub = MeaningRequestDebugStubs.CANNOT_DELETE
+        ),
+        meaning = MeaningDeleteObject(
+            id = "123"
+        )
+    )
+    val deleteResponseStubError = MeaningDeleteResponse(
+        responseType = "delete",
+        requestId = "789",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(code = StubErrorCode.CANNOT_DELETE.name, message = "Cannot delete")
+        ),
+        meaning = MeaningResponseDeleteObject()
+    )
+
+    val readRequestStubSuccess = MeaningReadRequest(
         requestId = "456",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -59,10 +102,10 @@ object DataProvider {
             id = "789"
         )
     )
-    val readResponse = MeaningReadResponse(
+    val readResponseStubSuccess = MeaningReadResponse(
         responseType = "read",
         requestId = "456",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "123",
             word = "трава",
@@ -72,7 +115,27 @@ object DataProvider {
         )
     )
 
-    val updateRequest = MeaningUpdateRequest(
+    val readRequestStubError = MeaningReadRequest(
+        requestId = "456",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.STUB,
+            stub = MeaningRequestDebugStubs.CANNOT_READ
+        ),
+        meaning = MeaningReadObject(
+            id = "789"
+        )
+    )
+    val readResponseStubError = MeaningReadResponse(
+        responseType = "read",
+        requestId = "456",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(code = StubErrorCode.CANNOT_READ.name, message = "Cannot read")
+        ),
+        meaning = MeaningResponseFullObject()
+    )
+
+    val updateRequestStubSuccess = MeaningUpdateRequest(
         requestId = "789",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -83,10 +146,10 @@ object DataProvider {
             approved = false
         )
     )
-    val updateResponse = MeaningUpdateResponse(
+    val updateResponseStubSuccess = MeaningUpdateResponse(
         responseType = "update",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "123",
             word = "трава",
@@ -95,10 +158,10 @@ object DataProvider {
             approved = true
         )
     )
-    val updateToCreateResponse = MeaningCreateResponse(
+    val updateToCreateResponseStubSuccess = MeaningCreateResponse(
         responseType = "create",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseFullObject(
             id = "123",
             word = "трава",
@@ -107,16 +170,37 @@ object DataProvider {
             approved = true
         )
     )
-    val updateToDeleteResponse = MeaningDeleteResponse(
+    val updateToDeleteResponseStubSuccess = MeaningDeleteResponse(
         responseType = "delete",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meaning = MeaningResponseDeleteObject(
             id = "123"
         )
     )
 
-    val searchRequest = MeaningSearchRequest(
+    val updateRequestStubError = MeaningUpdateRequest(
+        requestId = "789",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.STUB,
+            stub = MeaningRequestDebugStubs.CANNOT_UPDATE
+        ),
+        meaning = MeaningUpdateObject(
+            id = "456",
+            approved = false
+        )
+    )
+    val updateResponseStubError = MeaningUpdateResponse(
+        responseType = "update",
+        requestId = "789",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(code = StubErrorCode.CANNOT_UPDATE.name, message = "Cannot update")
+        ),
+        meaning = MeaningResponseFullObject()
+    )
+
+    val searchRequestStubSuccess = MeaningSearchRequest(
         requestId = "789",
         debug = MeaningDebug(
             mode = MeaningRequestDebugMode.STUB,
@@ -127,10 +211,10 @@ object DataProvider {
             approved = false
         )
     )
-    val searchResponse = MeaningSearchResponse(
+    val searchResponseStubSuccess = MeaningSearchResponse(
         responseType = "search",
         requestId = "789",
-        result = ResponseResult.ERROR,
+        result = ResponseResult.SUCCESS,
         meanings = listOf(
             MeaningResponseFullObject(
                 id = "123",
@@ -146,6 +230,26 @@ object DataProvider {
                 proposedBy = "t-o-n-y-p",
                 approved = false
             )
+        )
+    )
+
+    val searchRequestStubError = MeaningSearchRequest(
+        requestId = "789",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.STUB,
+            stub = MeaningRequestDebugStubs.CANNOT_SEARCH
+        ),
+        meaningFilter = MeaningSearchFilter(
+            word = "растение",
+            approved = false
+        )
+    )
+    val searchResponseStubError = MeaningSearchResponse(
+        responseType = "search",
+        requestId = "789",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(code = StubErrorCode.CANNOT_SEARCH.name, message = "Cannot search")
         )
     )
 
@@ -293,7 +397,7 @@ object DataProvider {
             }
         ),
         row(
-            "Wrong word and wrong approved",
+            "Wrong word and approved",
             searchRequest {
                 meaningFilter {
                     word = "обвал"
