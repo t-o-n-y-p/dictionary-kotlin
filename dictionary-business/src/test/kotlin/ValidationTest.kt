@@ -10,6 +10,7 @@ import com.tonyp.dictionarykotlin.common.models.*
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 
 class ValidationTest : FreeSpec ({
 
@@ -74,7 +75,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     word = word.trim(),
@@ -146,7 +147,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     word = "слово",
@@ -170,7 +171,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     word = "слово",
@@ -218,7 +219,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     word = "слово",
@@ -312,7 +313,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId(id.trim())
@@ -376,7 +377,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId(id.trim())
@@ -443,7 +444,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId(id.trim()),
@@ -483,7 +484,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId("123"),
@@ -527,7 +528,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
                     word = "",
@@ -549,7 +550,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
                     word = word,
@@ -571,7 +572,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
                     word = word.trim(),
@@ -590,14 +591,14 @@ class ValidationTest : FreeSpec ({
         )
         processor.exec(context)
 
-        context.state shouldBe DictionaryState.RUNNING
+        context.state shouldNotBe DictionaryState.FAILING
         context.errors shouldBe emptyList()
         context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
             word = "word"
         )
     }
 
-    "Update with valid approved flag" - {
+    "Search with valid approved flag" - {
         validApproved.map { (description, approved) ->
             description {
                 val context = DictionaryContext(
@@ -609,7 +610,7 @@ class ValidationTest : FreeSpec ({
                 )
                 processor.exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
                     word = "word",

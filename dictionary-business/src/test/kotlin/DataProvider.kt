@@ -1,10 +1,21 @@
 import com.tonyp.dictionarykotlin.business.DictionaryMeaningProcessor
+import com.tonyp.dictionarykotlin.common.DictionaryCorSettings
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
+import com.tonyp.dictionarykotlin.common.models.DictionaryWorkMode
+import com.tonyp.dictionarykotlin.repo.stub.MeaningRepoStub
 import io.kotest.data.row
 
 object DataProvider {
 
-    val processor = DictionaryMeaningProcessor()
+    val processor = DictionaryMeaningProcessor(
+        settings = DictionaryCorSettings(
+            repositories = mapOf(
+                DictionaryWorkMode.PROD to MeaningRepoStub(),
+                DictionaryWorkMode.TEST to MeaningRepoStub(),
+                DictionaryWorkMode.STUB to MeaningRepoStub()
+            )
+        )
+    )
 
     val empties = listOf(
         row("Empty", ""),
