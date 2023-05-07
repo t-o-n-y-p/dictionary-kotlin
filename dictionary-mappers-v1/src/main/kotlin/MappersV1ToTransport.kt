@@ -67,18 +67,12 @@ private fun DictionaryMeaning.toTransportFullMeaning(): MeaningResponseFullObjec
     word = word.takeIf { it.isNotBlank() },
     value = value.takeIf { it.isNotBlank() },
     proposedBy = proposedBy.takeIf { it.isNotBlank() },
-    approved = approved.toTransportMeaning()
+    approved = approved.boolean
 )
 
 private fun DictionaryMeaning.toTransportDeleteMeaning(): MeaningResponseDeleteObject = MeaningResponseDeleteObject(
     id = id.takeIf { it != DictionaryMeaningId.NONE }?.asString()
 )
-
-private fun DictionaryMeaningApproved.toTransportMeaning() : Boolean? = when (this) {
-    DictionaryMeaningApproved.FALSE -> false
-    DictionaryMeaningApproved.TRUE -> true
-    DictionaryMeaningApproved.NONE -> null
-}
 
 private fun List<DictionaryError>.toTransportErrors(): List<Error>? = this
     .map { it.toTransportMeaning() }

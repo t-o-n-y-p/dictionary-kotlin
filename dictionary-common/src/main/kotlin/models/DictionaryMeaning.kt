@@ -7,4 +7,8 @@ data class DictionaryMeaning (
     var value: String = "",
     var proposedBy: String = "",
     var approved: DictionaryMeaningApproved = DictionaryMeaningApproved.NONE
-)
+) {
+    companion object {
+        val NONE = DictionaryMeaning()
+    }
+}

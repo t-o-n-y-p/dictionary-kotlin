@@ -1,6 +1,7 @@
 package com.tonyp.dictionarykotlin.common
 
 import com.tonyp.dictionarykotlin.common.models.*
+import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.common.stubs.DictionaryStub
 
 import kotlinx.datetime.Instant
@@ -14,6 +15,12 @@ data class DictionaryContext (
 
     var workMode: DictionaryWorkMode = DictionaryWorkMode.PROD,
     var stubCase: DictionaryStub = DictionaryStub.NONE,
+
+    var meaningRepo: IMeaningRepository = IMeaningRepository.NONE,
+    var meaningRepoRead: DictionaryMeaning = DictionaryMeaning(),
+    var meaningRepoPrepare: DictionaryMeaning = DictionaryMeaning(),
+    var meaningRepoDone: DictionaryMeaning = DictionaryMeaning(),
+    var meaningsRepoDone: MutableList<DictionaryMeaning> = mutableListOf(),
 
     var webSocketExtensions: MutableList<DictionaryWebSocketExtension> = mutableListOf(),
 
