@@ -1,11 +1,13 @@
 package com.tonyp.dictionarykotlin.repo.inmemory
 
 import com.benasher44.uuid.uuid4
-import com.tonyp.dictionarykotlin.common.models.DictionaryError
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
 import com.tonyp.dictionarykotlin.common.repo.*
+import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_ALREADY_EXISTS
+import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID
+import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND
 import io.github.reactivecircus.cache4k.Cache
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -34,25 +36,25 @@ class MeaningRepoInMemory (
     }
 
     override suspend fun createMeaning(rq: DbMeaningRequest): DbMeaningResponse {
+        cache.asMap().asSequence()
+            .firstOrNull {
+                it.value.wordEntity?.word == rq.meaning.word
+                        && it.value.valueEntity?.value == rq.meaning.value
+            }
+            ?.let { return RESULT_ERROR_ALREADY_EXISTS }
+
         val key = randomUuid()
         val meaning = rq.meaning.copy(id = DictionaryMeaningId(key))
         val entity = MeaningEntity(meaning)
         cache.put(key, entity)
-        return DbMeaningResponse(
-            data = meaning,
-            isSuccess = true
-        )
+        return DbMeaningResponse.success(meaning)
     }
 
     override suspend fun readMeaning(rq: DbMeaningIdRequest): DbMeaningResponse {
         val key = rq.id.takeIf { it != DictionaryMeaningId.NONE }?.asString() ?: return RESULT_ERROR_EMPTY_ID
         return cache.get(key)
-            ?.let {
-                DbMeaningResponse(
-                    data = it.toInternal(),
-                    isSuccess = true,
-                )
-            } ?: RESULT_ERROR_NOT_FOUND
+            ?.let { DbMeaningResponse.success(it.toInternal()) }
+            ?: RESULT_ERROR_NOT_FOUND
     }
 
     override suspend fun updateMeaning(rq: DbMeaningRequest): DbMeaningResponse {
@@ -63,10 +65,7 @@ class MeaningRepoInMemory (
             null -> RESULT_ERROR_NOT_FOUND
             else -> {
                 cache.put(key, entity)
-                DbMeaningResponse(
-                    data = newMeaning,
-                    isSuccess = true
-                )
+                DbMeaningResponse.success(newMeaning)
             }
         }
     }
@@ -77,10 +76,7 @@ class MeaningRepoInMemory (
             null -> RESULT_ERROR_NOT_FOUND
             else -> {
                 cache.invalidate(key)
-                DbMeaningResponse(
-                    data = oldMeaning.toInternal(),
-                    isSuccess = true
-                )
+                DbMeaningResponse.success(oldMeaning.toInternal())
             }
         }
     }
@@ -99,32 +95,6 @@ class MeaningRepoInMemory (
             }
             .map { it.value.toInternal() }
             .toList()
-        return DbMeaningsResponse(
-            data = result,
-            isSuccess = true
-        )
-    }
-
-    companion object {
-        val RESULT_ERROR_EMPTY_ID = DbMeaningResponse(
-            isSuccess = false,
-            data = null,
-            errors = listOf(
-                DictionaryError(
-                    code = "ID_IS_EMPTY",
-                    message = "ID must not be empty"
-                )
-            )
-        )
-        val RESULT_ERROR_NOT_FOUND = DbMeaningResponse(
-            isSuccess = false,
-            data = null,
-            errors = listOf(
-                DictionaryError(
-                    code = "NOT_FOUND",
-                    message = "Meaning with the provided ID doesn't exist"
-                )
-            )
-        )
+        return DbMeaningsResponse.success(result)
     }
 }
