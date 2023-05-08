@@ -19,4 +19,5 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation(project(mapOf("path" to ":dictionary-repo-in-memory")))
     testImplementation(project(mapOf("path" to ":dictionary-repo-stubs")))
+    testImplementation(project(mapOf("path" to ":dictionary-repo-tests")))
 }

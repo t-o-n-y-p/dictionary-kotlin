@@ -30,6 +30,37 @@ object DictionaryMeaningStub {
 
     fun getSearchResult() = listOf(getApproved(), getPending())
 
+    fun getLongSearchData() = listOf(
+        DictionaryMeaning(
+            id = DictionaryMeaningId("123"),
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "unittest",
+            approved = DictionaryMeaningApproved.TRUE
+        ),
+        DictionaryMeaning(
+            id = DictionaryMeaningId("456"),
+            word = "обвал",
+            value = "снежные глыбы или обломки скал, обрушившиеся с гор",
+            proposedBy = "t-o-n-y-p",
+            approved = DictionaryMeaningApproved.FALSE
+        ),
+        DictionaryMeaning(
+            id = DictionaryMeaningId("789"),
+            word = "трава",
+            value = "снежные глыбы или обломки скал, обрушившиеся с гор",
+            proposedBy = "unittest",
+            approved = DictionaryMeaningApproved.FALSE
+        ),
+        DictionaryMeaning(
+            id = DictionaryMeaningId("34567"),
+            word = "обвал",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "t-o-n-y-p",
+            approved = DictionaryMeaningApproved.TRUE
+        )
+    )
+
     fun getCreateError() = DictionaryError(
         code = StubErrorCode.CANNOT_CREATE.name,
         message = "Cannot create"

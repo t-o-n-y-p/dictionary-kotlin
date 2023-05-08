@@ -10,7 +10,6 @@ import com.tonyp.dictionarykotlin.log.v1.dictionaryLogger
 import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
 import com.tonyp.dictionarykotlin.meaning.app.module
 import com.tonyp.dictionarykotlin.repo.inmemory.MeaningRepoInMemory
-import com.tonyp.dictionarykotlin.repo.stub.MeaningRepoStub
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -29,8 +28,7 @@ fun Application.initAppSettings(): DictionaryAppSettings {
         loggerProvider = DictionaryLoggerProvider { dictionaryLogger(it) },
         repositories = mapOf(
             DictionaryWorkMode.PROD to MeaningRepoInMemory(),
-            DictionaryWorkMode.TEST to MeaningRepoInMemory(),
-            DictionaryWorkMode.STUB to MeaningRepoStub(),
+            DictionaryWorkMode.TEST to MeaningRepoInMemory()
         )
     )
     return DictionaryAppSettings(

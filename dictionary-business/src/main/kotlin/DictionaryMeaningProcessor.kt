@@ -6,7 +6,6 @@ import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.DictionaryCorSettings
 import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
 import com.tonyp.dictionarykotlin.cor.chain
-import com.tonyp.dictionarykotlin.cor.sequence
 
 class DictionaryMeaningProcessor(
     private val settings: DictionaryCorSettings = DictionaryCorSettings()
@@ -36,8 +35,7 @@ class DictionaryMeaningProcessor(
                     validateUsernameContent()
                     finishMeaningValidation()
                 }
-                sequence {
-                    this.title = "Логика создания"
+                repo("Логика создания") {
                     repoPrepareCreate()
                     repoCreate()
                 }
@@ -56,8 +54,7 @@ class DictionaryMeaningProcessor(
                     validateIdContent()
                     finishMeaningValidation()
                 }
-                sequence {
-                    this.title = "Логика чтения"
+                repo("Логика чтения") {
                     repoRead()
                     repoPrepareReadResult()
                 }
@@ -77,8 +74,7 @@ class DictionaryMeaningProcessor(
                     validateApprovedNotEmpty()
                     finishMeaningValidation()
                 }
-                sequence {
-                    this.title = "Логика изменения"
+                repo("Логика изменения") {
                     repoRead()
                     repoPrepareUpdate()
                     repoUpdate()
@@ -98,8 +94,7 @@ class DictionaryMeaningProcessor(
                     validateIdContent()
                     finishMeaningValidation()
                 }
-                sequence {
-                    this.title = "Логика удаления"
+                repo("Логика удаления") {
                     repoRead()
                     repoPrepareDelete()
                     repoDelete()
@@ -117,7 +112,9 @@ class DictionaryMeaningProcessor(
                     clearValidatingSearchContext()
                     finishFilterValidation()
                 }
-                repoSearch()
+                repo("Логика поиска") {
+                    repoSearch()
+                }
                 prepareResult()
             }
         }.build()

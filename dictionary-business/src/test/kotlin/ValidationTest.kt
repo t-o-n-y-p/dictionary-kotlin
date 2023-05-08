@@ -2,7 +2,6 @@ import DataProvider.empties
 import DataProvider.invalidIds
 import DataProvider.invalidUsernames
 import DataProvider.invalidWords
-import DataProvider.processor
 import DataProvider.validApproved
 import DataProvider.validIds
 import com.tonyp.dictionarykotlin.common.DictionaryContext
@@ -25,7 +24,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -49,7 +48,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -73,7 +72,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -97,7 +96,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -121,7 +120,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -145,7 +144,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -169,7 +168,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = username
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -193,7 +192,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = username
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -217,7 +216,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = username
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -239,7 +238,7 @@ class ValidationTest : FreeSpec ({
                 proposedBy = invalidUsernames[2].b
             )
         )
-        processor.exec(context)
+        DataProvider.processor().exec(context)
 
         context.state shouldBe DictionaryState.FAILING
         context.errors shouldContainExactlyInAnyOrder listOf(
@@ -267,7 +266,7 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -289,7 +288,7 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -311,7 +310,7 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -331,7 +330,7 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -353,7 +352,7 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -375,7 +374,7 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -396,7 +395,7 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.FALSE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -419,7 +418,7 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.TRUE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -442,7 +441,7 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.FALSE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -461,7 +460,7 @@ class ValidationTest : FreeSpec ({
                 id = DictionaryMeaningId(validIds[0].b)
             )
         )
-        processor.exec(context)
+        DataProvider.processor().exec(context)
 
         context.state shouldBe DictionaryState.FAILING
         context.errors shouldContainExactlyInAnyOrder listOf(
@@ -482,7 +481,7 @@ class ValidationTest : FreeSpec ({
                         approved = approved
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -501,7 +500,7 @@ class ValidationTest : FreeSpec ({
                 id = DictionaryMeaningId(invalidIds[0].b)
             )
         )
-        processor.exec(context)
+        DataProvider.processor().exec(context)
 
         context.state shouldBe DictionaryState.FAILING
         context.errors shouldContainExactlyInAnyOrder listOf(
@@ -526,7 +525,7 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.FALSE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -548,7 +547,7 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.TRUE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -570,7 +569,7 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.FALSE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
@@ -589,7 +588,7 @@ class ValidationTest : FreeSpec ({
                 word = "word"
             )
         )
-        processor.exec(context)
+        DataProvider.processor().exec(context)
 
         context.state shouldNotBe DictionaryState.FAILING
         context.errors shouldBe emptyList()
@@ -608,7 +607,7 @@ class ValidationTest : FreeSpec ({
                         approved = approved
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()

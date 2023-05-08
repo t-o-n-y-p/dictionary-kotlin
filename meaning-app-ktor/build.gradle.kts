@@ -64,6 +64,7 @@ dependencies {
     implementation(project(mapOf("path" to ":dictionary-business")))
     implementation(project(mapOf("path" to ":dictionary-repo-in-memory")))
     implementation(project(mapOf("path" to ":dictionary-repo-stubs")))
+    implementation(project(mapOf("path" to ":dictionary-repo-tests")))
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
