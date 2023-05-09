@@ -29,7 +29,8 @@ class FromUpdateTransportMapperTest : FunSpec ({
         ),
         meaning = MeaningUpdateObject(
             id = "789",
-            approved = false
+            approved = false,
+            version = "qwerty"
         )
     )
 
@@ -46,9 +47,9 @@ class FromUpdateTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -65,9 +66,9 @@ class FromUpdateTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -84,9 +85,9 @@ class FromUpdateTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -108,10 +109,11 @@ class FromUpdateTransportMapperTest : FunSpec ({
             word = "",
             value = "",
             proposedBy = "",
-            approved = DictionaryMeaningApproved.FALSE
+            approved = DictionaryMeaningApproved.FALSE,
+            version = DictionaryMeaningVersion("qwerty")
         )
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 

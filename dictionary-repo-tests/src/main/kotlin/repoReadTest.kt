@@ -13,10 +13,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 fun repoReadTest(repo: IMeaningRepository) = funSpec {
 
     repoTest("Read success") {
-        val result = repo.readMeaning(DbMeaningIdRequest(repoReadInitObjects[0]))
+        val result = repo.readMeaning(DbMeaningIdRequest(InitReadObjects.initObjects[0]))
 
         result.isSuccess shouldBe true
-        result.data shouldBe repoReadInitObjects[0]
+        result.data shouldBe InitReadObjects.initObjects[0]
         result.errors shouldBe emptyList()
     }
 
@@ -45,6 +45,7 @@ fun repoReadTest(repo: IMeaningRepository) = funSpec {
     }
 }
 
-val repoReadInitObjects: List<DictionaryMeaning> = listOf(
-    DictionaryMeaningStub.getApproved()
-)
+object InitReadObjects : InitObjects {
+    override val initObjects: List<DictionaryMeaning> =
+        listOf(DictionaryMeaningStub.getApproved())
+}

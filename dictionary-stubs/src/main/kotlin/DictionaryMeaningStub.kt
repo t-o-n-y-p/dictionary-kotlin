@@ -1,9 +1,6 @@
 package com.tonyp.dictionarykotlin.stubs
 
-import com.tonyp.dictionarykotlin.common.models.DictionaryError
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
+import com.tonyp.dictionarykotlin.common.models.*
 
 object DictionaryMeaningStub {
 
@@ -13,7 +10,8 @@ object DictionaryMeaningStub {
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = DictionaryMeaningApproved.TRUE
+            approved = DictionaryMeaningApproved.TRUE,
+            version = DictionaryMeaningVersion("qwerty")
         )
     private val pendingMeaning: DictionaryMeaning =
         DictionaryMeaning(
@@ -21,7 +19,8 @@ object DictionaryMeaningStub {
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = DictionaryMeaningApproved.FALSE
+            approved = DictionaryMeaningApproved.FALSE,
+            version = DictionaryMeaningVersion("asdfgh")
         )
 
     fun getApproved() = approvedMeaning.copy()
@@ -36,28 +35,32 @@ object DictionaryMeaningStub {
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = DictionaryMeaningApproved.TRUE
+            approved = DictionaryMeaningApproved.TRUE,
+            version = DictionaryMeaningVersion("qwerty")
         ),
         DictionaryMeaning(
             id = DictionaryMeaningId("456"),
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = DictionaryMeaningApproved.FALSE
+            approved = DictionaryMeaningApproved.FALSE,
+            version = DictionaryMeaningVersion("asdfgh")
         ),
         DictionaryMeaning(
             id = DictionaryMeaningId("789"),
             word = "трава",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "unittest",
-            approved = DictionaryMeaningApproved.FALSE
+            approved = DictionaryMeaningApproved.FALSE,
+            version = DictionaryMeaningVersion("zxcvbn")
         ),
         DictionaryMeaning(
             id = DictionaryMeaningId("34567"),
             word = "обвал",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "t-o-n-y-p",
-            approved = DictionaryMeaningApproved.TRUE
+            approved = DictionaryMeaningApproved.TRUE,
+            version = DictionaryMeaningVersion("qweasdzxc")
         )
     )
 

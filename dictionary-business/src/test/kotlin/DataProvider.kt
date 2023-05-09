@@ -5,8 +5,9 @@ import com.tonyp.dictionarykotlin.common.repo.DbMeaningResponse
 import com.tonyp.dictionarykotlin.common.repo.DbMeaningsResponse
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_ALREADY_EXISTS
+import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID
-import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND
+import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION
 import com.tonyp.dictionarykotlin.repo.stub.MeaningRepoStub
 import com.tonyp.dictionarykotlin.repo.tests.MeaningRepositoryMock
 import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
@@ -41,7 +42,7 @@ object DataProvider {
             )
         },
         invokeUpdate = {
-            DbMeaningResponse.success(it.meaning)
+            DbMeaningResponse.success(it.meaning.copy(version = DictionaryMeaningVersion("qwerty")))
         },
         invokeDelete = { idRequest ->
             DbMeaningResponse.success(
@@ -58,7 +59,7 @@ object DataProvider {
             RESULT_ERROR_ALREADY_EXISTS
         },
         invokeRead = {
-            RESULT_ERROR_NOT_FOUND
+            RESULT_ERROR_EMPTY_ID
         },
         invokeSearch = {
             DbMeaningsResponse.error(DictionaryMeaningStub.getSearchError())
@@ -72,10 +73,10 @@ object DataProvider {
             )
         },
         invokeUpdate = {
-            RESULT_ERROR_EMPTY_ID
+            RESULT_ERROR_CONCURRENT_MODIFICATION
         },
         invokeDelete = {
-            RESULT_ERROR_NOT_FOUND
+            RESULT_ERROR_EMPTY_VERSION
         }
     )
 
@@ -121,6 +122,16 @@ object DataProvider {
     val validApproved = listOf(
         row("false", DictionaryMeaningApproved.FALSE),
         row("true", DictionaryMeaningApproved.TRUE)
+    )
+    val invalidVersions = listOf(
+        row("Too long", "hedgehog12345678".repeat(5)),
+        row("Special symbols", "special?!"),
+        row("Non-latin", "пешеход")
+    )
+    val validVersions = listOf(
+        row("0", "0"),
+        row("                    qwerty          ", "                    qwerty          "),
+        row("20000000-ABCD-EFGH-0000-000000000001", "20000000-ABCD-EFGH-0000-000000000001")
     )
 
 }

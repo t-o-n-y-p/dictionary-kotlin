@@ -3,10 +3,7 @@ import com.tonyp.dictionarykotlin.api.v1.models.MeaningDeleteResponse
 import com.tonyp.dictionarykotlin.api.v1.models.MeaningReadResponse
 import com.tonyp.dictionarykotlin.api.v1.models.MeaningUpdateResponse
 import com.tonyp.dictionarykotlin.repo.inmemory.MeaningRepoInMemory
-import com.tonyp.dictionarykotlin.repo.tests.repoCreateInitObjects
-import com.tonyp.dictionarykotlin.repo.tests.repoDeleteInitObjects
-import com.tonyp.dictionarykotlin.repo.tests.repoReadInitObjects
-import com.tonyp.dictionarykotlin.repo.tests.repoUpdateInitObjects
+import com.tonyp.dictionarykotlin.repo.tests.*
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -15,11 +12,15 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import util.DataProvider.createRequestTestError
 import util.DataProvider.createResponseTestError
+import util.DataProvider.deleteRequestTestConcurrentModification
 import util.DataProvider.deleteRequestTestError
+import util.DataProvider.deleteResponseTestConcurrentModification
 import util.DataProvider.deleteResponseTestError
 import util.DataProvider.readRequestTestError
 import util.DataProvider.readResponseTestError
+import util.DataProvider.updateRequestTestConcurrentModification
 import util.DataProvider.updateRequestTestError
+import util.DataProvider.updateResponseTestConcurrentModification
 import util.DataProvider.updateResponseTestError
 import util.post
 import util.testApplication
@@ -28,7 +29,7 @@ class ApiErrorInMemoryTest : FunSpec ({
 
     test("Create request error in memory: already exists") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoCreateInitObjects
+            initObjects = InitCreateObjects.initObjects
         )
 
         testApplication(meaningRepoInMemory) {
@@ -44,7 +45,7 @@ class ApiErrorInMemoryTest : FunSpec ({
 
     test("Read request error in memory: not found") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoReadInitObjects
+            initObjects = InitReadObjects.initObjects
         )
 
         testApplication(meaningRepoInMemory) {
@@ -60,7 +61,7 @@ class ApiErrorInMemoryTest : FunSpec ({
 
     test("Update request error in memory: not found") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoUpdateInitObjects
+            initObjects = InitUpdateObjects.initObjects
         )
 
         testApplication(meaningRepoInMemory) {
@@ -74,9 +75,25 @@ class ApiErrorInMemoryTest : FunSpec ({
         }
     }
 
+    test("Update request error in memory: concurrent modification") {
+        val meaningRepoInMemory = MeaningRepoInMemory(
+            initObjects = InitUpdateObjects.initObjects
+        )
+
+        testApplication(meaningRepoInMemory) {
+            val response = post("/api/v1/meaning/update") {
+                contentType(ContentType.Application.Json)
+                setBody(updateRequestTestConcurrentModification)
+            }
+
+            response shouldHaveStatus HttpStatusCode.OK
+            response.body() as MeaningUpdateResponse shouldBe updateResponseTestConcurrentModification
+        }
+    }
+
     test("Delete request error in memory: not found") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoDeleteInitObjects
+            initObjects = InitDeleteObjects.initObjects
         )
 
         testApplication(meaningRepoInMemory) {
@@ -87,6 +104,22 @@ class ApiErrorInMemoryTest : FunSpec ({
 
             response shouldHaveStatus HttpStatusCode.OK
             response.body() as MeaningDeleteResponse shouldBe deleteResponseTestError
+        }
+    }
+
+    test("Delete request error in memory: concurrent modification") {
+        val meaningRepoInMemory = MeaningRepoInMemory(
+            initObjects = InitDeleteObjects.initObjects
+        )
+
+        testApplication(meaningRepoInMemory) {
+            val response = post("/api/v1/meaning/delete") {
+                contentType(ContentType.Application.Json)
+                setBody(deleteRequestTestConcurrentModification)
+            }
+
+            response shouldHaveStatus HttpStatusCode.OK
+            response.body() as MeaningDeleteResponse shouldBe deleteResponseTestConcurrentModification
         }
     }
 

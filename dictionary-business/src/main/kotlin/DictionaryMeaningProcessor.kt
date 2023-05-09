@@ -72,6 +72,8 @@ class DictionaryMeaningProcessor(
                     validateIdNotEmpty()
                     validateIdContent()
                     validateApprovedNotEmpty()
+                    validateVersionNotEmpty()
+                    validateVersionContent()
                     finishMeaningValidation()
                 }
                 repo("Логика изменения") {
@@ -92,6 +94,8 @@ class DictionaryMeaningProcessor(
                     clearValidatingDeleteContext()
                     validateIdNotEmpty()
                     validateIdContent()
+                    validateVersionNotEmpty()
+                    validateVersionContent()
                     finishMeaningValidation()
                 }
                 repo("Логика удаления") {

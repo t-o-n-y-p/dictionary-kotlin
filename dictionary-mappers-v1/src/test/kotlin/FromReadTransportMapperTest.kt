@@ -45,9 +45,9 @@ class FromReadTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -64,9 +64,9 @@ class FromReadTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -83,9 +83,9 @@ class FromReadTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -110,7 +110,7 @@ class FromReadTransportMapperTest : FunSpec ({
             approved = DictionaryMeaningApproved.NONE
         )
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 

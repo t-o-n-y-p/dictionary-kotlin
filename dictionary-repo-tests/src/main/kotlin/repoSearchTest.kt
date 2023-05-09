@@ -17,7 +17,7 @@ fun repoSearchTest(repo: IMeaningRepository) = funSpec {
         val result = repo.searchMeaning(DbMeaningFilterRequest(DictionaryMeaningFilter()))
 
         result.isSuccess shouldBe true
-        result.data shouldBe repoSearchInitObjects
+        result.data shouldBe InitSearchObjects.initObjects
         result.errors shouldBe emptyList()
     }
 
@@ -27,7 +27,7 @@ fun repoSearchTest(repo: IMeaningRepository) = funSpec {
         )
 
         result.isSuccess shouldBe true
-        result.data shouldBe repoSearchInitObjects.filter { it.word == "трава" }
+        result.data shouldBe InitSearchObjects.initObjects.filter { it.word == "трава" }
         result.errors shouldBe emptyList()
     }
 
@@ -37,7 +37,7 @@ fun repoSearchTest(repo: IMeaningRepository) = funSpec {
         )
 
         result.isSuccess shouldBe true
-        result.data shouldBe repoSearchInitObjects.filter { it.approved == DictionaryMeaningApproved.TRUE }
+        result.data shouldBe InitSearchObjects.initObjects.filter { it.approved == DictionaryMeaningApproved.TRUE }
         result.errors shouldBe emptyList()
     }
 
@@ -47,12 +47,14 @@ fun repoSearchTest(repo: IMeaningRepository) = funSpec {
         )
 
         result.isSuccess shouldBe true
-        result.data shouldBe repoSearchInitObjects.filter {
+        result.data shouldBe InitSearchObjects.initObjects.filter {
             it.word == "обвал" && it.approved == DictionaryMeaningApproved.FALSE
         }
         result.errors shouldBe emptyList()
     }
 }
 
-val repoSearchInitObjects: List<DictionaryMeaning> =
-    DictionaryMeaningStub.getLongSearchData()
+object InitSearchObjects : InitObjects {
+    override val initObjects: List<DictionaryMeaning> =
+        DictionaryMeaningStub.getLongSearchData()
+}

@@ -22,7 +22,8 @@ class ToDeleteTransportMapperResponseTest : FunSpec ({
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = DictionaryMeaningApproved.TRUE
+            approved = DictionaryMeaningApproved.TRUE,
+            version = DictionaryMeaningVersion("qwerty")
         )
     )
     val errorDeleteContext = DictionaryContext(

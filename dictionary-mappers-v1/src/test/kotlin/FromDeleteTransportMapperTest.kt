@@ -28,7 +28,8 @@ class FromDeleteTransportMapperTest : FunSpec ({
             stub = MeaningRequestDebugStubs.CANNOT_DELETE
         ),
         meaning = MeaningDeleteObject(
-            id = "123"
+            id = "123",
+            version = "zxcvbn"
         )
     )
 
@@ -45,9 +46,9 @@ class FromDeleteTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -64,9 +65,9 @@ class FromDeleteTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -83,9 +84,9 @@ class FromDeleteTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -107,10 +108,11 @@ class FromDeleteTransportMapperTest : FunSpec ({
             word = "",
             value = "",
             proposedBy = "",
-            approved = DictionaryMeaningApproved.NONE
+            approved = DictionaryMeaningApproved.NONE,
+            version = DictionaryMeaningVersion("zxcvbn")
         )
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 

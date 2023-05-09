@@ -195,6 +195,10 @@ components:
       type: string
       description: Идентификатор объекта значения
 
+    MeaningVersion:
+      type: string
+      description: Версия оптимистичной блокировки
+
     BaseCreateMeaning:
       type: object
       properties:
@@ -256,6 +260,8 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/MeaningId'
+            version:
+              $ref: '#/components/schemas/MeaningVersion'
 
     MeaningUpdateRequest:
       allOf:
@@ -272,6 +278,8 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/MeaningId'
+            version:
+              $ref: '#/components/schemas/MeaningVersion'
 
     MeaningDeleteRequest:
       allOf:
@@ -313,11 +321,15 @@ components:
       allOf:
         - $ref: '#/components/schemas/BaseFullMeaning'
         - $ref: '#/components/schemas/MeaningResponseDeleteObject'
+        - type: object
+          properties:
+            version:
+              $ref: '#/components/schemas/MeaningVersion'
 
     MeaningResponseDeleteSingle:
       allOf:
         - type: object
-          description: Ответ только с идентификатором объекта значения и пермишенами
+          description: Ответ только с идентификатором объекта значения
           properties:
             meaning:
               $ref: '#/components/schemas/MeaningResponseDeleteObject'

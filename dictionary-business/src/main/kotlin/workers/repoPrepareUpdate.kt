@@ -11,6 +11,7 @@ fun CorChainDsl<DictionaryContext>.repoPrepareUpdate() = worker {
     handle {
         meaningRepoPrepare = meaningRepoRead.copy().apply {
             approved = meaningValidated.approved
+            version = meaningValidated.version
         }
     }
 }

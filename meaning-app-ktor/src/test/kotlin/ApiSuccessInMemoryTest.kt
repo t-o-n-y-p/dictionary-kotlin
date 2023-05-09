@@ -24,8 +24,10 @@ class ApiSuccessInMemoryTest : FunSpec ({
 
     test("Create request success in memory") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoCreateInitObjects,
-            randomUuid = { createResponseTestSuccess.meaning!!.id!! })
+            initObjects = InitCreateObjects.initObjects,
+            idUuid = { createResponseTestSuccess.meaning!!.id!! },
+            versionUuid = { createResponseTestSuccess.meaning!!.version!! }
+        )
 
         testApplication(meaningRepoInMemory) {
             val response = post("/api/v1/meaning/create") {
@@ -40,7 +42,7 @@ class ApiSuccessInMemoryTest : FunSpec ({
 
     test("Read request success in memory") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoReadInitObjects
+            initObjects = InitReadObjects.initObjects
         )
         testApplication(meaningRepoInMemory) {
             val response = post("/api/v1/meaning/read") {
@@ -55,7 +57,8 @@ class ApiSuccessInMemoryTest : FunSpec ({
 
     test("Update request success in memory") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoUpdateInitObjects
+            initObjects = InitUpdateObjects.initObjects,
+            versionUuid = { "db6d3220-cb83-46ba-b074-40e49f2a8c65" }
         )
         testApplication(meaningRepoInMemory) {
             val response = post("/api/v1/meaning/update") {
@@ -70,7 +73,7 @@ class ApiSuccessInMemoryTest : FunSpec ({
 
     test("Delete request success in memory") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoDeleteInitObjects
+            initObjects = InitDeleteObjects.initObjects
         )
         testApplication(meaningRepoInMemory) {
             val response = post("/api/v1/meaning/delete") {
@@ -85,7 +88,7 @@ class ApiSuccessInMemoryTest : FunSpec ({
 
     test("Search request success in memory") {
         val meaningRepoInMemory = MeaningRepoInMemory(
-            initObjects = repoSearchInitObjects
+            initObjects = InitSearchObjects.initObjects
         )
         testApplication(meaningRepoInMemory) {
             val response = post("/api/v1/meaning/search") {

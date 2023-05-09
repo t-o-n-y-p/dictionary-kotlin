@@ -28,7 +28,8 @@ object DataProvider {
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = false
+            approved = false,
+            version = "asdfgh"
         )
     )
     val createRequestTestSuccess = MeaningCreateRequest(
@@ -51,7 +52,8 @@ object DataProvider {
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = false
+            approved = false,
+            version = "0d41215a-4f83-4e85-bf86-f164fc503082"
         )
     )
 
@@ -123,7 +125,8 @@ object DataProvider {
             mode = MeaningRequestDebugMode.TEST
         ),
         meaning = MeaningDeleteObject(
-            id = "123"
+            id = "123",
+            version = "qwerty"
         )
     )
     val deleteResponseTestSuccess = MeaningDeleteResponse(
@@ -160,7 +163,8 @@ object DataProvider {
             mode = MeaningRequestDebugMode.TEST
         ),
         meaning = MeaningDeleteObject(
-            id = "456"
+            id = "00000",
+            version = "version"
         )
     )
     val deleteResponseTestError = MeaningDeleteResponse(
@@ -171,6 +175,28 @@ object DataProvider {
             Error(
                 code = IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND.errors[0].code,
                 message = IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND.errors[0].message
+            )
+        ),
+        meaning = MeaningResponseDeleteObject()
+    )
+    val deleteRequestTestConcurrentModification = MeaningDeleteRequest(
+        requestId = "789",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.TEST
+        ),
+        meaning = MeaningDeleteObject(
+            id = "123",
+            version = "version"
+        )
+    )
+    val deleteResponseTestConcurrentModification = MeaningDeleteResponse(
+        responseType = "delete",
+        requestId = "789",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(
+                code = IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION.errors[0].code,
+                message = IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION.errors[0].message
             )
         ),
         meaning = MeaningResponseDeleteObject()
@@ -195,7 +221,8 @@ object DataProvider {
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = true
+            approved = true,
+            version = "qwerty"
         )
     )
     val readRequestTestSuccess = MeaningReadRequest(
@@ -216,7 +243,8 @@ object DataProvider {
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = true
+            approved = true,
+            version = "qwerty"
         )
     )
 
@@ -281,7 +309,8 @@ object DataProvider {
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = true
+            approved = true,
+            version = "qwerty"
         )
     )
     val updateToCreateResponseStubSuccess = MeaningCreateResponse(
@@ -293,7 +322,8 @@ object DataProvider {
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = true
+            approved = true,
+            version = "qwerty"
         )
     )
     val updateToDeleteResponseStubSuccess = MeaningDeleteResponse(
@@ -311,7 +341,8 @@ object DataProvider {
         ),
         meaning = MeaningUpdateObject(
             id = "456",
-            approved = true
+            approved = true,
+            version = "asdfgh"
         )
     )
     val updateResponseTestSuccess = MeaningUpdateResponse(
@@ -323,7 +354,8 @@ object DataProvider {
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = true
+            approved = true,
+            version = "db6d3220-cb83-46ba-b074-40e49f2a8c65"
         )
     )
 
@@ -353,8 +385,9 @@ object DataProvider {
             mode = MeaningRequestDebugMode.TEST
         ),
         meaning = MeaningUpdateObject(
-            id = "123",
-            approved = false
+            id = "000000",
+            approved = false,
+            version = "version"
         )
     )
     val updateResponseTestError = MeaningUpdateResponse(
@@ -365,6 +398,29 @@ object DataProvider {
             Error(
                 code = IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND.errors[0].code,
                 message = IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND.errors[0].message
+            )
+        ),
+        meaning = MeaningResponseFullObject()
+    )
+    val updateRequestTestConcurrentModification = MeaningUpdateRequest(
+        requestId = "789",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.TEST
+        ),
+        meaning = MeaningUpdateObject(
+            id = "456",
+            approved = true,
+            version = "qwerty"
+        )
+    )
+    val updateResponseTestConcurrentModification = MeaningUpdateResponse(
+        responseType = "update",
+        requestId = "789",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(
+                code = IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION.errors[0].code,
+                message = IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION.errors[0].message
             )
         ),
         meaning = MeaningResponseFullObject()
@@ -391,14 +447,16 @@ object DataProvider {
                 word = "трава",
                 value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
                 proposedBy = "unittest",
-                approved = true
+                approved = true,
+                version = "qwerty"
             ),
             MeaningResponseFullObject(
                 id = "456",
                 word = "обвал",
                 value = "снежные глыбы или обломки скал, обрушившиеся с гор",
                 proposedBy = "t-o-n-y-p",
-                approved = false
+                approved = false,
+                version = "asdfgh"
             )
         )
     )
@@ -421,14 +479,16 @@ object DataProvider {
                 word = "обвал",
                 value = "снежные глыбы или обломки скал, обрушившиеся с гор",
                 proposedBy = "t-o-n-y-p",
-                approved = false
+                approved = false,
+                version = "asdfgh"
             ),
             MeaningResponseFullObject(
                 id = "789",
                 word = "трава",
                 value = "снежные глыбы или обломки скал, обрушившиеся с гор",
                 proposedBy = "unittest",
-                approved = false
+                approved = false,
+                version = "zxcvbn"
             )
         )
     )

@@ -2,7 +2,6 @@ package com.tonyp.dictionarykotlin.repo.tests
 
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
 import com.tonyp.dictionarykotlin.common.repo.DbMeaningRequest
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_ALREADY_EXISTS
@@ -22,7 +21,10 @@ fun repoCreateTest(repo: IMeaningRepository) = funSpec {
             approved = DictionaryMeaningApproved.FALSE
         )
         val result = repo.createMeaning(DbMeaningRequest(createObject))
-        val expected = createObject.copy(id = result.data?.id ?: DictionaryMeaningId.NONE)
+        val expected = createObject.copy(
+            id = InitCreateObjects.initId,
+            version = InitCreateObjects.initVersion
+        )
 
         result.isSuccess shouldBe true
         result.data shouldBe expected
@@ -41,6 +43,7 @@ fun repoCreateTest(repo: IMeaningRepository) = funSpec {
     }
 }
 
-val repoCreateInitObjects: List<DictionaryMeaning> = listOf(
-    DictionaryMeaningStub.getPending()
-)
+object InitCreateObjects : InitObjects {
+    override val initObjects: List<DictionaryMeaning> =
+        listOf(DictionaryMeaningStub.getPending())
+}

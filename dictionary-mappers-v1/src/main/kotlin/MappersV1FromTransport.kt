@@ -17,6 +17,7 @@ fun DictionaryContext.fromTransport(request: IRequest) = when (request) {
 
 private fun String?.toMeaningId() = this?.let { DictionaryMeaningId(it) } ?: DictionaryMeaningId.NONE
 private fun String?.toMeaningWithId() = DictionaryMeaning(id = this.toMeaningId())
+private fun String?.toMeaningLock() = this?.let { DictionaryMeaningVersion(it) } ?: DictionaryMeaningVersion.NONE
 private fun IRequest?.requestId() = this?.requestId?.let { DictionaryRequestId(it) } ?: DictionaryRequestId.NONE
 
 private fun MeaningDebug?.transportToWorkMode(): DictionaryWorkMode = when (this?.mode) {
@@ -39,7 +40,7 @@ private fun MeaningDebug?.transportToStubCase(): DictionaryStub = when (this?.st
 private fun DictionaryContext.fromTransport(request: MeaningCreateRequest) {
     command = DictionaryCommand.CREATE
     requestId = request.requestId()
-    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning()
+    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning.NONE
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -55,7 +56,7 @@ private fun DictionaryContext.fromTransport(request: MeaningReadRequest) {
 private fun DictionaryContext.fromTransport(request: MeaningUpdateRequest) {
     command = DictionaryCommand.UPDATE
     requestId = request.requestId()
-    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning()
+    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning.NONE
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -63,7 +64,7 @@ private fun DictionaryContext.fromTransport(request: MeaningUpdateRequest) {
 private fun DictionaryContext.fromTransport(request: MeaningDeleteRequest) {
     command = DictionaryCommand.DELETE
     requestId = request.requestId()
-    meaningRequest = request.meaning?.id.toMeaningWithId()
+    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning.NONE
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -89,5 +90,11 @@ private fun MeaningCreateObject.toInternal(): DictionaryMeaning = DictionaryMean
 
 private fun MeaningUpdateObject.toInternal(): DictionaryMeaning = DictionaryMeaning(
     id = this.id.toMeaningId(),
-    approved = DictionaryMeaningApproved.fromBoolean(this.approved)
+    approved = DictionaryMeaningApproved.fromBoolean(this.approved),
+    version = version.toMeaningLock()
+)
+
+private fun MeaningDeleteObject.toInternal(): DictionaryMeaning = DictionaryMeaning(
+    id = this.id.toMeaningId(),
+    version = version.toMeaningLock()
 )

@@ -12,7 +12,7 @@ fun DictionaryContext.toLog(logId: String) = CommonLogModel(
 )
 
 private fun DictionaryContext.toMeaningLog(): DictionaryLogModel? {
-    val empty = DictionaryMeaning()
+    val empty = DictionaryMeaning.NONE
     return DictionaryLogModel(
         requestId = requestId.takeIf { it != DictionaryRequestId.NONE }?.asString(),
         operation = command.toLog(),

@@ -1,9 +1,11 @@
 import DataProvider.empties
 import DataProvider.invalidIds
 import DataProvider.invalidUsernames
+import DataProvider.invalidVersions
 import DataProvider.invalidWords
 import DataProvider.validApproved
 import DataProvider.validIds
+import DataProvider.validVersions
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.*
 import io.kotest.core.spec.style.FreeSpec
@@ -327,7 +329,8 @@ class ValidationTest : FreeSpec ({
                 val context = DictionaryContext(
                     command = DictionaryCommand.DELETE,
                     meaningRequest = DictionaryMeaning(
-                        id = DictionaryMeaningId(id)
+                        id = DictionaryMeaningId(id),
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -349,7 +352,8 @@ class ValidationTest : FreeSpec ({
                 val context = DictionaryContext(
                     command = DictionaryCommand.DELETE,
                     meaningRequest = DictionaryMeaning(
-                        id = DictionaryMeaningId(id)
+                        id = DictionaryMeaningId(id),
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -371,7 +375,8 @@ class ValidationTest : FreeSpec ({
                 val context = DictionaryContext(
                     command = DictionaryCommand.DELETE,
                     meaningRequest = DictionaryMeaning(
-                        id = DictionaryMeaningId(id)
+                        id = DictionaryMeaningId(id),
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -379,10 +384,102 @@ class ValidationTest : FreeSpec ({
                 context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
-                    id = DictionaryMeaningId(id.trim())
+                    id = DictionaryMeaningId(id.trim()),
+                    version = DictionaryMeaningVersion("version")
                 )
             }
         }
+    }
+
+    "Delete with empty version" - {
+        empties.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "VERSION_IS_EMPTY",
+                        message = "Version must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Delete with invalid version" - {
+        invalidVersions.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_VERSION",
+                        message = "Version must be mo more than 64 digits, latin chars, or dashes"
+                    )
+                )
+            }
+        }
+    }
+
+    "Delete with valid version" - {
+        validVersions.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldNotBe DictionaryState.FAILING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    id = DictionaryMeaningId("0"),
+                    version = DictionaryMeaningVersion(version.trim())
+                )
+            }
+        }
+    }
+
+    "Delete with multiple errors" {
+        val context = DictionaryContext(
+            command = DictionaryCommand.DELETE,
+            meaningRequest = DictionaryMeaning(
+                id = DictionaryMeaningId(empties[0].b),
+                version = DictionaryMeaningVersion(invalidVersions[1].b)
+            )
+        )
+        DataProvider.processor().exec(context)
+
+        context.state shouldBe DictionaryState.FAILING
+        context.errors shouldContainExactlyInAnyOrder listOf(
+            DictionaryError(
+                code = "ID_IS_EMPTY",
+                message = "ID must not be empty"
+            ),
+            DictionaryError(
+                code = "INVALID_VERSION",
+                message = "Version must be mo more than 64 digits, latin chars, or dashes"
+            )
+        )
     }
 
     "Update with empty ID" - {
@@ -392,7 +489,8 @@ class ValidationTest : FreeSpec ({
                     command = DictionaryCommand.UPDATE,
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
-                        approved = DictionaryMeaningApproved.FALSE
+                        approved = DictionaryMeaningApproved.FALSE,
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -415,7 +513,8 @@ class ValidationTest : FreeSpec ({
                     command = DictionaryCommand.UPDATE,
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
-                        approved = DictionaryMeaningApproved.TRUE
+                        approved = DictionaryMeaningApproved.TRUE,
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -438,7 +537,8 @@ class ValidationTest : FreeSpec ({
                     command = DictionaryCommand.UPDATE,
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
-                        approved = DictionaryMeaningApproved.FALSE
+                        approved = DictionaryMeaningApproved.FALSE,
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -447,7 +547,80 @@ class ValidationTest : FreeSpec ({
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId(id.trim()),
-                    approved = DictionaryMeaningApproved.FALSE
+                    approved = DictionaryMeaningApproved.FALSE,
+                    version = DictionaryMeaningVersion("version")
+                )
+            }
+        }
+    }
+
+    "Update with empty version" - {
+        empties.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        approved = DictionaryMeaningApproved.FALSE,
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "VERSION_IS_EMPTY",
+                        message = "Version must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Update with invalid version" - {
+        invalidVersions.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        approved = DictionaryMeaningApproved.TRUE,
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_VERSION",
+                        message = "Version must be mo more than 64 digits, latin chars, or dashes"
+                    )
+                )
+            }
+        }
+    }
+
+    "Update with valid version" - {
+        validVersions.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        approved = DictionaryMeaningApproved.FALSE,
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldNotBe DictionaryState.FAILING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    id = DictionaryMeaningId("0"),
+                    approved = DictionaryMeaningApproved.FALSE,
+                    version = DictionaryMeaningVersion(version.trim())
                 )
             }
         }
@@ -457,7 +630,8 @@ class ValidationTest : FreeSpec ({
         val context = DictionaryContext(
             command = DictionaryCommand.UPDATE,
             meaningRequest = DictionaryMeaning(
-                id = DictionaryMeaningId(validIds[0].b)
+                id = DictionaryMeaningId(validIds[0].b),
+                version = DictionaryMeaningVersion("version")
             )
         )
         DataProvider.processor().exec(context)
@@ -478,7 +652,8 @@ class ValidationTest : FreeSpec ({
                     command = DictionaryCommand.UPDATE,
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId("123"),
-                        approved = approved
+                        approved = approved,
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -487,7 +662,8 @@ class ValidationTest : FreeSpec ({
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId("123"),
-                    approved = approved
+                    approved = approved,
+                    version = DictionaryMeaningVersion("version")
                 )
             }
         }
@@ -497,7 +673,8 @@ class ValidationTest : FreeSpec ({
         val context = DictionaryContext(
             command = DictionaryCommand.UPDATE,
             meaningRequest = DictionaryMeaning(
-                id = DictionaryMeaningId(invalidIds[0].b)
+                id = DictionaryMeaningId(invalidIds[0].b),
+                version = DictionaryMeaningVersion(invalidVersions[2].b)
             )
         )
         DataProvider.processor().exec(context)
@@ -511,6 +688,10 @@ class ValidationTest : FreeSpec ({
             DictionaryError(
                 code = "APPROVED_FLAG_IS_EMPTY",
                 message = "Approved flag must not be empty"
+            ),
+            DictionaryError(
+                code = "INVALID_VERSION",
+                message = "Version must be mo more than 64 digits, latin chars, or dashes"
             )
         )
     }

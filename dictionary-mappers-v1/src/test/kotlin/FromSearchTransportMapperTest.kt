@@ -46,9 +46,9 @@ class FromSearchTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -65,9 +65,9 @@ class FromSearchTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -84,9 +84,9 @@ class FromSearchTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -103,12 +103,12 @@ class FromSearchTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId("456")
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning()
+        context.meaningRequest shouldBe DictionaryMeaning.NONE
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter(
             word = "трава",
             approved = DictionaryMeaningApproved.TRUE
         )
-        context.meaningResponse shouldBe DictionaryMeaning()
+        context.meaningResponse shouldBe DictionaryMeaning.NONE
         context.meaningsResponse shouldBe mutableListOf()
     }
 

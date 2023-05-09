@@ -31,6 +31,12 @@ interface IMeaningRepository {
                 message = "ID must not be empty"
             )
         )
+        val RESULT_ERROR_EMPTY_VERSION = DbMeaningResponse.error(
+            DictionaryError(
+                code = "VERSION_IS_EMPTY",
+                message = "Version must not be empty"
+            )
+        )
         val RESULT_ERROR_NOT_FOUND = DbMeaningResponse.error(
             DictionaryError(
                 code = "NOT_FOUND",
@@ -41,6 +47,13 @@ interface IMeaningRepository {
             DictionaryError(
                 code = "ALREADY_EXISTS",
                 message = "Meaning with the provided word and value already exists"
+            )
+        )
+        val RESULT_ERROR_CONCURRENT_MODIFICATION = DbMeaningResponse.error(
+            DictionaryError(
+                code = "CONCURRENT_MODIFICATION",
+                message = "The object has been changed concurrently by another user or process. " +
+                        "Please reload the object and try again"
             )
         )
 

@@ -18,6 +18,12 @@ class RepoTest : FunSpec ({
         )
         DataProvider.processor(DataProvider.successRepo).exec(ctx)
 
+        ctx.meaningRepoPrepare shouldBe DictionaryMeaning(
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "unittest",
+            approved = DictionaryMeaningApproved.FALSE
+        )
         ctx.state shouldBe DictionaryState.FINISHING
         ctx.meaningResponse shouldBe DictionaryMeaning(
             id = DictionaryMeaningId("10000000000000000000000000000001"),
@@ -39,6 +45,12 @@ class RepoTest : FunSpec ({
         )
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
 
+        ctx.meaningRepoPrepare shouldBe DictionaryMeaning(
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "unittest",
+            approved = DictionaryMeaningApproved.FALSE
+        )
         ctx.state shouldBe DictionaryState.FAILING
         ctx.meaningResponse shouldBe DictionaryMeaning.NONE
         ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_ALREADY_EXISTS.errors
@@ -68,14 +80,15 @@ class RepoTest : FunSpec ({
 
         ctx.state shouldBe DictionaryState.FAILING
         ctx.meaningResponse shouldBe DictionaryMeaning.NONE
-        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND.errors
+        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID.errors
     }
 
     test("Repo delete success") {
         val ctx = DictionaryContext(
             command = DictionaryCommand.DELETE,
             meaningRequest = DictionaryMeaning(
-                id = DictionaryMeaningStub.getSearchResult()[1].id
+                id = DictionaryMeaningStub.getSearchResult()[1].id,
+                version = DictionaryMeaningStub.getSearchResult()[1].version
             )
         )
         DataProvider.processor(DataProvider.successRepo).exec(ctx)
@@ -88,45 +101,46 @@ class RepoTest : FunSpec ({
         val ctx = DictionaryContext(
             command = DictionaryCommand.DELETE,
             meaningRequest = DictionaryMeaning(
-                id = DictionaryMeaningStub.getSearchResult()[1].id
+                id = DictionaryMeaningStub.getSearchResult()[1].id,
+                version = DictionaryMeaningStub.getSearchResult()[1].version
             )
         )
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
 
         ctx.state shouldBe DictionaryState.FAILING
         ctx.meaningResponse shouldBe DictionaryMeaning.NONE
-        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND.errors
+        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID.errors
     }
 
     test("Repo delete error at the delete state") {
         val ctx = DictionaryContext(
             command = DictionaryCommand.DELETE,
             meaningRequest = DictionaryMeaning(
-                id = DictionaryMeaningStub.getSearchResult()[1].id
+                id = DictionaryMeaningStub.getSearchResult()[1].id,
+                version = DictionaryMeaningStub.getSearchResult()[1].version
             )
         )
         DataProvider.processor(DataProvider.updateDeleteErrorRepo).exec(ctx)
 
         ctx.state shouldBe DictionaryState.FAILING
         ctx.meaningResponse shouldBe DictionaryMeaning.NONE
-        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND.errors
+        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION.errors
     }
 
     test("Repo update success") {
         val ctx = DictionaryContext(
             command = DictionaryCommand.UPDATE,
-            meaningRequest = DictionaryMeaning(
-                id = DictionaryMeaningId("456"),
-                word = "обвал",
-                value = "снежные глыбы или обломки скал, обрушившиеся с гор",
-                proposedBy = "t-o-n-y-p",
+            meaningRequest = DictionaryMeaningStub.getSearchResult()[1].copy(
                 approved = DictionaryMeaningApproved.TRUE
             )
         )
         DataProvider.processor(DataProvider.successRepo).exec(ctx)
 
+        ctx.meaningRepoPrepare shouldBe DictionaryMeaningStub.getSearchResult()[1].copy(
+            approved = DictionaryMeaningApproved.TRUE
+        )
         ctx.state shouldBe DictionaryState.FINISHING
-        ctx.meaningResponse shouldBe ctx.meaningRequest
+        ctx.meaningResponse shouldBe ctx.meaningRequest.copy(version = DictionaryMeaningVersion("qwerty"))
     }
 
     test("Repo update error at the read state") {
@@ -137,14 +151,16 @@ class RepoTest : FunSpec ({
                 word = "обвал",
                 value = "снежные глыбы или обломки скал, обрушившиеся с гор",
                 proposedBy = "t-o-n-y-p",
-                approved = DictionaryMeaningApproved.TRUE
+                approved = DictionaryMeaningApproved.TRUE,
+                version = DictionaryMeaningVersion("version")
             )
         )
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
 
+        ctx.meaningRepoPrepare shouldBe DictionaryMeaning.NONE
         ctx.state shouldBe DictionaryState.FAILING
         ctx.meaningResponse shouldBe DictionaryMeaning.NONE
-        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND.errors
+        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID.errors
     }
 
     test("Repo update error at the update state") {
@@ -155,14 +171,23 @@ class RepoTest : FunSpec ({
                 word = "обвал",
                 value = "снежные глыбы или обломки скал, обрушившиеся с гор",
                 proposedBy = "t-o-n-y-p",
-                approved = DictionaryMeaningApproved.TRUE
+                approved = DictionaryMeaningApproved.TRUE,
+                version = DictionaryMeaningVersion("version")
             )
         )
         DataProvider.processor(DataProvider.updateDeleteErrorRepo).exec(ctx)
 
+        ctx.meaningRepoPrepare shouldBe DictionaryMeaning(
+            id = DictionaryMeaningId("456"),
+            word = "обвал",
+            value = "снежные глыбы или обломки скал, обрушившиеся с гор",
+            proposedBy = "t-o-n-y-p",
+            approved = DictionaryMeaningApproved.TRUE,
+            version = DictionaryMeaningVersion("version")
+        )
         ctx.state shouldBe DictionaryState.FAILING
         ctx.meaningResponse shouldBe DictionaryMeaning.NONE
-        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID.errors
+        ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION.errors
     }
 
     test("Repo search success") {

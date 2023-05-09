@@ -67,7 +67,8 @@ private fun DictionaryMeaning.toTransportFullMeaning(): MeaningResponseFullObjec
     word = word.takeIf { it.isNotBlank() },
     value = value.takeIf { it.isNotBlank() },
     proposedBy = proposedBy.takeIf { it.isNotBlank() },
-    approved = approved.boolean
+    approved = approved.boolean,
+    version = version.takeIf { it != DictionaryMeaningVersion.NONE }?.asString()
 )
 
 private fun DictionaryMeaning.toTransportDeleteMeaning(): MeaningResponseDeleteObject = MeaningResponseDeleteObject(

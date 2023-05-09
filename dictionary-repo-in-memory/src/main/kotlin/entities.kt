@@ -3,13 +3,15 @@ package com.tonyp.dictionarykotlin.repo.inmemory
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
+import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningVersion
 
 data class MeaningEntity (
     val id: String? = null,
     val wordEntity: WordEntity? = null,
     val valueEntity: ValueEntity? = null,
     val proposedBy: String? = null,
-    val approved: Boolean? = null
+    val approved: Boolean? = null,
+    val version: String? = null
 ) {
     constructor(model: DictionaryMeaning): this(
         id = model.id.asString().takeIf { it.isNotBlank() },
@@ -20,7 +22,8 @@ data class MeaningEntity (
             .takeIf { it.isNotBlank() }
             ?.let { ValueEntity(value = it) },
         proposedBy = model.proposedBy.takeIf { it.isNotBlank() },
-        approved = model.approved.boolean
+        approved = model.approved.boolean,
+        version = model.version.asString().takeIf { it.isNotBlank() }
     )
 
     fun toInternal() = DictionaryMeaning(
@@ -28,7 +31,8 @@ data class MeaningEntity (
         word = wordEntity?.word ?: "",
         value = valueEntity?.value ?: "",
         proposedBy = proposedBy ?: "",
-        approved = DictionaryMeaningApproved.fromBoolean(approved)
+        approved = DictionaryMeaningApproved.fromBoolean(approved),
+        version = version?.let { DictionaryMeaningVersion(it) } ?: DictionaryMeaningVersion.NONE
     )
 }
 

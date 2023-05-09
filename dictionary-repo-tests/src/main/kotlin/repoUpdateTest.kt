@@ -3,6 +3,7 @@ package com.tonyp.dictionarykotlin.repo.tests
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
+import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningVersion
 import com.tonyp.dictionarykotlin.common.repo.DbMeaningRequest
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
@@ -14,14 +15,34 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 fun repoUpdateTest(repo: IMeaningRepository) = funSpec {
 
     repoTest("Update success") {
-        val updateObject = repoUpdateInitObjects[0].copy(
+        val updateObject = InitUpdateObjects.initObjects[0].copy(
             approved = DictionaryMeaningApproved.TRUE
         )
         val result = repo.updateMeaning(DbMeaningRequest(updateObject))
 
         result.isSuccess shouldBe true
-        result.data shouldBe updateObject
+        result.data shouldBe updateObject.copy(version = InitUpdateObjects.initVersion)
         result.errors shouldBe emptyList()
+    }
+
+    repoTest("Update error: version empty") {
+        val updateObject = InitUpdateObjects.initObjects[1].copy(
+            approved = DictionaryMeaningApproved.TRUE,
+            version = DictionaryMeaningVersion.NONE
+        )
+        val result = repo.updateMeaning(DbMeaningRequest(updateObject))
+
+        result shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION
+    }
+
+    repoTest("Update error: concurrent modification") {
+        val updateObject = InitUpdateObjects.initObjects[2].copy(
+            approved = DictionaryMeaningApproved.TRUE,
+            version = InitDeleteObjects.initVersion
+        )
+        val result = repo.updateMeaning(DbMeaningRequest(updateObject))
+
+        result shouldBe IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION
     }
 
     repoTest("Update error: not found") {
@@ -30,7 +51,8 @@ fun repoUpdateTest(repo: IMeaningRepository) = funSpec {
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = DictionaryMeaningApproved.TRUE
+            approved = DictionaryMeaningApproved.TRUE,
+            version = InitUpdateObjects.initVersion
         )
         val result = repo.updateMeaning(DbMeaningRequest(updateObject))
 
@@ -43,7 +65,8 @@ fun repoUpdateTest(repo: IMeaningRepository) = funSpec {
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = DictionaryMeaningApproved.TRUE
+            approved = DictionaryMeaningApproved.TRUE,
+            version = InitUpdateObjects.initVersion
         )
         val result = repo.updateMeaning(DbMeaningRequest(updateObject))
 
@@ -51,6 +74,7 @@ fun repoUpdateTest(repo: IMeaningRepository) = funSpec {
     }
 }
 
-val repoUpdateInitObjects: List<DictionaryMeaning> = listOf(
-    DictionaryMeaningStub.getPending()
-)
+object InitUpdateObjects : InitObjects {
+    override val initObjects: List<DictionaryMeaning> =
+        DictionaryMeaningStub.getLongSearchData()
+}

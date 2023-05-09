@@ -36,9 +36,11 @@ fun errorValidation(
 fun errorAdministration(
     code: String,
     message: String,
-    level: DictionaryError.Level = DictionaryError.Level.ERROR
+    level: DictionaryError.Level = DictionaryError.Level.ERROR,
+    exception: Exception? = null
 ) = DictionaryError(
     code = code,
     message = message,
-    level = level
+    level = level,
+    exception = exception
 )

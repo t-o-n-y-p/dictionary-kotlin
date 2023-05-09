@@ -1,10 +1,7 @@
 package com.tonyp.dictionarykotlin.business.sequences
 
 import com.tonyp.dictionarykotlin.common.DictionaryContext
-import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
-import com.tonyp.dictionarykotlin.common.models.DictionaryState
+import com.tonyp.dictionarykotlin.common.models.*
 import com.tonyp.dictionarykotlin.cor.CorChainDsl
 import com.tonyp.dictionarykotlin.cor.sequence
 import com.tonyp.dictionarykotlin.cor.worker
@@ -17,4 +14,5 @@ fun CorChainDsl<DictionaryContext>.clearValidatingCreateContext() = sequence {
     worker("Очистка value") { meaningValidating.value = meaningValidating.value.trim() }
     worker("Очистка proposedBy") { meaningValidating.proposedBy = meaningValidating.proposedBy.trim() }
     worker("Очистка approved") { meaningValidating.approved = DictionaryMeaningApproved.NONE }
+    worker("Очистка version") { meaningValidating.version = DictionaryMeaningVersion.NONE }
 }
