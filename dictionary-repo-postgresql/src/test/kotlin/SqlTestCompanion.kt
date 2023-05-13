@@ -26,13 +26,14 @@ object SqlTestCompanion {
 
     fun repoUnderTestContainer(
         initObjects: Collection<DictionaryMeaning> = emptyList(),
-        randomUuid: () -> String = { uuid4().toString() },
+        idUuid: () -> String = { uuid4().toString() },
+        versionUuid: () -> String = { uuid4().toString() },
     ): MeaningRepoSql {
         return MeaningRepoSql(
             SqlProperties(url, USER, PASS, SCHEMA, dropDatabase = true),
             initObjects,
-            idUuid = randomUuid,
-            versionUuid = randomUuid
+            idUuid = idUuid,
+            versionUuid = versionUuid
         )
     }
 }

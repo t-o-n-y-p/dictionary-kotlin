@@ -15,6 +15,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("com.benasher44:uuid:$uuidVersion")
     implementation(project(mapOf("path" to ":dictionary-common")))
+    implementation(project(mapOf("path" to ":dictionary-repo-tests")))
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
