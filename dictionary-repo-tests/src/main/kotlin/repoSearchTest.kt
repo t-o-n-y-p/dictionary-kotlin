@@ -7,6 +7,7 @@ import com.tonyp.dictionarykotlin.common.repo.DbMeaningFilterRequest
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
 import io.kotest.core.spec.style.funSpec
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -17,7 +18,7 @@ fun repoSearchTest(repo: IMeaningRepository) = funSpec {
         val result = repo.searchMeaning(DbMeaningFilterRequest(DictionaryMeaningFilter()))
 
         result.isSuccess shouldBe true
-        result.data shouldBe InitSearchObjects.initObjects
+        result.data shouldContainExactlyInAnyOrder InitSearchObjects.initObjects
         result.errors shouldBe emptyList()
     }
 
@@ -27,7 +28,8 @@ fun repoSearchTest(repo: IMeaningRepository) = funSpec {
         )
 
         result.isSuccess shouldBe true
-        result.data shouldBe InitSearchObjects.initObjects.filter { it.word == "трава" }
+        result.data shouldContainExactlyInAnyOrder
+                InitSearchObjects.initObjects.filter { it.word == "трава" }
         result.errors shouldBe emptyList()
     }
 
@@ -37,7 +39,8 @@ fun repoSearchTest(repo: IMeaningRepository) = funSpec {
         )
 
         result.isSuccess shouldBe true
-        result.data shouldBe InitSearchObjects.initObjects.filter { it.approved == DictionaryMeaningApproved.TRUE }
+        result.data shouldContainExactlyInAnyOrder
+                InitSearchObjects.initObjects.filter { it.approved == DictionaryMeaningApproved.TRUE }
         result.errors shouldBe emptyList()
     }
 
@@ -47,9 +50,10 @@ fun repoSearchTest(repo: IMeaningRepository) = funSpec {
         )
 
         result.isSuccess shouldBe true
-        result.data shouldBe InitSearchObjects.initObjects.filter {
-            it.word == "обвал" && it.approved == DictionaryMeaningApproved.FALSE
-        }
+        result.data shouldContainExactlyInAnyOrder
+                InitSearchObjects.initObjects.filter {
+                    it.word == "обвал" && it.approved == DictionaryMeaningApproved.FALSE
+                }
         result.errors shouldBe emptyList()
     }
 }

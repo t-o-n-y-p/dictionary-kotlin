@@ -5,6 +5,7 @@ import com.tonyp.dictionarykotlin.common.helpers.asDictionaryError
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
+import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningVersion
 import com.tonyp.dictionarykotlin.common.repo.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -55,7 +56,7 @@ class MeaningRepoSql(
             ?.let { Words.getId(it) }
             ?: Words.getId(
                 Words.insert {
-                    to(it, meaning.word, idUuid)
+                    to(it, meaning.word) { uuid4().toString() }
                 }
             )
         val valueId: String = Values
@@ -64,7 +65,7 @@ class MeaningRepoSql(
             ?.let { Values.getId(it) }
             ?: Values.getId(
                 Values.insert {
-                    to(it, meaning.value, idUuid)
+                    to(it, meaning.value) { uuid4().toString() }
                 }
             )
         Meanings.insert {
@@ -73,8 +74,8 @@ class MeaningRepoSql(
                 wordId = wordId,
                 valueId = valueId,
                 meaning = meaning,
-                idUuid = idUuid,
-                versionUuid = versionUuid
+                idUuid = { meaning.id.asString() },
+                versionUuid = { meaning.version.asString() }
             )
         }
     }
@@ -144,6 +145,9 @@ class MeaningRepoSql(
 
     override suspend fun updateMeaning(rq: DbMeaningRequest): DbMeaningResponse =
         transactionWrapper {
+            rq.meaning.version
+                .takeIf { it != DictionaryMeaningVersion.NONE }
+                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION
             val queryResult: Query = rq.meaning.id
                 .takeIf { it != DictionaryMeaningId.NONE }
                 ?.let { Meanings.select { Meanings.id eq it.asString() } }
@@ -164,11 +168,16 @@ class MeaningRepoSql(
 
     override suspend fun deleteMeaning(rq: DbMeaningIdRequest): DbMeaningResponse =
         transactionWrapper {
+            rq.version
+                .takeIf { it != DictionaryMeaningVersion.NONE }
+                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION
             val response: DbMeaningResponse = rq.id
                 .takeIf { it != DictionaryMeaningId.NONE }
                 ?.let { read(it) }
-                ?: IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID
-            rq.takeIf { it.version == response.data?.version }
+                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID
+            val version = response.data?.version
+                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND
+            rq.takeIf { it.version == version }
                 ?.let {
                     Meanings.deleteWhere { id eq rq.id.asString() }
                     response
