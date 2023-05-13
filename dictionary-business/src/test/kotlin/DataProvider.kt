@@ -111,11 +111,11 @@ object DataProvider {
     )
     val validIds = listOf(
         row("0", "0"),
-        row("123", "123"),
-        row("         456789    ", "         456789    ")
+        row("--123", "--123"),
+        row("         hedgehog-456789    ", "         hedgehog-456789    ")
     )
     val invalidIds = listOf(
-        row("Latin with numbers", "hedgehog1234"),
+        row("Too long", "a".repeat(100)),
         row("Special symbols", "special?!"),
         row("Non-latin", "пешеход")
     )

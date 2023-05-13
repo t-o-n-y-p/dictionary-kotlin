@@ -63,10 +63,11 @@ fun testApplication(
         }
         application {
             module(
-                DictionaryAppSettings(corSettings = DictionaryCorSettings(repositories = mapOf(
-                    DictionaryWorkMode.PROD to repository,
-                    DictionaryWorkMode.TEST to repository
-                )))
+                DictionaryAppSettings(
+                    corSettings = DictionaryCorSettings(
+                        repositories = DictionaryWorkMode.values().associateWith { repository }
+                    )
+                )
             )
         }
 

@@ -2,15 +2,17 @@ import com.tonyp.dictionarykotlin.api.v1.apiV1Mapper
 import com.tonyp.dictionarykotlin.api.v1.models.MeaningCreateResponse
 import com.tonyp.dictionarykotlin.api.v1.models.MeaningDeleteResponse
 import com.tonyp.dictionarykotlin.api.v1.models.MeaningUpdateResponse
+import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
+import com.tonyp.dictionarykotlin.repo.stub.MeaningRepoStub
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.ktor.server.testing.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import util.DataProvider
 import util.post
+import util.testApplication
 import util.webSocket
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -19,7 +21,7 @@ class WebSocketNotificationTest : FreeSpec({
     "Successful create notification to websocket" - {
         DataProvider.successfulCreateDeleteNotificationData.map { (description, searchRequest) ->
             description {
-                testApplication {
+                testApplication(MeaningRepoStub()) {
                     webSocket("/ws/v1/meaning/search") {
                         // skipping init response
                         incoming.receive() as Frame.Text
@@ -44,7 +46,7 @@ class WebSocketNotificationTest : FreeSpec({
     "No create notification to websocket" - {
         DataProvider.noCreateDeleteNotificationData.map { (description, searchRequest) ->
             description {
-                testApplication {
+                testApplication(MeaningRepoStub()) {
                     webSocket("/ws/v1/meaning/search") {
                         // skipping init response
                         incoming.receive() as Frame.Text
@@ -67,7 +69,7 @@ class WebSocketNotificationTest : FreeSpec({
     "Successful delete notification to websocket" - {
         DataProvider.successfulCreateDeleteNotificationData.map { (description, searchRequest) ->
             description {
-                testApplication {
+                testApplication(MeaningRepoStub()) {
                     webSocket("/ws/v1/meaning/search") {
                         // skipping init response
                         incoming.receive() as Frame.Text
@@ -92,7 +94,7 @@ class WebSocketNotificationTest : FreeSpec({
     "No delete notification to websocket" - {
         DataProvider.noCreateDeleteNotificationData.map { (description, searchRequest) ->
             description {
-                testApplication {
+                testApplication(MeaningRepoStub()) {
                     webSocket("/ws/v1/meaning/search") {
                         // skipping init response
                         incoming.receive() as Frame.Text
@@ -115,7 +117,7 @@ class WebSocketNotificationTest : FreeSpec({
     "Successful update notification to websocket" - {
         DataProvider.successfulUpdateNotificationData.map { (description, searchRequest) ->
             description {
-                testApplication {
+                testApplication(MeaningRepoStub()) {
                     webSocket("/ws/v1/meaning/search") {
                         // skipping init response
                         incoming.receive() as Frame.Text
@@ -140,7 +142,7 @@ class WebSocketNotificationTest : FreeSpec({
     "Successful create notification to websocket from update request" - {
         DataProvider.successfulCreateNotificationFromUpdateRequestData.map { (description, searchRequest) ->
             description {
-                testApplication {
+                testApplication(MeaningRepoStub()) {
                     webSocket("/ws/v1/meaning/search") {
                         // skipping init response
                         incoming.receive() as Frame.Text
@@ -165,7 +167,7 @@ class WebSocketNotificationTest : FreeSpec({
     "Successful delete notification to websocket from update request" - {
         DataProvider.successfulDeleteNotificationFromUpdateRequestData.map { (description, searchRequest) ->
             description {
-                testApplication {
+                testApplication(MeaningRepoStub()) {
                     webSocket("/ws/v1/meaning/search") {
                         // skipping init response
                         incoming.receive() as Frame.Text
@@ -190,7 +192,7 @@ class WebSocketNotificationTest : FreeSpec({
     "No update notification to websocket" - {
         DataProvider.noUpdateNotificationData.map { (description, searchRequest) ->
             description {
-                testApplication {
+                testApplication(MeaningRepoStub()) {
                     webSocket("/ws/v1/meaning/search") {
                         // skipping init response
                         incoming.receive() as Frame.Text

@@ -296,7 +296,7 @@ class ValidationTest : FreeSpec ({
                 context.errors shouldContainExactlyInAnyOrder listOf(
                     DictionaryError(
                         code = "INVALID_ID",
-                        message = "ID must be 1 or more digits"
+                        message = "ID must be no more than 64 digits, latin characters, or dashes"
                     )
                 )
             }
@@ -362,7 +362,7 @@ class ValidationTest : FreeSpec ({
                 context.errors shouldContainExactlyInAnyOrder listOf(
                     DictionaryError(
                         code = "INVALID_ID",
-                        message = "ID must be 1 or more digits"
+                        message = "ID must be no more than 64 digits, latin characters, or dashes"
                     )
                 )
             }
@@ -523,7 +523,7 @@ class ValidationTest : FreeSpec ({
                 context.errors shouldContainExactlyInAnyOrder listOf(
                     DictionaryError(
                         code = "INVALID_ID",
-                        message = "ID must be 1 or more digits"
+                        message = "ID must be no more than 64 digits, latin characters, or dashes"
                     )
                 )
             }
@@ -683,7 +683,7 @@ class ValidationTest : FreeSpec ({
         context.errors shouldContainExactlyInAnyOrder listOf(
             DictionaryError(
                 code = "INVALID_ID",
-                message = "ID must be 1 or more digits"
+                message = "ID must be no more than 64 digits, latin characters, or dashes"
             ),
             DictionaryError(
                 code = "APPROVED_FLAG_IS_EMPTY",

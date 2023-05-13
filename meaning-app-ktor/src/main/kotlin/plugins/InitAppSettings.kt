@@ -9,7 +9,6 @@ import com.tonyp.dictionarykotlin.log.v1.common.DictionaryLoggerProvider
 import com.tonyp.dictionarykotlin.log.v1.dictionaryLogger
 import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
 import com.tonyp.dictionarykotlin.meaning.app.module
-import com.tonyp.dictionarykotlin.repo.inmemory.MeaningRepoInMemory
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -26,10 +25,7 @@ import org.slf4j.event.Level
 fun Application.initAppSettings(): DictionaryAppSettings {
     val corSettings = DictionaryCorSettings(
         loggerProvider = DictionaryLoggerProvider { dictionaryLogger(it) },
-        repositories = mapOf(
-            DictionaryWorkMode.PROD to MeaningRepoInMemory(),
-            DictionaryWorkMode.TEST to MeaningRepoInMemory()
-        )
+        repositories = DictionaryWorkMode.values().associateWith { getRepository(it) }
     )
     return DictionaryAppSettings(
         appUrls = environment.config.propertyOrNull("ktor.urls")?.getList() ?: emptyList(),
