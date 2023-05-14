@@ -16,7 +16,7 @@ dictionary:
     test: in-memory
     prod: psql
     psql:
-      url: "jdbc:postgresql://localhost:5432/dictionary"
+      url: "jdbc:postgresql://psql:5432/dictionary"
       schema: dictionary
       user: postgres
       password: dictionary
