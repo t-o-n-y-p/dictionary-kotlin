@@ -45,144 +45,93 @@ class MeaningRepoSql(
         transaction {
             properties.takeIf { it.dropDatabase }?.let { dropTables() }
             createTables()
-            initObjects.forEach { createWithNoDuplicateError(it) }
-        }
-    }
-
-    private fun createWithNoDuplicateError(meaning: DictionaryMeaning) {
-        val wordId: String = Words
-            .select { Words.word eq meaning.word }
-            .singleOrNull()
-            ?.let { Words.getId(it) }
-            ?: Words.getId(
-                Words.insert {
-                    to(it, meaning.word) { uuid4().toString() }
+            initObjects.forEach {
+                Meanings.insert {
+                    builder ->
+                    to(
+                        builder = builder,
+                        meaning = it,
+                        idUuid = { it.id.asString() },
+                        versionUuid = { it.version.asString() }
+                    )
                 }
-            )
-        val valueId: String = Values
-            .select { Values.value eq meaning.value }
-            .singleOrNull()
-            ?.let { Values.getId(it) }
-            ?: Values.getId(
-                Values.insert {
-                    to(it, meaning.value) { uuid4().toString() }
-                }
-            )
-        Meanings.insert {
-            to(
-                builder = it,
-                wordId = wordId,
-                valueId = valueId,
-                meaning = meaning,
-                idUuid = { meaning.id.asString() },
-                versionUuid = { meaning.version.asString() }
-            )
+            }
         }
     }
 
     private fun read(id: DictionaryMeaningId): DbMeaningResponse {
-        val res = Meanings
-            .innerJoin(Words)
-            .innerJoin(Values)
-            .select {
-                Meanings.id eq id.asString()
-            }.singleOrNull()
-            ?: return IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND
+        val res: ResultRow = id
+            .takeIf { id != DictionaryMeaningId.NONE }
+            ?.let {
+                Meanings
+                    .innerJoin(Words)
+                    .innerJoin(Values)
+                    .select { Meanings.id eq id.asString() }
+                    .singleOrNull()
+                    ?: return IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND
+            }
+            ?: return IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID
         return DbMeaningResponse.success(Meanings.from(res))
     }
 
+    private fun update(rq: DbMeaningIdRequest, block: (DbMeaningResponse) -> DbMeaningResponse): DbMeaningResponse =
+        transactionWrapper {
+            rq.version
+                .takeIf { it != DictionaryMeaningVersion.NONE }
+                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION
+            read(rq.id).takeIf { (it.data?.version ?: return@transactionWrapper it) == rq.version }
+                ?.let { block(it) }
+                ?: IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION
+        }
+
     override suspend fun createMeaning(rq: DbMeaningRequest): DbMeaningResponse =
         transactionWrapper {
-            val wordId: String = Words
-                .select { Words.word eq rq.meaning.word }
-                .singleOrNull()
-                ?.let { Words.getId(it) }
-                ?: Words.getId(
-                    Words.insert {
-                        to(it, rq.meaning.word, idUuid)
-                    }
-                )
-            val valueId: String = Values
-                .select { Values.value eq rq.meaning.value }
-                .singleOrNull()
-                ?.let { Values.getId(it) }
-                ?: Values.getId(
-                    Values.insert {
-                        to(it, rq.meaning.value, idUuid)
-                    }
-                )
             val meaningId: String = Meanings
                 .select {
                     buildList {
-                        add(Meanings.wordId eq wordId)
-                        add(Meanings.valueId eq valueId)
+                        add(Meanings.wordId eq Words.getId(rq.meaning.word))
+                        add(Meanings.valueId eq Values.getId(rq.meaning.value))
                     }.reduce { a, b -> a and b }
                 }
                 .singleOrNull()
                 ?.let { return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_ALREADY_EXISTS }
-                ?: Meanings.getId(
+                ?: idUuid().also {
                     Meanings.insert {
+                        builder ->
                         to(
-                            builder = it,
-                            wordId = wordId,
-                            valueId = valueId,
+                            builder = builder,
                             meaning = rq.meaning,
-                            idUuid = idUuid,
+                            idUuid = { it },
                             versionUuid = versionUuid
                         )
                     }
-                )
+                }
             read(DictionaryMeaningId(meaningId))
         }
 
     override suspend fun readMeaning(rq: DbMeaningIdRequest): DbMeaningResponse =
         transactionWrapper {
-            rq.id
-                .takeIf { it != DictionaryMeaningId.NONE }
-                ?.let { read(it) }
-                ?: IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID
+             read(rq.id)
         }
 
     override suspend fun updateMeaning(rq: DbMeaningRequest): DbMeaningResponse =
-        transactionWrapper {
-            rq.meaning.version
-                .takeIf { it != DictionaryMeaningVersion.NONE }
-                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION
-            val queryResult: Query = rq.meaning.id
-                .takeIf { it != DictionaryMeaningId.NONE }
-                ?.let { Meanings.select { Meanings.id eq it.asString() } }
-                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID
-            val singleRow: ResultRow = queryResult
-                .singleOrNull()
-                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND
-            rq.meaning
-                .takeIf { it.version.asString() == singleRow[Meanings.version] }
-                ?.let {
-                    Meanings.update({ Meanings.id eq it.id.asString() }) {
-                        builder -> to(builder, singleRow, it, versionUuid)
-                    }
-                    read(rq.meaning.id)
-                }
-                ?: IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION
+        update(rq.getIdRequest()) {
+            Meanings.update({ Meanings.id eq rq.meaning.id.asString() }) {
+                builder ->
+                to(
+                    builder = builder,
+                    meaning = rq.meaning,
+                    idUuid = { rq.meaning.id.asString() },
+                    versionUuid = versionUuid
+                )
+            }
+            read(rq.meaning.id)
         }
 
     override suspend fun deleteMeaning(rq: DbMeaningIdRequest): DbMeaningResponse =
-        transactionWrapper {
-            rq.version
-                .takeIf { it != DictionaryMeaningVersion.NONE }
-                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION
-            val response: DbMeaningResponse = rq.id
-                .takeIf { it != DictionaryMeaningId.NONE }
-                ?.let { read(it) }
-                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID
-            val version = response.data?.version
-                ?: return@transactionWrapper IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND
-            rq.takeIf { it.version == version }
-                ?.let {
-                    Meanings.deleteWhere { id eq rq.id.asString() }
-                    response
-                }
-                ?: IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION
+        update(rq) {
+            Meanings.deleteWhere { id eq rq.id.asString() }
+            it
         }
 
     override suspend fun searchMeaning(rq: DbMeaningFilterRequest): DbMeaningsResponse =
