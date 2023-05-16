@@ -87,10 +87,12 @@ class MeaningRepoSql(
     override suspend fun createMeaning(rq: DbMeaningRequest): DbMeaningResponse =
         transactionWrapper {
             val meaningId: String = Meanings
+                .innerJoin(Words)
+                .innerJoin(Values)
                 .select {
                     buildList {
-                        add(Meanings.wordId eq Words.getId(rq.meaning.word))
-                        add(Meanings.valueId eq Values.getId(rq.meaning.value))
+                        add(Words.word eq rq.meaning.word)
+                        add(Values.value eq rq.meaning.value)
                     }.reduce { a, b -> a and b }
                 }
                 .singleOrNull()
