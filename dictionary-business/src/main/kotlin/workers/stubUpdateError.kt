@@ -15,7 +15,6 @@ fun CorChainDsl<DictionaryContext>.stubUpdateError() = worker {
                 && state == DictionaryState.RUNNING
     }
     handle {
-        state = DictionaryState.FAILING
         fail(DictionaryMeaningStub.getUpdateError())
     }
 }

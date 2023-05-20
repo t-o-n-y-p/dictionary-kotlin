@@ -11,7 +11,6 @@ fun CorChainDsl<DictionaryContext>.stubDoesNotExist() = worker {
     this.title = "Ошибка: запрошенный стаб не существует"
     on { state == DictionaryState.RUNNING }
     handle {
-        state = DictionaryState.FAILING
         fail(DictionaryMeaningStub.getInvalidStubError())
     }
 }

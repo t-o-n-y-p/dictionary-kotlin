@@ -22,7 +22,8 @@ class ToReadTransportMapperResponseTest : FunSpec ({
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = DictionaryMeaningApproved.TRUE
+            approved = DictionaryMeaningApproved.TRUE,
+            version = DictionaryMeaningVersion("zxcvbn")
         )
     )
     val errorReadContext = DictionaryContext(
@@ -64,7 +65,8 @@ class ToReadTransportMapperResponseTest : FunSpec ({
             word = "трава",
             value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
             proposedBy = "unittest",
-            approved = true
+            approved = true,
+            version = "zxcvbn"
         )
     }
 

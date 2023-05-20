@@ -24,14 +24,16 @@ class ToSearchTransportMapperResponseTest : FunSpec ({
                 word = "обвал",
                 value = "снежные глыбы или обломки скал, обрушившиеся с гор",
                 proposedBy = "t-o-n-y-p",
-                approved = DictionaryMeaningApproved.TRUE
+                approved = DictionaryMeaningApproved.TRUE,
+                version = DictionaryMeaningVersion("asdfgh")
             ),
             DictionaryMeaning(
                 id = DictionaryMeaningId("789"),
                 word = "трава",
                 value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
                 proposedBy = "unittest",
-                approved = DictionaryMeaningApproved.FALSE
+                approved = DictionaryMeaningApproved.FALSE,
+                version = DictionaryMeaningVersion("qwerty")
             ),
         )
     )
@@ -76,14 +78,16 @@ class ToSearchTransportMapperResponseTest : FunSpec ({
                 word = "обвал",
                 value = "снежные глыбы или обломки скал, обрушившиеся с гор",
                 proposedBy = "t-o-n-y-p",
-                approved = true
+                approved = true,
+                version = "asdfgh"
             ),
             MeaningResponseFullObject(
                 id = "789",
                 word = "трава",
                 value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
                 proposedBy = "unittest",
-                approved = false
+                approved = false,
+                version = "qwerty"
             )
         )
     }

@@ -1,4 +1,3 @@
-import DataProvider.processor
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
 import com.tonyp.dictionarykotlin.common.models.DictionaryState
@@ -16,7 +15,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.SUCCESS
         )
-        processor.exec(successStubContext)
+        DataProvider.processor().exec(successStubContext)
 
         successStubContext.state shouldBe DictionaryState.FINISHING
         successStubContext.meaningResponse shouldBe DictionaryMeaningStub.getPending()
@@ -28,7 +27,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.CANNOT_CREATE
         )
-        processor.exec(errorStubContext)
+        DataProvider.processor().exec(errorStubContext)
 
         errorStubContext.state shouldBe DictionaryState.FAILING
         errorStubContext.errors shouldBe listOf(DictionaryMeaningStub.getCreateError())
@@ -40,7 +39,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.SUCCESS
         )
-        processor.exec(successStubContext)
+        DataProvider.processor().exec(successStubContext)
 
         successStubContext.state shouldBe DictionaryState.FINISHING
         successStubContext.meaningResponse shouldBe DictionaryMeaningStub.getApproved()
@@ -52,7 +51,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.CANNOT_READ
         )
-        processor.exec(errorStubContext)
+        DataProvider.processor().exec(errorStubContext)
 
         errorStubContext.state shouldBe DictionaryState.FAILING
         errorStubContext.errors shouldBe listOf(DictionaryMeaningStub.getReadError())
@@ -64,7 +63,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.SUCCESS
         )
-        processor.exec(successStubContext)
+        DataProvider.processor().exec(successStubContext)
 
         successStubContext.state shouldBe DictionaryState.FINISHING
         successStubContext.meaningResponse shouldBe DictionaryMeaningStub.getApproved()
@@ -76,7 +75,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.CANNOT_UPDATE
         )
-        processor.exec(errorStubContext)
+        DataProvider.processor().exec(errorStubContext)
 
         errorStubContext.state shouldBe DictionaryState.FAILING
         errorStubContext.errors shouldBe listOf(DictionaryMeaningStub.getUpdateError())
@@ -88,7 +87,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.SUCCESS
         )
-        processor.exec(successStubContext)
+        DataProvider.processor().exec(successStubContext)
 
         successStubContext.state shouldBe DictionaryState.FINISHING
         successStubContext.meaningResponse shouldBe DictionaryMeaningStub.getPending()
@@ -100,7 +99,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.CANNOT_DELETE
         )
-        processor.exec(errorStubContext)
+        DataProvider.processor().exec(errorStubContext)
 
         errorStubContext.state shouldBe DictionaryState.FAILING
         errorStubContext.errors shouldBe listOf(DictionaryMeaningStub.getDeleteError())
@@ -112,7 +111,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.SUCCESS
         )
-        processor.exec(successStubContext)
+        DataProvider.processor().exec(successStubContext)
 
         successStubContext.state shouldBe DictionaryState.FINISHING
         successStubContext.meaningsResponse shouldBe DictionaryMeaningStub.getSearchResult()
@@ -124,7 +123,7 @@ class MeaningStubTest : FunSpec ({
             workMode = DictionaryWorkMode.STUB,
             stubCase = DictionaryStub.CANNOT_SEARCH
         )
-        processor.exec(errorStubContext)
+        DataProvider.processor().exec(errorStubContext)
 
         errorStubContext.state shouldBe DictionaryState.FAILING
         errorStubContext.errors shouldBe listOf(DictionaryMeaningStub.getSearchError())

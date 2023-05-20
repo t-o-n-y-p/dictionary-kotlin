@@ -3,6 +3,7 @@ package com.tonyp.dictionarykotlin.business.sequences
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
+import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningVersion
 import com.tonyp.dictionarykotlin.common.models.DictionaryState
 import com.tonyp.dictionarykotlin.cor.CorChainDsl
 import com.tonyp.dictionarykotlin.cor.sequence
@@ -17,4 +18,8 @@ fun CorChainDsl<DictionaryContext>.clearValidatingUpdateContext() = sequence {
     worker("Очистка word") { meaningValidating.word = "" }
     worker("Очистка value") { meaningValidating.value = "" }
     worker("Очистка proposedBy") { meaningValidating.proposedBy = "" }
+    worker("Очистка version") {
+        meaningValidating.version = DictionaryMeaningVersion(meaningValidating.version.asString().trim())
+    }
+
 }

@@ -1,14 +1,16 @@
 import com.tonyp.dictionarykotlin.api.v1.apiV1Mapper
 import com.tonyp.dictionarykotlin.api.v1.models.*
+import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
+import com.tonyp.dictionarykotlin.repo.stub.MeaningRepoStub
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.ktor.server.testing.*
 import io.ktor.websocket.*
 import util.DataProvider.searchRequestStubError
 import util.DataProvider.searchRequestStubSuccess
 import util.DataProvider.searchResponseStubError
 import util.DataProvider.searchResponseStubSuccess
 import util.PatchedWebSockets
+import util.testApplication
 import util.webSocket
 
 class WebSocketStubTest : FunSpec ({
@@ -25,7 +27,7 @@ class WebSocketStubTest : FunSpec ({
     )
 
     test("Init response with no extensions") {
-        testApplication {
+        testApplication(MeaningRepoStub()) {
             webSocket("/ws/v1/meaning/search") {
                 val raw = incoming.receive() as Frame.Text
                 val response = apiV1Mapper.readValue(raw.readText(), MeaningInitResponse::class.java)
@@ -35,7 +37,7 @@ class WebSocketStubTest : FunSpec ({
     }
 
     test("Init response with extensions") {
-        testApplication {
+        testApplication(MeaningRepoStub()) {
             webSocket("/ws/v1/meaning/search", { install(PatchedWebSockets) }) {
                 val raw = incoming.receive() as Frame.Text
                 val response = apiV1Mapper.readValue(raw.readText(), MeaningInitResponse::class.java)
@@ -45,7 +47,7 @@ class WebSocketStubTest : FunSpec ({
     }
 
     test("Search request success stub") {
-        testApplication {
+        testApplication(MeaningRepoStub()) {
             webSocket("/ws/v1/meaning/search") {
                 // skipping init response
                 incoming.receive() as Frame.Text
@@ -58,7 +60,7 @@ class WebSocketStubTest : FunSpec ({
     }
 
     test("Search request error stub") {
-        testApplication {
+        testApplication(MeaningRepoStub()) {
             webSocket("/ws/v1/meaning/search") {
                 // skipping init response
                 incoming.receive() as Frame.Text

@@ -15,6 +15,10 @@ fun Throwable.asDictionaryError(
     )
 
 fun DictionaryContext.fail(vararg errors: DictionaryError) {
+    fail(errors.asList())
+}
+
+fun DictionaryContext.fail(errors: List<DictionaryError>) {
     this.errors.addAll(errors)
     state = DictionaryState.FAILING
 }
@@ -27,4 +31,16 @@ fun errorValidation(
     code = code,
     message = message,
     level = level
+)
+
+fun errorAdministration(
+    code: String,
+    message: String,
+    level: DictionaryError.Level = DictionaryError.Level.ERROR,
+    exception: Exception? = null
+) = DictionaryError(
+    code = code,
+    message = message,
+    level = level,
+    exception = exception
 )

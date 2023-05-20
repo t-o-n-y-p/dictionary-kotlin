@@ -11,3 +11,12 @@ ktor:
   urls:
     - "http://127.0.0.1:8080/"
     - "http://0.0.0.0:8080/"
+dictionary:
+  repository:
+    test: in-memory
+    prod: psql
+    psql:
+      url: "jdbc:postgresql://psql:5432/dictionary"
+      schema: dictionary
+      user: postgres
+      password: dictionary

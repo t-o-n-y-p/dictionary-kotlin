@@ -22,7 +22,8 @@ class ToCreateTransportMapperResponseTest : FunSpec ({
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = DictionaryMeaningApproved.FALSE
+            approved = DictionaryMeaningApproved.FALSE,
+            version = DictionaryMeaningVersion("qwerty")
         )
     )
     val errorCreateContext = DictionaryContext(
@@ -64,7 +65,8 @@ class ToCreateTransportMapperResponseTest : FunSpec ({
             word = "обвал",
             value = "снежные глыбы или обломки скал, обрушившиеся с гор",
             proposedBy = "t-o-n-y-p",
-            approved = false
+            approved = false,
+            version = "qwerty"
         )
     }
 

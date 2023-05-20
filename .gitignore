@@ -38,3 +38,4 @@ outTmp/
 kotlin-ide/
 gradlew*
 /gradle/
+psql/

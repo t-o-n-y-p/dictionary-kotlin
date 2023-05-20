@@ -1,15 +1,17 @@
 import DataProvider.empties
 import DataProvider.invalidIds
 import DataProvider.invalidUsernames
+import DataProvider.invalidVersions
 import DataProvider.invalidWords
-import DataProvider.processor
 import DataProvider.validApproved
 import DataProvider.validIds
+import DataProvider.validVersions
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.*
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 
 class ValidationTest : FreeSpec ({
 
@@ -24,7 +26,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -48,7 +50,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -72,9 +74,9 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     word = word.trim(),
@@ -96,7 +98,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -120,7 +122,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -144,9 +146,9 @@ class ValidationTest : FreeSpec ({
                         proposedBy = "proposedBy"
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     word = "слово",
@@ -168,9 +170,9 @@ class ValidationTest : FreeSpec ({
                         proposedBy = username
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     word = "слово",
@@ -192,7 +194,7 @@ class ValidationTest : FreeSpec ({
                         proposedBy = username
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -216,9 +218,9 @@ class ValidationTest : FreeSpec ({
                         proposedBy = username
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     word = "слово",
@@ -238,7 +240,7 @@ class ValidationTest : FreeSpec ({
                 proposedBy = invalidUsernames[2].b
             )
         )
-        processor.exec(context)
+        DataProvider.processor().exec(context)
 
         context.state shouldBe DictionaryState.FAILING
         context.errors shouldContainExactlyInAnyOrder listOf(
@@ -266,7 +268,7 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -288,13 +290,13 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
                     DictionaryError(
                         code = "INVALID_ID",
-                        message = "ID must be 1 or more digits"
+                        message = "ID must be no more than 64 digits, latin characters, or dashes"
                     )
                 )
             }
@@ -310,9 +312,9 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id)
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId(id.trim())
@@ -327,10 +329,11 @@ class ValidationTest : FreeSpec ({
                 val context = DictionaryContext(
                     command = DictionaryCommand.DELETE,
                     meaningRequest = DictionaryMeaning(
-                        id = DictionaryMeaningId(id)
+                        id = DictionaryMeaningId(id),
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -349,16 +352,17 @@ class ValidationTest : FreeSpec ({
                 val context = DictionaryContext(
                     command = DictionaryCommand.DELETE,
                     meaningRequest = DictionaryMeaning(
-                        id = DictionaryMeaningId(id)
+                        id = DictionaryMeaningId(id),
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
                     DictionaryError(
                         code = "INVALID_ID",
-                        message = "ID must be 1 or more digits"
+                        message = "ID must be no more than 64 digits, latin characters, or dashes"
                     )
                 )
             }
@@ -371,18 +375,111 @@ class ValidationTest : FreeSpec ({
                 val context = DictionaryContext(
                     command = DictionaryCommand.DELETE,
                     meaningRequest = DictionaryMeaning(
-                        id = DictionaryMeaningId(id)
+                        id = DictionaryMeaningId(id),
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
-                    id = DictionaryMeaningId(id.trim())
+                    id = DictionaryMeaningId(id.trim()),
+                    version = DictionaryMeaningVersion("version")
                 )
             }
         }
+    }
+
+    "Delete with empty version" - {
+        empties.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "VERSION_IS_EMPTY",
+                        message = "Version must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Delete with invalid version" - {
+        invalidVersions.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_VERSION",
+                        message = "Version must be mo more than 64 digits, latin chars, or dashes"
+                    )
+                )
+            }
+        }
+    }
+
+    "Delete with valid version" - {
+        validVersions.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.DELETE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldNotBe DictionaryState.FAILING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    id = DictionaryMeaningId("0"),
+                    version = DictionaryMeaningVersion(version.trim())
+                )
+            }
+        }
+    }
+
+    "Delete with multiple errors" {
+        val context = DictionaryContext(
+            command = DictionaryCommand.DELETE,
+            meaningRequest = DictionaryMeaning(
+                id = DictionaryMeaningId(empties[0].b),
+                version = DictionaryMeaningVersion(invalidVersions[1].b)
+            )
+        )
+        DataProvider.processor().exec(context)
+
+        context.state shouldBe DictionaryState.FAILING
+        context.errors shouldContainExactlyInAnyOrder listOf(
+            DictionaryError(
+                code = "ID_IS_EMPTY",
+                message = "ID must not be empty"
+            ),
+            DictionaryError(
+                code = "INVALID_VERSION",
+                message = "Version must be mo more than 64 digits, latin chars, or dashes"
+            )
+        )
     }
 
     "Update with empty ID" - {
@@ -392,10 +489,11 @@ class ValidationTest : FreeSpec ({
                     command = DictionaryCommand.UPDATE,
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
-                        approved = DictionaryMeaningApproved.FALSE
+                        approved = DictionaryMeaningApproved.FALSE,
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
@@ -415,16 +513,17 @@ class ValidationTest : FreeSpec ({
                     command = DictionaryCommand.UPDATE,
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
-                        approved = DictionaryMeaningApproved.TRUE
+                        approved = DictionaryMeaningApproved.TRUE,
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
                 context.state shouldBe DictionaryState.FAILING
                 context.errors shouldContainExactlyInAnyOrder listOf(
                     DictionaryError(
                         code = "INVALID_ID",
-                        message = "ID must be 1 or more digits"
+                        message = "ID must be no more than 64 digits, latin characters, or dashes"
                     )
                 )
             }
@@ -438,16 +537,90 @@ class ValidationTest : FreeSpec ({
                     command = DictionaryCommand.UPDATE,
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
-                        approved = DictionaryMeaningApproved.FALSE
+                        approved = DictionaryMeaningApproved.FALSE,
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId(id.trim()),
-                    approved = DictionaryMeaningApproved.FALSE
+                    approved = DictionaryMeaningApproved.FALSE,
+                    version = DictionaryMeaningVersion("version")
+                )
+            }
+        }
+    }
+
+    "Update with empty version" - {
+        empties.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        approved = DictionaryMeaningApproved.FALSE,
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "VERSION_IS_EMPTY",
+                        message = "Version must not be empty"
+                    )
+                )
+            }
+        }
+    }
+
+    "Update with invalid version" - {
+        invalidVersions.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        approved = DictionaryMeaningApproved.TRUE,
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldBe DictionaryState.FAILING
+                context.errors shouldContainExactlyInAnyOrder listOf(
+                    DictionaryError(
+                        code = "INVALID_VERSION",
+                        message = "Version must be mo more than 64 digits, latin chars, or dashes"
+                    )
+                )
+            }
+        }
+    }
+
+    "Update with valid version" - {
+        validVersions.map { (description, version) ->
+            description {
+                val context = DictionaryContext(
+                    command = DictionaryCommand.UPDATE,
+                    meaningRequest = DictionaryMeaning(
+                        id = DictionaryMeaningId("0"),
+                        approved = DictionaryMeaningApproved.FALSE,
+                        version = DictionaryMeaningVersion(version)
+                    )
+                )
+                DataProvider.processor().exec(context)
+
+                context.state shouldNotBe DictionaryState.FAILING
+                context.errors shouldBe emptyList()
+                context.meaningValidated shouldBe DictionaryMeaning(
+                    id = DictionaryMeaningId("0"),
+                    approved = DictionaryMeaningApproved.FALSE,
+                    version = DictionaryMeaningVersion(version.trim())
                 )
             }
         }
@@ -457,10 +630,11 @@ class ValidationTest : FreeSpec ({
         val context = DictionaryContext(
             command = DictionaryCommand.UPDATE,
             meaningRequest = DictionaryMeaning(
-                id = DictionaryMeaningId(validIds[0].b)
+                id = DictionaryMeaningId(validIds[0].b),
+                version = DictionaryMeaningVersion("version")
             )
         )
-        processor.exec(context)
+        DataProvider.processor().exec(context)
 
         context.state shouldBe DictionaryState.FAILING
         context.errors shouldContainExactlyInAnyOrder listOf(
@@ -478,16 +652,18 @@ class ValidationTest : FreeSpec ({
                     command = DictionaryCommand.UPDATE,
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId("123"),
-                        approved = approved
+                        approved = approved,
+                        version = DictionaryMeaningVersion("version")
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningValidated shouldBe DictionaryMeaning(
                     id = DictionaryMeaningId("123"),
-                    approved = approved
+                    approved = approved,
+                    version = DictionaryMeaningVersion("version")
                 )
             }
         }
@@ -497,20 +673,25 @@ class ValidationTest : FreeSpec ({
         val context = DictionaryContext(
             command = DictionaryCommand.UPDATE,
             meaningRequest = DictionaryMeaning(
-                id = DictionaryMeaningId(invalidIds[0].b)
+                id = DictionaryMeaningId(invalidIds[0].b),
+                version = DictionaryMeaningVersion(invalidVersions[2].b)
             )
         )
-        processor.exec(context)
+        DataProvider.processor().exec(context)
 
         context.state shouldBe DictionaryState.FAILING
         context.errors shouldContainExactlyInAnyOrder listOf(
             DictionaryError(
                 code = "INVALID_ID",
-                message = "ID must be 1 or more digits"
+                message = "ID must be no more than 64 digits, latin characters, or dashes"
             ),
             DictionaryError(
                 code = "APPROVED_FLAG_IS_EMPTY",
                 message = "Approved flag must not be empty"
+            ),
+            DictionaryError(
+                code = "INVALID_VERSION",
+                message = "Version must be mo more than 64 digits, latin chars, or dashes"
             )
         )
     }
@@ -525,9 +706,9 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.FALSE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
                     word = "",
@@ -547,9 +728,9 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.TRUE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
                     word = word,
@@ -569,9 +750,9 @@ class ValidationTest : FreeSpec ({
                         approved = DictionaryMeaningApproved.FALSE
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
                     word = word.trim(),
@@ -588,16 +769,16 @@ class ValidationTest : FreeSpec ({
                 word = "word"
             )
         )
-        processor.exec(context)
+        DataProvider.processor().exec(context)
 
-        context.state shouldBe DictionaryState.RUNNING
+        context.state shouldNotBe DictionaryState.FAILING
         context.errors shouldBe emptyList()
         context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
             word = "word"
         )
     }
 
-    "Update with valid approved flag" - {
+    "Search with valid approved flag" - {
         validApproved.map { (description, approved) ->
             description {
                 val context = DictionaryContext(
@@ -607,9 +788,9 @@ class ValidationTest : FreeSpec ({
                         approved = approved
                     )
                 )
-                processor.exec(context)
+                DataProvider.processor().exec(context)
 
-                context.state shouldBe DictionaryState.RUNNING
+                context.state shouldNotBe DictionaryState.FAILING
                 context.errors shouldBe emptyList()
                 context.meaningFilterValidated shouldBe DictionaryMeaningFilter(
                     word = "word",

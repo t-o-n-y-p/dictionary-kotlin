@@ -1,9 +1,19 @@
 package com.tonyp.dictionarykotlin.common.models
 
-enum class DictionaryMeaningApproved {
+enum class DictionaryMeaningApproved(
+    val boolean: Boolean?
+) {
 
-    NONE,
-    FALSE,
-    TRUE
+    NONE(null),
+    FALSE(false),
+    TRUE(true);
+
+    companion object {
+        fun fromBoolean(boolean: Boolean?) = when (boolean) {
+            false -> FALSE
+            true -> TRUE
+            null -> NONE
+        }
+    }
 
 }
