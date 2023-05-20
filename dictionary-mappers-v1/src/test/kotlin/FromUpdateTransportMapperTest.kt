@@ -47,9 +47,9 @@ class FromUpdateTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning.NONE
+        context.meaningRequest.isEmpty() shouldBe true
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning.NONE
+        context.meaningResponse.isEmpty() shouldBe true
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -66,9 +66,9 @@ class FromUpdateTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning.NONE
+        context.meaningRequest.isEmpty() shouldBe true
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning.NONE
+        context.meaningResponse.isEmpty() shouldBe true
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -85,9 +85,9 @@ class FromUpdateTransportMapperTest : FunSpec ({
 
         context.requestId shouldBe DictionaryRequestId.NONE
         context.timeStart shouldBe Instant.NONE
-        context.meaningRequest shouldBe DictionaryMeaning.NONE
+        context.meaningRequest.isEmpty() shouldBe true
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning.NONE
+        context.meaningResponse.isEmpty() shouldBe true
         context.meaningsResponse shouldBe mutableListOf()
     }
 
@@ -113,7 +113,7 @@ class FromUpdateTransportMapperTest : FunSpec ({
             version = DictionaryMeaningVersion("qwerty")
         )
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter()
-        context.meaningResponse shouldBe DictionaryMeaning.NONE
+        context.meaningResponse.isEmpty() shouldBe true
         context.meaningsResponse shouldBe mutableListOf()
     }
 

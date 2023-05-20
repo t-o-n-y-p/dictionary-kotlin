@@ -40,7 +40,7 @@ private fun MeaningDebug?.transportToStubCase(): DictionaryStub = when (this?.st
 private fun DictionaryContext.fromTransport(request: MeaningCreateRequest) {
     command = DictionaryCommand.CREATE
     requestId = request.requestId()
-    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning.NONE
+    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -56,7 +56,7 @@ private fun DictionaryContext.fromTransport(request: MeaningReadRequest) {
 private fun DictionaryContext.fromTransport(request: MeaningUpdateRequest) {
     command = DictionaryCommand.UPDATE
     requestId = request.requestId()
-    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning.NONE
+    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -64,7 +64,7 @@ private fun DictionaryContext.fromTransport(request: MeaningUpdateRequest) {
 private fun DictionaryContext.fromTransport(request: MeaningDeleteRequest) {
     command = DictionaryCommand.DELETE
     requestId = request.requestId()
-    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning.NONE
+    meaningRequest = request.meaning?.toInternal() ?: DictionaryMeaning()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }

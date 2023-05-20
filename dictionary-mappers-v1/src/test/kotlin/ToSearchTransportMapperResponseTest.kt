@@ -18,7 +18,7 @@ class ToSearchTransportMapperResponseTest : FunSpec ({
         state = DictionaryState.FINISHING,
         requestId = DictionaryRequestId("123"),
         meaningsResponse = mutableListOf(
-            DictionaryMeaning.NONE,
+            DictionaryMeaning(),
             DictionaryMeaning(
                 id = DictionaryMeaningId("456"),
                 word = "обвал",

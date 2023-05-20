@@ -52,7 +52,7 @@ class RepoTest : FunSpec ({
             approved = DictionaryMeaningApproved.FALSE
         )
         ctx.state shouldBe DictionaryState.FAILING
-        ctx.meaningResponse shouldBe DictionaryMeaning.NONE
+        ctx.meaningResponse.isEmpty() shouldBe true
         ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_ALREADY_EXISTS.errors
     }
 
@@ -79,7 +79,7 @@ class RepoTest : FunSpec ({
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
 
         ctx.state shouldBe DictionaryState.FAILING
-        ctx.meaningResponse shouldBe DictionaryMeaning.NONE
+        ctx.meaningResponse.isEmpty() shouldBe true
         ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID.errors
     }
 
@@ -108,7 +108,7 @@ class RepoTest : FunSpec ({
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
 
         ctx.state shouldBe DictionaryState.FAILING
-        ctx.meaningResponse shouldBe DictionaryMeaning.NONE
+        ctx.meaningResponse.isEmpty() shouldBe true
         ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID.errors
     }
 
@@ -123,7 +123,7 @@ class RepoTest : FunSpec ({
         DataProvider.processor(DataProvider.updateDeleteErrorRepo).exec(ctx)
 
         ctx.state shouldBe DictionaryState.FAILING
-        ctx.meaningResponse shouldBe DictionaryMeaning.NONE
+        ctx.meaningResponse.isEmpty() shouldBe true
         ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_VERSION.errors
     }
 
@@ -157,9 +157,9 @@ class RepoTest : FunSpec ({
         )
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
 
-        ctx.meaningRepoPrepare shouldBe DictionaryMeaning.NONE
+        ctx.meaningRepoPrepare.isEmpty() shouldBe true
         ctx.state shouldBe DictionaryState.FAILING
-        ctx.meaningResponse shouldBe DictionaryMeaning.NONE
+        ctx.meaningResponse.isEmpty() shouldBe true
         ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_EMPTY_ID.errors
     }
 
@@ -186,7 +186,7 @@ class RepoTest : FunSpec ({
             version = DictionaryMeaningVersion("version")
         )
         ctx.state shouldBe DictionaryState.FAILING
-        ctx.meaningResponse shouldBe DictionaryMeaning.NONE
+        ctx.meaningResponse.isEmpty() shouldBe true
         ctx.errors shouldBe IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION.errors
     }
 

@@ -8,7 +8,10 @@ data class DictionaryMeaning (
     var approved: DictionaryMeaningApproved = DictionaryMeaningApproved.NONE,
     var version: DictionaryMeaningVersion = DictionaryMeaningVersion.NONE
 ) {
+
+    fun isEmpty() = this == NONE
+
     companion object {
-        val NONE = DictionaryMeaning()
+        private val NONE = DictionaryMeaning()
     }
 }
