@@ -1,5 +1,7 @@
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.*
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryPrincipal
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryUserGroup
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
 import io.kotest.core.spec.style.FunSpec
@@ -14,6 +16,10 @@ class RepoTest : FunSpec ({
                 word = "трава",
                 value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
                 proposedBy = "unittest"
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor(DataProvider.successRepo).exec(ctx)
@@ -41,6 +47,10 @@ class RepoTest : FunSpec ({
                 word = "трава",
                 value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
                 proposedBy = "unittest"
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
@@ -89,6 +99,10 @@ class RepoTest : FunSpec ({
             meaningRequest = DictionaryMeaning(
                 id = DictionaryMeaningStub.getSearchResult()[1].id,
                 version = DictionaryMeaningStub.getSearchResult()[1].version
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor(DataProvider.successRepo).exec(ctx)
@@ -103,6 +117,10 @@ class RepoTest : FunSpec ({
             meaningRequest = DictionaryMeaning(
                 id = DictionaryMeaningStub.getSearchResult()[1].id,
                 version = DictionaryMeaningStub.getSearchResult()[1].version
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
@@ -118,6 +136,10 @@ class RepoTest : FunSpec ({
             meaningRequest = DictionaryMeaning(
                 id = DictionaryMeaningStub.getSearchResult()[1].id,
                 version = DictionaryMeaningStub.getSearchResult()[1].version
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor(DataProvider.updateDeleteErrorRepo).exec(ctx)
@@ -132,6 +154,10 @@ class RepoTest : FunSpec ({
             command = DictionaryCommand.UPDATE,
             meaningRequest = DictionaryMeaningStub.getSearchResult()[1].copy(
                 approved = DictionaryMeaningApproved.TRUE
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor(DataProvider.successRepo).exec(ctx)
@@ -153,6 +179,10 @@ class RepoTest : FunSpec ({
                 proposedBy = "t-o-n-y-p",
                 approved = DictionaryMeaningApproved.TRUE,
                 version = DictionaryMeaningVersion("version")
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor(DataProvider.createReadSearchErrorRepo).exec(ctx)
@@ -173,6 +203,10 @@ class RepoTest : FunSpec ({
                 proposedBy = "t-o-n-y-p",
                 approved = DictionaryMeaningApproved.TRUE,
                 version = DictionaryMeaningVersion("version")
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor(DataProvider.updateDeleteErrorRepo).exec(ctx)
