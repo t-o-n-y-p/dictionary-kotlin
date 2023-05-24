@@ -20,3 +20,8 @@ dictionary:
       schema: dictionary
       user: postgres
       password: dictionary
+jwt:
+  secret: "secret"
+  issuer: "dictionary"
+  audience: "meaning-users"
+  realm: "dictionary-meanings"

@@ -9,9 +9,12 @@ import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
 import com.tonyp.dictionarykotlin.log.v1.common.IDictionaryLogWrapper
 import com.tonyp.dictionarykotlin.mappers.v1.fromTransport
 import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
+import com.tonyp.dictionarykotlin.meaning.app.base.toModel
 import com.tonyp.dictionarykotlin.meaning.app.helpers.process
 import com.tonyp.dictionarykotlin.meaning.app.helpers.sendResponse
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
@@ -33,6 +36,7 @@ suspend inline fun <reified Q : IRequest> ApplicationCall.processCommand(
     )
     try {
         logger.doWithLogging(logId) {
+            context.principal = principal<JWTPrincipal>().toModel()
             val request = receive<Q>()
             context.fromTransport(request)
             process(appSettings, context, logId)
