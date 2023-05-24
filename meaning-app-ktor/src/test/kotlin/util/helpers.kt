@@ -70,20 +70,21 @@ fun testApplication(
     block: suspend ApplicationTestBuilder.(String) -> Unit
 ) {
     val testConfig = ApplicationConfig("application-test.yaml")
+    val authConfig = DictionaryAuthConfig(config = testConfig)
     testApplication {
         environment {
             config = testConfig
         }
         application {
             module(
-                DictionaryAppSettings(
+                appSettings = DictionaryAppSettings(
                     corSettings = DictionaryCorSettings(
                         repositories = DictionaryWorkMode.values().associateWith { repository }
                     )
-                )
+                ),
+                authConfig = authConfig
             )
         }
-        val authConfig = DictionaryAuthConfig(config = testConfig)
         block(
             JWT.create()
                 .withAudience(authConfig.audience)

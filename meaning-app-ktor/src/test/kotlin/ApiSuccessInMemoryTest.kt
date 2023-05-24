@@ -29,9 +29,12 @@ class ApiSuccessInMemoryTest : FunSpec ({
             versionUuid = { createResponseTestSuccess.meaning!!.version!! }
         )
 
-        testApplication(meaningRepoInMemory) {
+        testApplication(meaningRepoInMemory) {token ->
             val response = post("/api/v1/meaning/create") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(createRequestTestSuccess)
             }
 
@@ -60,9 +63,12 @@ class ApiSuccessInMemoryTest : FunSpec ({
             initObjects = InitUpdateObjects.initObjects,
             versionUuid = { "db6d3220-cb83-46ba-b074-40e49f2a8c65" }
         )
-        testApplication(meaningRepoInMemory) {
+        testApplication(meaningRepoInMemory) {token ->
             val response = post("/api/v1/meaning/update") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(updateRequestTestSuccess)
             }
 
@@ -75,9 +81,12 @@ class ApiSuccessInMemoryTest : FunSpec ({
         val meaningRepoInMemory = MeaningRepoInMemory(
             initObjects = InitDeleteObjects.initObjects
         )
-        testApplication(meaningRepoInMemory) {
+        testApplication(meaningRepoInMemory) {token ->
             val response = post("/api/v1/meaning/delete") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(deleteRequestTestSuccess)
             }
 

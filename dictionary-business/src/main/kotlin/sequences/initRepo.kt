@@ -15,11 +15,12 @@ fun CorChainDsl<DictionaryContext>.initRepo() = sequence {
     this.title = "Инициализация репозитория"
     on { state == DictionaryState.RUNNING }
     worker("Выбор репозитория по режиму работы и принсипалу") {
-        principal
-            .takeIf { it.groups.contains(DictionaryUserGroup.TEST) }
-            ?.let { settings.repositories[DictionaryWorkMode.TEST] }
-            ?: settings.repositories[workMode]
-            ?: IMeaningRepository.NONE
+        meaningRepo =
+            principal
+                .takeIf { it.groups.contains(DictionaryUserGroup.TEST) }
+                ?.let { settings.repositories[DictionaryWorkMode.TEST] }
+                ?: settings.repositories[workMode]
+                        ?: IMeaningRepository.NONE
     }
     worker {
         this.title = "Проверка конфигурации репозитория"

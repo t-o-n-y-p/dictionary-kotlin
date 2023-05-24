@@ -32,9 +32,12 @@ class ApiErrorInMemoryTest : FunSpec ({
             initObjects = InitCreateObjects.initObjects
         )
 
-        testApplication(meaningRepoInMemory) {
+        testApplication(meaningRepoInMemory) {token ->
             val response = post("/api/v1/meaning/create") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(createRequestTestError)
             }
 
@@ -64,9 +67,12 @@ class ApiErrorInMemoryTest : FunSpec ({
             initObjects = InitUpdateObjects.initObjects
         )
 
-        testApplication(meaningRepoInMemory) {
+        testApplication(meaningRepoInMemory) {token ->
             val response = post("/api/v1/meaning/update") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(updateRequestTestError)
             }
 
@@ -80,9 +86,12 @@ class ApiErrorInMemoryTest : FunSpec ({
             initObjects = InitUpdateObjects.initObjects
         )
 
-        testApplication(meaningRepoInMemory) {
+        testApplication(meaningRepoInMemory) {token ->
             val response = post("/api/v1/meaning/update") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(updateRequestTestConcurrentModification)
             }
 
@@ -96,9 +105,12 @@ class ApiErrorInMemoryTest : FunSpec ({
             initObjects = InitDeleteObjects.initObjects
         )
 
-        testApplication(meaningRepoInMemory) {
+        testApplication(meaningRepoInMemory) {token ->
             val response = post("/api/v1/meaning/delete") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(deleteRequestTestError)
             }
 
@@ -112,9 +124,12 @@ class ApiErrorInMemoryTest : FunSpec ({
             initObjects = InitDeleteObjects.initObjects
         )
 
-        testApplication(meaningRepoInMemory) {
+        testApplication(meaningRepoInMemory) {token ->
             val response = post("/api/v1/meaning/delete") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(deleteRequestTestConcurrentModification)
             }
 

@@ -1,5 +1,4 @@
 import com.tonyp.dictionarykotlin.api.v1.models.*
-import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.repo.stub.MeaningRepoStub
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.core.spec.style.FunSpec
@@ -14,9 +13,12 @@ import util.testApplication
 class ApiErrorStubTest : FunSpec ({
 
     test("Create request error stub") {
-        testApplication(MeaningRepoStub()) {
+        testApplication(MeaningRepoStub()) {token ->
             val response = post("/api/v1/meaning/create") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(DataProvider.createRequestStubError)
             }
 
@@ -26,9 +28,12 @@ class ApiErrorStubTest : FunSpec ({
     }
 
     test("Delete request error stub") {
-        testApplication(MeaningRepoStub()) {
+        testApplication(MeaningRepoStub()) {token ->
             val response = post("/api/v1/meaning/delete") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(DataProvider.deleteRequestStubError)
             }
 
@@ -50,9 +55,12 @@ class ApiErrorStubTest : FunSpec ({
     }
 
     test("Update request error stub") {
-        testApplication(MeaningRepoStub()) {
+        testApplication(MeaningRepoStub()) {token ->
             val response = post("/api/v1/meaning/update") {
                 contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
                 setBody(DataProvider.updateRequestStubError)
             }
 
