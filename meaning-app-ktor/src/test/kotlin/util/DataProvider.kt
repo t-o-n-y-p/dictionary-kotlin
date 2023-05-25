@@ -32,6 +32,29 @@ object DataProvider {
             version = "asdfgh"
         )
     )
+    val createRequestTestOwnSuccess = MeaningCreateRequest(
+        requestId = "456",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.TEST
+        ),
+        meaning = MeaningCreateObject(
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)"
+        )
+    )
+    val createResponseTestOwnSuccess = MeaningCreateResponse(
+        responseType = "create",
+        requestId = "456",
+        result = ResponseResult.SUCCESS,
+        meaning = MeaningResponseFullObject(
+            id = "123",
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "t_o_n_y_p",
+            approved = false,
+            version = "0d41215a-4f83-4e85-bf86-f164fc503082"
+        )
+    )
     val createRequestTestSuccess = MeaningCreateRequest(
         requestId = "456",
         debug = MeaningDebug(

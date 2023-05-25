@@ -7,7 +7,9 @@ import io.kotest.matchers.shouldBe
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import util.DataProvider.createRequestTestOwnSuccess
 import util.DataProvider.createRequestTestSuccess
+import util.DataProvider.createResponseTestOwnSuccess
 import util.DataProvider.createResponseTestSuccess
 import util.DataProvider.deleteRequestTestSuccess
 import util.DataProvider.deleteResponseTestSuccess
@@ -22,7 +24,28 @@ import util.testApplication
 
 class ApiSuccessInMemoryTest : FunSpec ({
 
-    test("Create request success in memory") {
+    test("Create request success in memory (own)") {
+        val meaningRepoInMemory = MeaningRepoInMemory(
+            initObjects = InitCreateObjects.initObjects,
+            idUuid = { createResponseTestOwnSuccess.meaning!!.id!! },
+            versionUuid = { createResponseTestOwnSuccess.meaning!!.version!! }
+        )
+
+        testApplication(meaningRepoInMemory) {token ->
+            val response = post("/api/v1/meaning/create") {
+                contentType(ContentType.Application.Json)
+                headers {
+                    bearerAuth(token)
+                }
+                setBody(createRequestTestOwnSuccess)
+            }
+
+            response shouldHaveStatus HttpStatusCode.OK
+            response.body() as MeaningCreateResponse shouldBe createResponseTestOwnSuccess
+        }
+    }
+
+    test("Create request success in memory (not own)") {
         val meaningRepoInMemory = MeaningRepoInMemory(
             initObjects = InitCreateObjects.initObjects,
             idUuid = { createResponseTestSuccess.meaning!!.id!! },
