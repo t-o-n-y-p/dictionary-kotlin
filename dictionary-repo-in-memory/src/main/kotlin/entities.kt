@@ -9,7 +9,7 @@ data class MeaningEntity (
     val id: String? = null,
     val wordEntity: WordEntity? = null,
     val valueEntity: ValueEntity? = null,
-    val proposedBy: String? = null,
+    val userEntity: UserEntity? = null,
     val approved: Boolean? = null,
     val version: String? = null
 ) {
@@ -21,7 +21,9 @@ data class MeaningEntity (
         valueEntity = model.value
             .takeIf { it.isNotBlank() }
             ?.let { ValueEntity(value = it) },
-        proposedBy = model.proposedBy.takeIf { it.isNotBlank() },
+        userEntity = model.proposedBy
+            .takeIf { it.isNotBlank() }
+            ?.let { UserEntity(name = it) },
         approved = model.approved.boolean,
         version = model.version.asString().takeIf { it.isNotBlank() }
     )
@@ -30,7 +32,7 @@ data class MeaningEntity (
         id = id?.let { DictionaryMeaningId(it) }?: DictionaryMeaningId.NONE,
         word = wordEntity?.word ?: "",
         value = valueEntity?.value ?: "",
-        proposedBy = proposedBy ?: "",
+        proposedBy = userEntity?.name ?: "",
         approved = DictionaryMeaningApproved.fromBoolean(approved),
         version = version?.let { DictionaryMeaningVersion(it) } ?: DictionaryMeaningVersion.NONE
     )
@@ -44,4 +46,9 @@ data class WordEntity (
 data class ValueEntity (
     val id: String? = null,
     val value: String? = null
+)
+
+data class UserEntity (
+    val id: String? = null,
+    val name: String? = null
 )

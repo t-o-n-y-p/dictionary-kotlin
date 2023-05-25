@@ -33,6 +33,9 @@ class MeaningRepoInMemory (
     private val valueCache = Cache.Builder<String, ValueEntity>()
         .expireAfterWrite(ttl)
         .build()
+    private val userCache = Cache.Builder<String, UserEntity>()
+        .expireAfterWrite(ttl)
+        .build()
     private val mutex: Mutex = Mutex()
 
     init {
@@ -50,6 +53,9 @@ class MeaningRepoInMemory (
             entity.valueEntity
                 ?.takeUnless { valueCache.asMap().containsValue(entity.valueEntity) }
                 ?.let { valueCache.put(uuid4().toString(), it) }
+            entity.userEntity
+                ?.takeUnless { userCache.asMap().containsValue(entity.userEntity) }
+                ?.let { userCache.put(uuid4().toString(), it) }
             meaningCache.put(entity.id, entity)
         }
     }

@@ -48,12 +48,31 @@ object Values : Table("values") {
         }
 }
 
+object Users : Table("users") {
+
+    val id = varchar("id", 64)
+    val name = varchar("name", 12).uniqueIndex()
+
+    override val primaryKey = PrimaryKey(id)
+
+    fun getId(name: String): String = Users
+        .select { Users.name eq name }
+        .singleOrNull()
+        ?.let { it[id].toString() }
+        ?: uuid4().toString().also {id ->
+            Users.insert {
+                it[Users.id] = id
+                it[Users.name] = name
+            }
+        }
+}
+
 object Meanings : Table("meanings") {
 
     val id = varchar("id", 64).uniqueIndex()
     val wordId = reference("word_id", Words.id, onDelete = ReferenceOption.CASCADE)
     val valueId = reference("value_id", Values.id, onDelete = ReferenceOption.CASCADE)
-    val proposedBy = varchar("proposed_by", 12)
+    val userId = reference("user_id", Users.id, onDelete = ReferenceOption.SET_NULL).nullable()
     val approved = enumeration("approved", DictionaryMeaningApproved::class)
     val version = varchar("version", 64)
 
@@ -68,7 +87,7 @@ object Meanings : Table("meanings") {
         builder[id] = idUuid()
         builder[wordId] = Words.getId(meaning.word)
         builder[valueId] = Values.getId(meaning.value)
-        builder[proposedBy] = meaning.proposedBy
+        builder[userId] = meaning.proposedBy.takeIf { it.isNotBlank() }?.let { Users.getId(it) }
         builder[approved] = meaning.approved
         builder[version] = versionUuid()
     }
@@ -77,13 +96,13 @@ object Meanings : Table("meanings") {
         id = DictionaryMeaningId(result[id].toString()),
         word = result[Words.word],
         value = result[Values.value],
-        proposedBy = result[proposedBy],
+        proposedBy = result.getOrNull(Users.name) ?: "",
         approved = result[approved],
         version = DictionaryMeaningVersion(result[version].toString())
     )
 
 }
 
-fun dropTables() = drop(Meanings, Words, Values)
+fun dropTables() = drop(Meanings, Words, Values, Users)
 
-fun createTables() = create(Words, Values, Meanings)
+fun createTables() = create(Words, Values, Users, Meanings)
