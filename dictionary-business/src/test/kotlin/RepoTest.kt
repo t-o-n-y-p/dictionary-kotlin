@@ -1,6 +1,7 @@
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.*
 import com.tonyp.dictionarykotlin.common.permissions.DictionaryPrincipal
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryPrincipalRelation
 import com.tonyp.dictionarykotlin.common.permissions.DictionaryUserGroup
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.stubs.DictionaryMeaningStub
@@ -9,7 +10,38 @@ import io.kotest.matchers.shouldBe
 
 class RepoTest : FunSpec ({
 
-    test("Repo create success") {
+    test("Repo create success (own)") {
+        val ctx = DictionaryContext(
+            command = DictionaryCommand.CREATE,
+            meaningRequest = DictionaryMeaning(
+                word = "трава",
+                value = "о чем-н. не имеющем вкуса, безвкусном (разг.)"
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
+            )
+        )
+        DataProvider.processor(DataProvider.successRepo).exec(ctx)
+
+        ctx.meaningRepoPrepare shouldBe DictionaryMeaning(
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "t_o_n_y_p",
+            approved = DictionaryMeaningApproved.FALSE,
+            principalRelation = DictionaryPrincipalRelation.OWN
+        )
+        ctx.state shouldBe DictionaryState.FINISHING
+        ctx.meaningResponse shouldBe DictionaryMeaning(
+            id = DictionaryMeaningId("10000000000000000000000000000001"),
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "t_o_n_y_p",
+            approved = DictionaryMeaningApproved.FALSE
+        )
+    }
+
+    test("Repo create success (not own)") {
         val ctx = DictionaryContext(
             command = DictionaryCommand.CREATE,
             meaningRequest = DictionaryMeaning(
