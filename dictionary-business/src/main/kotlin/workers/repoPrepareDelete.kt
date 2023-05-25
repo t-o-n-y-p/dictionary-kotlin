@@ -9,6 +9,8 @@ fun CorChainDsl<DictionaryContext>.repoPrepareDelete() = worker {
     this.title = "Подготовка объекта для удаления"
     on { state == DictionaryState.RUNNING }
     handle {
-        meaningRepoPrepare = meaningRepoRead.copy()
+        meaningRepoPrepare = meaningRepoRead.copy(
+            version = meaningValidated.version
+        )
     }
 }
