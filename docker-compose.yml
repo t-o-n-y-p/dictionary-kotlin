@@ -19,12 +19,32 @@ services:
     ports:
       - "8081:8080"
       - "8082:9990"
+    depends_on:
+      - mysql-kc
     volumes:
       - ./keycloak:/tmp
     environment:
       KEYCLOAK_USER: dictionary
       KEYCLOAK_PASSWORD: dictionary
+      DB_VENDOR: mysql
+      DB_ADDR: mysql-kc
+      DB_PORT: 3306
+      DB_USER: keycloak_user
+      DB_PASSWORD: keycloak_password
+      DB_DATABASE: keycloak_db
       KEYCLOAK_IMPORT: "/tmp/realm-export.json"
+
+  mysql-kc:
+    image: mysql:8.0.27
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: keycloak_user
+      MYSQL_PASSWORD: keycloak_password
+      MYSQL_DATABASE: keycloak_db
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./keycloak-data:/var/lib/mysql
 
   psql:
     image: postgres
