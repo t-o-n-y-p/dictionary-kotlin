@@ -21,8 +21,8 @@ dictionary:
       user: postgres
       password: dictionary
 jwt:
-  issuer: "http://localhost:8081/auth/realms/dictionary"
+  issuer: "http://localhost:8081/auth/realms/dictionary-meanings"
   audience: "meaning-users"
   realm: "dictionary-meanings"
   clientId: "dictionary-meanings-service"
-  certUrl: "http://localhost:8081/auth/realms/dictionary/protocol/openid-connect/certs"
+  certUrl: "http://localhost:8081/auth/realms/dictionary-meanings/protocol/openid-connect/certs"
