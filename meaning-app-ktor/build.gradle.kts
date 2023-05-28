@@ -30,7 +30,7 @@ application {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("stdlib"))
     implementation(ktorServer("core"))
     implementation(ktorServer("netty"))
 
