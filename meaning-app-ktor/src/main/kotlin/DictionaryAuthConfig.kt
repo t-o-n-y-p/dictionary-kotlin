@@ -18,7 +18,7 @@ data class DictionaryAuthConfig(
         issuer = config.property("jwt.issuer").getString(),
         audience = config.property("jwt.audience").getString(),
         realm = config.property("jwt.realm").getString(),
-        clientId = config.property("jwt.clientId").getString(),
+        clientId = config.propertyOrNull("jwt.clientId")?.getString() ?: "",
         certUrl = config.propertyOrNull("jwt.certUrl")?.getString(),
     )
 
