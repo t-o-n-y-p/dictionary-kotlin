@@ -24,7 +24,7 @@ services:
     environment:
       KEYCLOAK_USER: dictionary
       KEYCLOAK_PASSWORD: dictionary
-      #KEYCLOAK_IMPORT: "/tmp/realm-export.json"
+      KEYCLOAK_IMPORT: "/tmp/realm-export.json"
 
   psql:
     image: postgres
