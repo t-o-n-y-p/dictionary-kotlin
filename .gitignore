@@ -39,3 +39,4 @@ kotlin-ide/
 gradlew*
 /gradle/
 psql/
+/keycloak/hsperfdata_jboss
