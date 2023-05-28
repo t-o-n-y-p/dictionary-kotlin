@@ -24,6 +24,6 @@ data class DictionaryAuthConfig(
 
     companion object {
         const val GROUPS_CLAIM = "groups"
-        const val NAME_CLAIM = "name"
+        const val NAME_CLAIM = "preferred_username"
     }
 }

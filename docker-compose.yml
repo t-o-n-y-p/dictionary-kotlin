@@ -32,7 +32,7 @@ services:
       DB_USER: keycloak_user
       DB_PASSWORD: keycloak_password
       DB_DATABASE: keycloak_db
-      KEYCLOAK_IMPORT: "/tmp/realm-export.json"
+      #KEYCLOAK_IMPORT: "/tmp/realm-export.json"
 
   mysql-kc:
     image: mysql:8.0.27

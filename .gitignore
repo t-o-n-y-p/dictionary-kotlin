@@ -40,3 +40,4 @@ gradlew*
 /gradle/
 psql/
 /keycloak/hsperfdata_jboss
+/keycloak-data
