@@ -76,10 +76,22 @@ dependencies {
     testImplementation(ktorClient("websockets"))
 }
 
-docker {
-    javaApplication {
-        baseImage.set("openjdk:17")
+tasks {
+    val dockerJvmDockerfile by creating(Dockerfile::class) {
+        group = "docker"
+        from("openjdk:17")
+        copyFile("app.jar", "app.jar")
+        entryPoint("java", "-Xms256m", "-Xmx512m", "-jar", "/app.jar")
+    }
+    create("dockerBuildJvmImage", DockerBuildImage::class) {
+        group = "docker"
+        dependsOn(dockerJvmDockerfile)
+        doFirst {
+            copy {
+                from(dockerJvmDockerfile)
+                into("${project.buildDir}/docker/app.jar")
+            }
+        }
         images.add("${project.name}:${project.version}")
-        jvmArgs.set(listOf("-Xms256m", "-Xmx512m"))
     }
 }
