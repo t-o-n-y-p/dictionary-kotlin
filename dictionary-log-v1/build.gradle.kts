@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     val jacksonVersion: String by project
-    implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk8"))
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 }
