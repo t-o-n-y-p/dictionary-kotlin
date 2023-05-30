@@ -8,6 +8,7 @@ data class DictionaryAuthConfig(
     val issuer: String,
     val audience: String,
     val realm: String,
+    val clientId: String,
     val certUrl: String? = null,
 ) {
     constructor(environment: ApplicationEnvironment): this(environment.config)
@@ -17,11 +18,12 @@ data class DictionaryAuthConfig(
         issuer = config.property("jwt.issuer").getString(),
         audience = config.property("jwt.audience").getString(),
         realm = config.property("jwt.realm").getString(),
+        clientId = config.propertyOrNull("jwt.clientId")?.getString() ?: "",
         certUrl = config.propertyOrNull("jwt.certUrl")?.getString(),
     )
 
     companion object {
         const val GROUPS_CLAIM = "groups"
-        const val NAME_CLAIM = "name"
+        const val NAME_CLAIM = "preferred_username"
     }
 }

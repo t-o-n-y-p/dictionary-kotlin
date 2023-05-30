@@ -30,7 +30,7 @@ application {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("stdlib"))
     implementation(ktorServer("core"))
     implementation(ktorServer("netty"))
 
@@ -76,22 +76,10 @@ dependencies {
     testImplementation(ktorClient("websockets"))
 }
 
-tasks {
-    val dockerJvmDockerfile by creating(Dockerfile::class) {
-        group = "docker"
-        from("openjdk:17")
-        copyFile("app.jar", "app.jar")
-        entryPoint("java", "-Xms256m", "-Xmx512m", "-jar", "/app.jar")
-    }
-    create("dockerBuildJvmImage", DockerBuildImage::class) {
-        group = "docker"
-        dependsOn(dockerJvmDockerfile)
-        doFirst {
-            copy {
-                from(dockerJvmDockerfile)
-                into("${project.buildDir}/docker/app.jar")
-            }
-        }
+docker {
+    javaApplication {
+        baseImage.set("openjdk:17")
         images.add("${project.name}:${project.version}")
+        jvmArgs.set(listOf("-Xms256m", "-Xmx512m"))
     }
 }
