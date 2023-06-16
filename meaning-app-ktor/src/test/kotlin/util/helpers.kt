@@ -1,10 +1,17 @@
 package util
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.tonyp.dictionarykotlin.api.v1.apiV1Mapper
 import com.tonyp.dictionarykotlin.common.DictionaryCorSettings
 import com.tonyp.dictionarykotlin.common.models.DictionaryWorkMode
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryPrincipal
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryUserGroup
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
+import com.tonyp.dictionarykotlin.meaning.app.DictionaryAuthConfig
+import com.tonyp.dictionarykotlin.meaning.app.DictionaryAuthConfig.Companion.GROUPS_CLAIM
+import com.tonyp.dictionarykotlin.meaning.app.DictionaryAuthConfig.Companion.NAME_CLAIM
 import com.tonyp.dictionarykotlin.meaning.app.module
 import io.ktor.client.*
 import io.ktor.client.engine.*
@@ -17,6 +24,7 @@ import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
 import kotlinx.coroutines.withTimeout
+import java.util.*
 
 suspend fun ApplicationTestBuilder.post(
     urlString: String,
@@ -55,22 +63,36 @@ suspend fun ApplicationTestBuilder.webSocket(
 @KtorDsl
 fun testApplication(
     repository: IMeaningRepository,
-    block: suspend ApplicationTestBuilder.() -> Unit
+    principal: DictionaryPrincipal = DictionaryPrincipal(
+        name = "t_o_n_y_p",
+        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
+    ),
+    block: suspend ApplicationTestBuilder.(String) -> Unit
 ) {
+    val testConfig = ApplicationConfig("application-test.yaml")
+    val authConfig = DictionaryAuthConfig(config = testConfig)
     testApplication {
         environment {
-            config = ApplicationConfig("application-test.yaml")
+            config = testConfig
         }
         application {
             module(
-                DictionaryAppSettings(
+                appSettings = DictionaryAppSettings(
                     corSettings = DictionaryCorSettings(
                         repositories = DictionaryWorkMode.values().associateWith { repository }
                     )
-                )
+                ),
+                authConfig = authConfig
             )
         }
-
-        block()
+        block(
+            JWT.create()
+                .withAudience(authConfig.audience)
+                .withIssuer(authConfig.issuer)
+                .withClaim(NAME_CLAIM, principal.name)
+                .withClaim(GROUPS_CLAIM, principal.groups.map { it.name })
+                .withExpiresAt(Date(System.currentTimeMillis() + 120_000))
+                .sign(Algorithm.HMAC256(authConfig.secret))
+        )
     }
 }

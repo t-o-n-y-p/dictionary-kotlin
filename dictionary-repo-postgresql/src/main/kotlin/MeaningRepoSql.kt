@@ -66,6 +66,7 @@ class MeaningRepoSql(
                 Meanings
                     .innerJoin(Words)
                     .innerJoin(Values)
+                    .innerJoin(Users)
                     .select { Meanings.id eq id.asString() }
                     .singleOrNull()
                     ?: return IMeaningRepository.Errors.RESULT_ERROR_NOT_FOUND
@@ -141,6 +142,7 @@ class MeaningRepoSql(
             val data: List<DictionaryMeaning> = Meanings
                 .innerJoin(Words)
                 .innerJoin(Values)
+                .innerJoin(Users)
                 .select {
                     buildList {
                         add(Op.TRUE)

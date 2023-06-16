@@ -8,6 +8,8 @@ import DataProvider.validIds
 import DataProvider.validVersions
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.*
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryPrincipal
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryUserGroup
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
@@ -24,6 +26,10 @@ class ValidationTest : FreeSpec ({
                         word = word,
                         value = "value",
                         proposedBy = "proposedBy"
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -48,6 +54,10 @@ class ValidationTest : FreeSpec ({
                         word = word,
                         value = "value",
                         proposedBy = "proposedBy"
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -72,6 +82,10 @@ class ValidationTest : FreeSpec ({
                         word = word,
                         value = "value",
                         proposedBy = "proposedBy"
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -96,6 +110,10 @@ class ValidationTest : FreeSpec ({
                         word = "слово",
                         value = value,
                         proposedBy = "proposedBy"
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -120,6 +138,10 @@ class ValidationTest : FreeSpec ({
                         word = "слово",
                         value = value.repeat(257),
                         proposedBy = "proposedBy"
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -144,6 +166,10 @@ class ValidationTest : FreeSpec ({
                         word = "слово",
                         value = value,
                         proposedBy = "proposedBy"
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -168,6 +194,10 @@ class ValidationTest : FreeSpec ({
                         word = "слово",
                         value = "value",
                         proposedBy = username
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -192,6 +222,10 @@ class ValidationTest : FreeSpec ({
                         word = "слово",
                         value = "value",
                         proposedBy = username
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -216,6 +250,10 @@ class ValidationTest : FreeSpec ({
                         word = "слово",
                         value = "value",
                         proposedBy = username
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -238,6 +276,10 @@ class ValidationTest : FreeSpec ({
                 word = invalidWords[0].b,
                 value = empties[1].b,
                 proposedBy = invalidUsernames[2].b
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor().exec(context)
@@ -331,6 +373,10 @@ class ValidationTest : FreeSpec ({
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
                         version = DictionaryMeaningVersion("version")
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -354,6 +400,10 @@ class ValidationTest : FreeSpec ({
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
                         version = DictionaryMeaningVersion("version")
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -377,6 +427,10 @@ class ValidationTest : FreeSpec ({
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId(id),
                         version = DictionaryMeaningVersion("version")
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -399,6 +453,10 @@ class ValidationTest : FreeSpec ({
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId("0"),
                         version = DictionaryMeaningVersion(version)
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -422,6 +480,10 @@ class ValidationTest : FreeSpec ({
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId("0"),
                         version = DictionaryMeaningVersion(version)
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -445,6 +507,10 @@ class ValidationTest : FreeSpec ({
                     meaningRequest = DictionaryMeaning(
                         id = DictionaryMeaningId("0"),
                         version = DictionaryMeaningVersion(version)
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -465,6 +531,10 @@ class ValidationTest : FreeSpec ({
             meaningRequest = DictionaryMeaning(
                 id = DictionaryMeaningId(empties[0].b),
                 version = DictionaryMeaningVersion(invalidVersions[1].b)
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor().exec(context)
@@ -491,6 +561,10 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id),
                         approved = DictionaryMeaningApproved.FALSE,
                         version = DictionaryMeaningVersion("version")
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -515,6 +589,10 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id),
                         approved = DictionaryMeaningApproved.TRUE,
                         version = DictionaryMeaningVersion("version")
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -539,6 +617,10 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId(id),
                         approved = DictionaryMeaningApproved.FALSE,
                         version = DictionaryMeaningVersion("version")
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -563,6 +645,10 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId("0"),
                         approved = DictionaryMeaningApproved.FALSE,
                         version = DictionaryMeaningVersion(version)
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -587,6 +673,10 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId("0"),
                         approved = DictionaryMeaningApproved.TRUE,
                         version = DictionaryMeaningVersion(version)
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -611,6 +701,10 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId("0"),
                         approved = DictionaryMeaningApproved.FALSE,
                         version = DictionaryMeaningVersion(version)
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -632,6 +726,10 @@ class ValidationTest : FreeSpec ({
             meaningRequest = DictionaryMeaning(
                 id = DictionaryMeaningId(validIds[0].b),
                 version = DictionaryMeaningVersion("version")
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor().exec(context)
@@ -654,6 +752,10 @@ class ValidationTest : FreeSpec ({
                         id = DictionaryMeaningId("123"),
                         approved = approved,
                         version = DictionaryMeaningVersion("version")
+                    ),
+                    principal = DictionaryPrincipal(
+                        name = "t_o_n_y_p",
+                        groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
                     )
                 )
                 DataProvider.processor().exec(context)
@@ -675,6 +777,10 @@ class ValidationTest : FreeSpec ({
             meaningRequest = DictionaryMeaning(
                 id = DictionaryMeaningId(invalidIds[0].b),
                 version = DictionaryMeaningVersion(invalidVersions[2].b)
+            ),
+            principal = DictionaryPrincipal(
+                name = "t_o_n_y_p",
+                groups = setOf(DictionaryUserGroup.USER, DictionaryUserGroup.ADMIN)
             )
         )
         DataProvider.processor().exec(context)

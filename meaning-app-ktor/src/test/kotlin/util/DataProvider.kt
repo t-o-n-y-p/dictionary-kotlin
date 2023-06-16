@@ -32,6 +32,29 @@ object DataProvider {
             version = "asdfgh"
         )
     )
+    val createRequestTestOwnSuccess = MeaningCreateRequest(
+        requestId = "456",
+        debug = MeaningDebug(
+            mode = MeaningRequestDebugMode.TEST
+        ),
+        meaning = MeaningCreateObject(
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)"
+        )
+    )
+    val createResponseTestOwnSuccess = MeaningCreateResponse(
+        responseType = "create",
+        requestId = "456",
+        result = ResponseResult.SUCCESS,
+        meaning = MeaningResponseFullObject(
+            id = "123",
+            word = "трава",
+            value = "о чем-н. не имеющем вкуса, безвкусном (разг.)",
+            proposedBy = "t_o_n_y_p",
+            approved = false,
+            version = "0d41215a-4f83-4e85-bf86-f164fc503082"
+        )
+    )
     val createRequestTestSuccess = MeaningCreateRequest(
         requestId = "456",
         debug = MeaningDebug(
@@ -55,6 +78,15 @@ object DataProvider {
             approved = false,
             version = "0d41215a-4f83-4e85-bf86-f164fc503082"
         )
+    )
+    val createResponseTestAccessDenied = MeaningCreateResponse(
+        responseType = "create",
+        requestId = "456",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(code = "ACCESS_DENIED", message = "User is not allowed to perform this operation")
+        ),
+        meaning = MeaningResponseFullObject()
     )
 
     val createRequestStubError = MeaningCreateRequest(
@@ -136,6 +168,15 @@ object DataProvider {
         meaning = MeaningResponseDeleteObject(
             id = "123"
         )
+    )
+    val deleteResponseTestAccessDenied = MeaningDeleteResponse(
+        responseType = "delete",
+        requestId = "789",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(code = "ACCESS_DENIED", message = "User is not allowed to perform this operation")
+        ),
+        meaning = MeaningResponseDeleteObject()
     )
 
     val deleteRequestStubError = MeaningDeleteRequest(
@@ -357,6 +398,15 @@ object DataProvider {
             approved = true,
             version = "db6d3220-cb83-46ba-b074-40e49f2a8c65"
         )
+    )
+    val updateResponseTestAccessDenied = MeaningUpdateResponse(
+        responseType = "update",
+        requestId = "789",
+        result = ResponseResult.ERROR,
+        errors = listOf(
+            Error(code = "ACCESS_DENIED", message = "User is not allowed to perform this operation")
+        ),
+        meaning = MeaningResponseFullObject()
     )
 
     val updateRequestStubError = MeaningUpdateRequest(

@@ -13,7 +13,7 @@ fun CorChainDsl<DictionaryContext>.repoDelete() = worker {
     handle {
         val result = meaningRepo.deleteMeaning(DbMeaningIdRequest(meaningRepoPrepare))
         if (result.isSuccess) {
-            meaningRepoDone = meaningRepoRead
+            meaningRepoDone = meaningRepoPrepare
         } else {
             fail(result.errors)
         }

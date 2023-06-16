@@ -11,8 +11,11 @@ import io.ktor.server.routing.*
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.yaml
-fun Application.module(appSettings: DictionaryAppSettings = initAppSettings()) {
-    initPlugins(appSettings)
+fun Application.module(
+    appSettings: DictionaryAppSettings = initAppSettings(),
+    authConfig: DictionaryAuthConfig = DictionaryAuthConfig(environment),
+) {
+    initPlugins(appSettings, authConfig)
 
     routing {
         route("api/v1") {

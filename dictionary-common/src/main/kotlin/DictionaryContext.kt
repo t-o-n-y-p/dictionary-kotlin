@@ -1,6 +1,8 @@
 package com.tonyp.dictionarykotlin.common
 
 import com.tonyp.dictionarykotlin.common.models.*
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryPrincipal
+import com.tonyp.dictionarykotlin.common.permissions.DictionaryUserPermission
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository
 import com.tonyp.dictionarykotlin.common.stubs.DictionaryStub
 
@@ -15,6 +17,10 @@ data class DictionaryContext (
 
     var workMode: DictionaryWorkMode = DictionaryWorkMode.PROD,
     var stubCase: DictionaryStub = DictionaryStub.NONE,
+
+    var principal: DictionaryPrincipal = DictionaryPrincipal.NONE,
+    var permissions: MutableSet<DictionaryUserPermission> = mutableSetOf(),
+    var permitted: Boolean = false,
 
     var meaningRepo: IMeaningRepository = IMeaningRepository.NONE,
     var meaningRepoRead: DictionaryMeaning = DictionaryMeaning(),

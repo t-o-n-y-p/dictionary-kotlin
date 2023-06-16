@@ -35,8 +35,10 @@ class DictionaryMeaningProcessor(
                     validateUsernameContent()
                     finishMeaningValidation()
                 }
+                resolvePermissions()
                 repo("Логика создания") {
                     repoPrepareCreate()
+                    accessValidation()
                     repoCreate()
                 }
                 prepareResult()
@@ -76,9 +78,11 @@ class DictionaryMeaningProcessor(
                     validateVersionContent()
                     finishMeaningValidation()
                 }
+                resolvePermissions()
                 repo("Логика изменения") {
                     repoRead()
                     repoPrepareUpdate()
+                    accessValidation()
                     repoUpdate()
                 }
                 prepareResult()
@@ -98,9 +102,11 @@ class DictionaryMeaningProcessor(
                     validateVersionContent()
                     finishMeaningValidation()
                 }
+                resolvePermissions()
                 repo("Логика удаления") {
                     repoRead()
                     repoPrepareDelete()
+                    accessValidation()
                     repoDelete()
                 }
                 prepareResult()

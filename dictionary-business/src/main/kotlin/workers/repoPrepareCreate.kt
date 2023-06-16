@@ -10,6 +10,9 @@ fun CorChainDsl<DictionaryContext>.repoPrepareCreate() = worker {
     this.title = "Подготовка объекта для создания"
     on { state == DictionaryState.RUNNING }
     handle {
-        meaningRepoPrepare = meaningValidated.copy(approved = DictionaryMeaningApproved.FALSE)
+        meaningRepoPrepare = meaningValidated.copy(
+            approved = DictionaryMeaningApproved.FALSE
+        )
+        meaningRepoPrepare.takeIf { it.proposedBy.isBlank() }?.let { it.proposedBy = principal.name }
     }
 }

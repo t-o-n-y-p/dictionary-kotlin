@@ -8,3 +8,8 @@ ktor:
   urls:
     - "http://127.0.0.1:8080/"
     - "http://0.0.0.0:8080/"
+jwt:
+  secret: "test-secret"
+  issuer: "dictionary-test"
+  audience: "meaning-test-users"
+  realm: "dictionary-meanings-test"
