@@ -4,6 +4,7 @@ import com.tonyp.dictionarykotlin.api.v1.models.MeaningSearchRequest
 import com.tonyp.dictionarykotlin.common.DictionaryContext
 import com.tonyp.dictionarykotlin.common.models.DictionaryCommand
 import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
+import com.tonyp.dictionarykotlin.common.models.DictionaryState
 import com.tonyp.dictionarykotlin.log.v1.common.IDictionaryLogWrapper
 import com.tonyp.dictionarykotlin.meaning.app.DictionaryAppSettings
 import com.tonyp.dictionarykotlin.meaning.app.helpers.WebSocketSessionMap
@@ -27,43 +28,47 @@ suspend fun WebSocketSession.searchMeaning(appSettings: DictionaryAppSettings, l
 }
 
 suspend fun sendWebSocketCreateDeleteNotification(appSettings: DictionaryAppSettings, context: DictionaryContext) =
-    sessions.entries
-        .filter {
-            (
-                    it.value.meaningFilterValidated.word == context.meaningResponse.word
-                            || it.value.meaningFilterValidated.word == ""
-            ) && (
-                    it.value.meaningFilterValidated.approved == DictionaryMeaningApproved.NONE
-                            || it.value.meaningFilterValidated.approved == context.meaningResponse.approved
-                    )
-        }.forEach {
-            it.key.sendResponse(appSettings, context, "websocket-notification")
-        }
+    context.takeIf { it.state == DictionaryState.FINISHING }?.let { ctx ->
+        sessions.entries
+            .filter {
+                (
+                        it.value.meaningFilterValidated.word == ctx.meaningResponse.word
+                                || it.value.meaningFilterValidated.word == ""
+                        ) && (
+                        it.value.meaningFilterValidated.approved == DictionaryMeaningApproved.NONE
+                                || it.value.meaningFilterValidated.approved == ctx.meaningResponse.approved
+                        )
+            }.forEach {
+                it.key.sendResponse(appSettings, ctx, "websocket-notification")
+            }
+    }
 
 suspend fun sendWebSocketUpdateNotification(appSettings: DictionaryAppSettings, context: DictionaryContext) {
-    val logId = "websocket-notification"
-    sessions.entries
-        .filter {
-            (it.value.meaningFilterValidated.word == context.meaningResponse.word || it.value.meaningFilterValidated.word == "")
-                    && it.value.meaningFilterValidated.approved == DictionaryMeaningApproved.NONE
-        }.forEach {
-            it.key.sendResponse(appSettings, context, logId)
-        }
-    sessions.entries
-        .filter {
-            (it.value.meaningFilterValidated.word == context.meaningResponse.word || it.value.meaningFilterValidated.word == "")
-                    && it.value.meaningFilterValidated.approved == context.meaningResponse.approved
-        }.forEach {
-            context.command = DictionaryCommand.CREATE
-            it.key.sendResponse(appSettings, context, logId)
-        }
-    sessions.entries
-        .filter {
-            (it.value.meaningFilterValidated.word == context.meaningResponse.word || it.value.meaningFilterValidated.word == "")
-                    && it.value.meaningFilterValidated.approved != DictionaryMeaningApproved.NONE
-                    && it.value.meaningFilterValidated.approved != context.meaningResponse.approved
-        }.forEach {
-            context.command = DictionaryCommand.DELETE
-            it.key.sendResponse(appSettings, context, logId)
-        }
+    context.takeIf { it.state == DictionaryState.FINISHING }?.let { ctx ->
+        val logId = "websocket-notification"
+        sessions.entries
+            .filter {
+                (it.value.meaningFilterValidated.word == ctx.meaningResponse.word || it.value.meaningFilterValidated.word == "")
+                        && it.value.meaningFilterValidated.approved == DictionaryMeaningApproved.NONE
+            }.forEach {
+                it.key.sendResponse(appSettings, ctx, logId)
+            }
+        sessions.entries
+            .filter {
+                (it.value.meaningFilterValidated.word == ctx.meaningResponse.word || it.value.meaningFilterValidated.word == "")
+                        && it.value.meaningFilterValidated.approved == ctx.meaningResponse.approved
+            }.forEach {
+                ctx.command = DictionaryCommand.CREATE
+                it.key.sendResponse(appSettings, ctx, logId)
+            }
+        sessions.entries
+            .filter {
+                (it.value.meaningFilterValidated.word == ctx.meaningResponse.word || it.value.meaningFilterValidated.word == "")
+                        && it.value.meaningFilterValidated.approved != DictionaryMeaningApproved.NONE
+                        && it.value.meaningFilterValidated.approved != ctx.meaningResponse.approved
+            }.forEach {
+                ctx.command = DictionaryCommand.DELETE
+                it.key.sendResponse(appSettings, ctx, logId)
+            }
+    }
 }
