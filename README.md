@@ -128,16 +128,17 @@
 
 ### Функции (эндпоинты)
 
-1. POST /api/v1//meaning/create
-2. POST /api/v1//meaning/read
-3. POST /api/v1//meaning/update
-4. POST /api/v1//meaning/delete
-5. POST /api/v1//meaning/search
+1. POST /api/v1/meaning/create
+2. POST /api/v1/meaning/read
+3. POST /api/v1/meaning/update
+4. POST /api/v1/meaning/delete
+5. POST /api/v1/meaning/search
 
 ### Описание сущности meaning
 
 1. id: идентификатор
 2. word: строка со словом
-3. meaning: строка со значением
+3. value: строка со значением
 4. proposedBy: имя пользователя, который предложил значение
 5. approved: флаг подтверждения значение (true/false)
+6. version: версия оптимистичной блокировки
