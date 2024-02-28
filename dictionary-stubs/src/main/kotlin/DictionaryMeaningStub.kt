@@ -61,6 +61,22 @@ object DictionaryMeaningStub {
             proposedBy = "t-o-n-y-p",
             approved = DictionaryMeaningApproved.TRUE,
             version = DictionaryMeaningVersion("qweasdzxc")
+        ),
+        DictionaryMeaning(
+            id = DictionaryMeaningId("12890"),
+            word = "обвалиться",
+            value = "совершить обвал",
+            proposedBy = "t-o-n-y-p",
+            approved = DictionaryMeaningApproved.TRUE,
+            version = DictionaryMeaningVersion("rtyfghvbn")
+        ),
+        DictionaryMeaning(
+            id = DictionaryMeaningId("987654321"),
+            word = "приобвалиться",
+            value = "совершить обвал",
+            proposedBy = "t-o-n-y-p",
+            approved = DictionaryMeaningApproved.FALSE,
+            version = DictionaryMeaningVersion("uiopjklm")
         )
     )
 

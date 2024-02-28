@@ -29,6 +29,7 @@ class FromSearchTransportMapperTest : FunSpec ({
         ),
         meaningFilter = MeaningSearchFilter(
             word = "трава",
+            mode = MeaningSearchFilterMode.STARTS_WITH,
             approved = true
         )
     )
@@ -106,6 +107,7 @@ class FromSearchTransportMapperTest : FunSpec ({
         context.meaningRequest.isEmpty() shouldBe true
         context.meaningFilterRequest shouldBe DictionaryMeaningFilter(
             word = "трава",
+            mode = DictionaryMeaningFilterMode.STARTS_WITH,
             approved = DictionaryMeaningApproved.TRUE
         )
         context.meaningResponse.isEmpty() shouldBe true

@@ -297,9 +297,18 @@ components:
         word:
           type: string
           description: Слово, по которому будем искать
+        mode:
+          $ref: '#/components/schemas/MeaningSearchFilterMode'
         approved:
           type: boolean
           description: Будем искать подтвержденные или нет
+
+    MeaningSearchFilterMode:
+      type: string
+      description: Дополнительный режим поиска значения
+      enum:
+        - startsWith
+        - contains
 
     MeaningSearchRequest:
       allOf:

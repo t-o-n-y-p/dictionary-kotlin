@@ -79,8 +79,15 @@ private fun DictionaryContext.fromTransport(request: MeaningSearchRequest) {
 
 private fun MeaningSearchFilter?.toInternal(): DictionaryMeaningFilter = DictionaryMeaningFilter(
     word = this?.word ?: "",
+    mode = this?.mode.toInternal(),
     approved = DictionaryMeaningApproved.fromBoolean(this?.approved)
 )
+
+private fun MeaningSearchFilterMode?.toInternal(): DictionaryMeaningFilterMode = when (this) {
+    MeaningSearchFilterMode.STARTS_WITH -> DictionaryMeaningFilterMode.STARTS_WITH
+    MeaningSearchFilterMode.CONTAINS -> DictionaryMeaningFilterMode.CONTAINS
+    null -> DictionaryMeaningFilterMode.NONE
+}
 
 private fun MeaningCreateObject.toInternal(): DictionaryMeaning = DictionaryMeaning(
     word = this.word ?: "",

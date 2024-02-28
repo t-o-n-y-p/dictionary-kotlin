@@ -1,10 +1,7 @@
 package com.tonyp.dictionarykotlin.repo.inmemory
 
 import com.benasher44.uuid.uuid4
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningVersion
+import com.tonyp.dictionarykotlin.common.models.*
 import com.tonyp.dictionarykotlin.common.repo.*
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_ALREADY_EXISTS
 import com.tonyp.dictionarykotlin.common.repo.IMeaningRepository.Errors.RESULT_ERROR_CONCURRENT_MODIFICATION
@@ -106,7 +103,11 @@ class MeaningRepoInMemory (
         val result = meaningCache.asMap().asSequence()
             .filter { entry ->
                 rq.filter.word.takeIf { it.isNotBlank() }?.let {
-                    it == entry.value.wordEntity?.word
+                    when (rq.filter.mode) {
+                        DictionaryMeaningFilterMode.NONE -> it == entry.value.wordEntity?.word
+                        DictionaryMeaningFilterMode.STARTS_WITH -> entry.value.wordEntity?.word?.startsWith(it)
+                        DictionaryMeaningFilterMode.CONTAINS -> entry.value.wordEntity?.word?.contains(it)
+                    }
                 } ?: true
             }
             .filter { entry ->

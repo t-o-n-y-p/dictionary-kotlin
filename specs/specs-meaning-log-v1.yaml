@@ -84,5 +84,10 @@ components:
       properties:
         word:
           type: string
+        mode:
+          type: string
+          enum:
+            - startWith
+            - contains
         approved:
           type: boolean

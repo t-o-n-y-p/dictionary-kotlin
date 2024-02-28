@@ -539,6 +539,14 @@ object DataProvider {
                 proposedBy = "unittest",
                 approved = false,
                 version = "zxcvbn"
+            ),
+            MeaningResponseFullObject(
+                id = "987654321",
+                word = "приобвалиться",
+                value = "совершить обвал",
+                proposedBy = "t-o-n-y-p",
+                approved = false,
+                version = "uiopjklm"
             )
         )
     )

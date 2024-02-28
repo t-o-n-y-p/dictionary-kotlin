@@ -35,8 +35,15 @@ private fun DictionaryCommand.toLog() = when (this) {
 
 private fun DictionaryMeaningFilter.toLog() = MeaningFilterLog(
     word = word.takeIf { it.isNotBlank() },
+    mode = mode.toLog(),
     approved = approved.toLog()
 )
+
+private fun DictionaryMeaningFilterMode.toLog() = when (this) {
+    DictionaryMeaningFilterMode.STARTS_WITH -> MeaningFilterLog.Mode.START_WITH
+    DictionaryMeaningFilterMode.CONTAINS -> MeaningFilterLog.Mode.CONTAINS
+    DictionaryMeaningFilterMode.NONE -> null
+}
 
 private fun DictionaryMeaning.toLog() = MeaningLog(
     id = id.takeIf { it != DictionaryMeaningId.NONE }?.asString(),

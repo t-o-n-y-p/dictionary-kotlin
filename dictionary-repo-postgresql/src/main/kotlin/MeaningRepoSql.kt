@@ -2,10 +2,7 @@ package com.tonyp.dictionarykotlin.repo.postgresql
 
 import com.benasher44.uuid.uuid4
 import com.tonyp.dictionarykotlin.common.helpers.asDictionaryError
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaning
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningApproved
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningId
-import com.tonyp.dictionarykotlin.common.models.DictionaryMeaningVersion
+import com.tonyp.dictionarykotlin.common.models.*
 import com.tonyp.dictionarykotlin.common.repo.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -146,7 +143,13 @@ class MeaningRepoSql(
                 .select {
                     buildList {
                         add(Op.TRUE)
-                        rq.filter.word.takeIf { it.isNotBlank() }?.let { add(Words.word eq it) }
+                        rq.filter.word.takeIf { it.isNotBlank() }?.let {
+                            when (rq.filter.mode) {
+                                DictionaryMeaningFilterMode.NONE -> add(Words.word eq it)
+                                DictionaryMeaningFilterMode.STARTS_WITH -> add(Words.word like "$it%")
+                                DictionaryMeaningFilterMode.CONTAINS -> add(Words.word like "%$it%")
+                            }
+                        }
                         rq.filter.approved
                             .takeIf { it != DictionaryMeaningApproved.NONE }
                             ?.let { add(Meanings.approved eq it) }

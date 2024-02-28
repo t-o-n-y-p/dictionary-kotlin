@@ -34,6 +34,7 @@ class ContextToLogMapperTest : FunSpec ({
         requestId = DictionaryRequestId("456"),
         meaningFilterRequest = DictionaryMeaningFilter(
             word = "обвал",
+            mode = DictionaryMeaningFilterMode.STARTS_WITH,
             approved = DictionaryMeaningApproved.TRUE
         ),
         meaningsResponse = mutableListOf(
@@ -116,6 +117,7 @@ class ContextToLogMapperTest : FunSpec ({
             operation = DictionaryLogModel.Operation.SEARCH,
             requestFilter = MeaningFilterLog(
                 word = "обвал",
+                mode = MeaningFilterLog.Mode.START_WITH,
                 approved = true
             ),
             responseMeanings = listOf(
